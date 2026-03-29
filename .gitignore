@@ -1,0 +1,10 @@
+node_modules
+dist
+.turbo
+*.log
+.DS_Store
+packages/dark-engine/pkg
+packages/dark-engine/dist
+packages/dark-color-utils/dist
+packages/**/target
+apps/chrome/dev

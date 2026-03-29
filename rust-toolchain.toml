@@ -1,0 +1,4 @@
+# 单一来源：CI 与本地 rustup 使用同一 channel / wasm 目标（见 RFC 001 / T-002）。
+[toolchain]
+channel = "stable"
+targets = ["wasm32-unknown-unknown"]

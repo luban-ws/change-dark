@@ -1,0 +1,34 @@
+{
+    "name": "@luban-ws/dark-engine",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.cjs",
+            "default": "./dist/index.mjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build:wasm": "env PATH=\"$HOME/.cargo/bin:$PATH\" wasm-pack build . --target bundler --out-dir pkg --release",
+        "build": "pnpm run build:wasm && vite build && node ./scripts/finish-dist.mjs",
+        "test": "cargo test",
+        "lint": "tsc -p tsconfig.json --noEmit"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.1",
+        "typescript": "^5.7.3",
+        "vite": "^5.4.11",
+        "vite-plugin-top-level-await": "^1.6.0",
+        "vite-plugin-wasm": "^3.6.0",
+        "wasm-pack": "^0.13.1"
+    }
+}
