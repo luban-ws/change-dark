@@ -1,0 +1,94 @@
+import { parseCssRgbToTriplet } from '../shared/color-parse'
+import type { SamplingBudget } from '../shared/sampling-budget'
+import { computeDeadlineMs, isPastDeadline } from '../shared/sampling-budget'
+
+/**
+ * 在 `requestIdleCallback` 不可用时用 `setTimeout(0)` 分片，避免长时间阻塞主线程（RFC 006）。
+ */
+export function scheduleIdleTask(task: () => void): void {
+  const ric = (
+    globalThis as unknown as {
+      requestIdleCallback?: (cb: IdleRequestCallback, opts?: IdleRequestOptions) => number
+    }
+  ).requestIdleCallback
+  if (typeof ric === 'function') {
+    ric(() => task(), { timeout: 80 })
+  } else {
+    setTimeout(task, 0)
+  }
+}
+
+/** `document_start` 后若 DOM 未就绪则等待 `DOMContentLoaded`。 */
+export function whenDomReady(): Promise<void> {
+  if (document.readyState === 'loading') {
+    return new Promise((resolve) => {
+      document.addEventListener('DOMContentLoaded', () => resolve(), { once: true })
+    })
+  }
+  return Promise.resolve()
+}
+
+/**
+ * 分层抽样：视口 `elementsFromPoint` 若干点 + 文档树深度优先遍历；
+ * 在节点数与时间墙任一达到上限时停止。输出 RFC 005 扁平 RGB。
+ */
+export function collectPageBackgroundRgbBuffer(
+  budget: SamplingBudget,
+  now: () => number,
+): Uint8Array {
+  const deadline = computeDeadlineMs(now(), budget.maxMs)
+  const seen = new Set<Element>()
+  const out: number[] = []
+
+  function trySample(el: Element): void {
+    if (seen.has(el)) return
+    if (isPastDeadline(now(), deadline)) return
+    if (seen.size >= budget.maxNodes) return
+    seen.add(el)
+    const bg = getComputedStyle(el).backgroundColor
+    const t = parseCssRgbToTriplet(bg)
+    if (t) {
+      out.push(t[0], t[1], t[2])
+    }
+  }
+
+  const rootEl = document.documentElement
+  const w = rootEl.clientWidth
+  const h = rootEl.clientHeight
+  if (w > 0 && h > 0) {
+    const points = [
+      { x: Math.floor(w / 2), y: Math.floor(h / 2) },
+      { x: Math.floor(w * 0.15), y: Math.floor(h * 0.15) },
+      { x: Math.floor(w * 0.85), y: Math.floor(h * 0.15) },
+      { x: Math.floor(w * 0.15), y: Math.floor(h * 0.85) },
+      { x: Math.floor(w * 0.85), y: Math.floor(h * 0.85) },
+    ]
+    for (const p of points) {
+      if (isPastDeadline(now(), deadline) || seen.size >= budget.maxNodes) break
+      let stack: Element[]
+      try {
+        stack = [...document.elementsFromPoint(p.x, p.y)]
+      } catch {
+        continue
+      }
+      for (const el of stack.slice(0, 14)) {
+        if (!(el instanceof Element)) continue
+        trySample(el)
+        if (seen.size >= budget.maxNodes || isPastDeadline(now(), deadline)) break
+      }
+    }
+  }
+
+  const treeRoot = document.body ?? document.documentElement
+  const stack: Element[] = [treeRoot]
+  while (stack.length > 0) {
+    if (isPastDeadline(now(), deadline) || seen.size >= budget.maxNodes) break
+    const el = stack.pop()!
+    trySample(el)
+    for (let i = el.children.length - 1; i >= 0; i--) {
+      stack.push(el.children[i] as Element)
+    }
+  }
+
+  return new Uint8Array(out)
+}

@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-021** |
 | 参考 | [Dark Reader Help — Toggle site / Site list](https://darkreader.org/help/en/) |
 
@@ -33,6 +33,17 @@
 - 纯函数：origin 归一化（strip path）。
 - 手工：多子域场景。
 
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 存储键 | `change-dark:site-list` → `{ denylist: string[] }`（RFC 017 模型子集，后续可扩展 `mode` / glob） |
+| 归一化 | `normalizeHttpOriginFromUrl`：仅 `http`/`https` 的 `URL.origin`；否则 Popup 禁用切换 |
+| 内容脚本 | `readShouldApplyForcedDarkForPage()`：全局允许 **且** `location.origin` ∉ `denylist` 才注入 |
+| Popup | 当前标签页加入/移出 `denylist`；`activeTab` 读 URL；`storage.onChanged` 刷新按钮 |
+| 快捷键 | `toggleCurrentOriginInDenylist(origin)` 供 **RFC 010** 复用 |
+
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved；匹配为 **精确 origin**，pattern/正则留待 RFC 017。

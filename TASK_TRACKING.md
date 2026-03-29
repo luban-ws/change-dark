@@ -14,14 +14,14 @@
 
 | ID | 专属 RFC | 状态 |
 |----|----------|------|
-| T-010 | [004](./docs/rfc/004-policy-storage-migration-from-enabled-boolean.md) | To do |
-| T-011 | [005](./docs/rfc/005-wasm-batch-color-api.md) | To do |
-| T-012 | [006](./docs/rfc/006-content-script-sampling-budget-fallback.md) | To do |
-| T-013 | [007](./docs/rfc/007-popup-options-minimal-ui.md) | To do |
-| T-020 | [008](./docs/rfc/008-global-on-off-policy.md) | To do |
-| T-021 | [009](./docs/rfc/009-toggle-site-ignore-list.md) | To do |
-| T-022 | [010](./docs/rfc/010-extension-hotkeys.md) | To do |
-| T-023 | [011](./docs/rfc/011-theme-filter-sliders.md) | To do |
+| T-010 | [004](./docs/rfc/004-policy-storage-migration-from-enabled-boolean.md) | Done |
+| T-011 | [005](./docs/rfc/005-wasm-batch-color-api.md) | Done |
+| T-012 | [006](./docs/rfc/006-content-script-sampling-budget-fallback.md) | Done |
+| T-013 | [007](./docs/rfc/007-popup-options-minimal-ui.md) | Done |
+| T-020 | [008](./docs/rfc/008-global-on-off-policy.md) | Done |
+| T-021 | [009](./docs/rfc/009-toggle-site-ignore-list.md) | Done |
+| T-022 | [010](./docs/rfc/010-extension-hotkeys.md) | Done |
+| T-023 | [011](./docs/rfc/011-theme-filter-sliders.md) | Done |
 | T-024 | [012](./docs/rfc/012-theme-mode-dynamic.md) | To do |
 | T-025 | [013](./docs/rfc/013-theme-mode-filter-css-invert.md) | To do |
 | T-026 | [014](./docs/rfc/014-theme-mode-filter-plus-svg.md) | To do |
@@ -30,6 +30,12 @@
 | T-029 | [017](./docs/rfc/017-site-list-patterns-regex.md) | To do |
 | T-030 | [018](./docs/rfc/018-font-and-text-stroke.md) | To do |
 | T-031 | [019](./docs/rfc/019-per-site-css-selector-fixes.md) | To do |
+
+## GitHub Pages（RFC 020）
+
+| ID | 专属 RFC | 状态 |
+|----|----------|------|
+| T-032 | [020](./docs/rfc/020-github-pages-site.md) | Done |
 
 ## 习惯用法
 

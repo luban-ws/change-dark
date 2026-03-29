@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-010** |
 
 依赖：[001](./001-rust-wasm-monorepo-and-chrome-host.md)
@@ -49,6 +49,18 @@
 - Vitest：迁移纯函数（旧存储快照 → 新 shape）。
 - 手工：加载扩展前后 storage 面板核对。
 
+## Implementation（落地）
+
+| 模块 | 说明 |
+|------|------|
+| `apps/chrome/src/shared/constants.ts` | `STORAGE_KEY_*`、`POLICY_*`、`STORAGE_KEYS_AFFECTING_INJECTION` |
+| `apps/chrome/src/shared/migration.ts` | `resolvePolicyFromSnapshot`、`planStorageMigration`、Vitest 覆盖 |
+| `apps/chrome/src/shared/ensure-migrated.ts` | 后台 `ensureStorageMigrated()` |
+| `apps/chrome/src/shared/storage.ts` | `readGlobalPolicy`、`readApplyDark`（`readEnabled` 别名） |
+| `apps/chrome/src/background.ts` | `onInstalled` / `onStartup` 触发迁移 |
+| `apps/chrome/src/content/index.ts` | 监听策略相关键并重算样式 |
+
 ## Decision log
 
 - 2026-03-29：初稿。
+- 2026-03-29：实现 Approved；`auto` 在内容脚本侧暂与 `on` 同效，待后续主题 RFC 细化。

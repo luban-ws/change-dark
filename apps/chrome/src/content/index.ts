@@ -1,8 +1,24 @@
-import { mix_toward_black, suggested_foreground_for_dark_bg } from '@luban-ws/dark-engine'
+import {
+  batch_mix_toward_black,
+  kMeansRgbCentroids,
+  mix_toward_black,
+  suggested_foreground_for_dark_bg,
+} from '@luban-ws/dark-engine'
 
+import { collectPageBackgroundRgbBuffer, scheduleIdleTask, whenDomReady } from './sampling'
 import { buildDarkCss, ensureStyleElement } from '../shared/css'
-import { ROOT_ATTR, STORAGE_KEY_ENABLED, STYLE_ELEMENT_ID } from '../shared/constants'
-import { readEnabled } from '../shared/storage'
+import {
+  MIX_TOWARD_BLACK_AMOUNT,
+  ROOT_ATTR,
+  STATIC_FALLBACK_RGB,
+  STORAGE_KEYS_AFFECTING_INJECTION,
+  STYLE_ELEMENT_ID,
+} from '../shared/constants'
+import {
+  readSamplingBudget,
+  readShouldApplyForcedDarkForPage,
+  readThemeFiltersState,
+} from '../shared/storage'
 
 /**
  * 将 RGB 分量格式化为 CSS rgb()，避免魔法字符串散落。
@@ -14,31 +30,59 @@ function rgb(parts: Uint8Array | number[]): string {
 
 /**
  * 用 WASM 生成背景/前景色并注入样式。失败时静默降级，避免破坏页面。
+ * RFC 006：空闲时采样 → k-means 代表色 → RFC 005 批混合；异常则回退静态色。
  */
 async function applyForcedDark(): Promise<void> {
-  const enabled = await readEnabled()
-  if (!enabled) {
+  const applyDark = await readShouldApplyForcedDarkForPage()
+  if (!applyDark) {
     document.documentElement.removeAttribute(ROOT_ATTR)
     document.getElementById(STYLE_ELEMENT_ID)?.remove()
     return
   }
 
-  // bundler 目标下 `dark_engine.js` 在加载时完成 `__wbindgen_start`；这里直接调用导出函数即可。
-  // 以近似白底的“纸面”为基准向黑色混合，得到柔和暗底；大量运算可走 WASM 批量 API 扩展。
-  const baseR = 248
-  const baseG = 250
-  const baseB = 252
-  const bgParts = mix_toward_black(baseR, baseG, baseB, 0.88)
-  const fgParts = suggested_foreground_for_dark_bg(bgParts[0]!, bgParts[1]!, bgParts[2]!)
+  const budget = await readSamplingBudget()
+  const themeFilters = await readThemeFiltersState()
 
-  const css = buildDarkCss(rgb(bgParts), rgb(fgParts))
-  document.documentElement.setAttribute(ROOT_ATTR, '')
-  ensureStyleElement(css)
+  const runPaint = (): void => {
+    let baseRgb: Uint8Array
+    try {
+      const buffer = collectPageBackgroundRgbBuffer(budget, () => Date.now())
+      if (buffer.length < 3) {
+        baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
+      } else {
+        baseRgb = kMeansRgbCentroids(buffer, 1, 40).subarray(0, 3)
+      }
+    } catch {
+      baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
+    }
+
+    let bgParts: Uint8Array
+    try {
+      bgParts = batch_mix_toward_black(baseRgb, MIX_TOWARD_BLACK_AMOUNT)
+    } catch {
+      bgParts = mix_toward_black(
+        baseRgb[0]!,
+        baseRgb[1]!,
+        baseRgb[2]!,
+        MIX_TOWARD_BLACK_AMOUNT,
+      )
+    }
+    const fgParts = suggested_foreground_for_dark_bg(bgParts[0]!, bgParts[1]!, bgParts[2]!)
+
+    const css = buildDarkCss(rgb(bgParts), rgb(fgParts), themeFilters)
+    document.documentElement.setAttribute(ROOT_ATTR, '')
+    ensureStyleElement(css)
+  }
+
+  scheduleIdleTask(() => {
+    void whenDomReady().then(runPaint)
+  })
 }
 
 void applyForcedDark()
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== 'local') return
-  if (changes[STORAGE_KEY_ENABLED]) void applyForcedDark()
+  const touched = STORAGE_KEYS_AFFECTING_INJECTION.some((k) => changes[k] !== undefined)
+  if (touched) void applyForcedDark()
 })

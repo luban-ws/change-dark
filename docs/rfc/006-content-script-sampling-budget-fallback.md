@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-012** |
 
 依赖：[001](./001-rust-wasm-monorepo-and-chrome-host.md)、[005](./005-wasm-batch-color-api.md)、[004](./004-policy-storage-migration-from-enabled-boolean.md)
@@ -41,6 +41,19 @@ Content script ──(budget)──▶ 采样 RGB 缓冲 ──▶ dark_engine�
 - Vitest：预算模块纯函数；模拟时钟。
 - 手工：大 DOM 页面对比 CPU。
 
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 可配置键 | `change-dark:sampling-max-nodes`、`change-dark:sampling-max-ms`（未设置则用默认） |
+| 纯函数 | `resolveSamplingBudgetFromSnapshot`、`computeDeadlineMs` / `isPastDeadline`（`sampling-budget.ts`） |
+| 颜色解析 | `parseCssRgbToTriplet`（`color-parse.ts`，仅常见 `rgb`/`rgba`） |
+| DOM 采样 | `collectPageBackgroundRgbBuffer`：视口多点 `elementsFromPoint` + 文档树 DFS；时间墙与节点数双上限 |
+| 调度 | `scheduleIdleTask`（`requestIdleCallback` + `timeout`，否则 `setTimeout(0)`）；`whenDomReady` 等待 DOM |
+| 聚合 | `kMeansRgbCentroids(buffer, 1, 40)` 得代表色；样本不足或异常 → `STATIC_FALLBACK_RGB`（与 v1 固定色一致） |
+| 注入键 | 采样键已加入 `STORAGE_KEYS_AFFECTING_INJECTION`，改配置会重算样式 |
+
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved；代表色用 k=1 k-means，与后续 Dynamic RFC 可再接更复杂策略。

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>嫦娥 Change Dark</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main class="popup-root" aria-labelledby="popup-title">
+      <h1 id="popup-title" class="popup-title">嫦娥 Change Dark</h1>
+
+      <fieldset class="policy-fieldset">
+        <legend id="policy-legend">全局开关</legend>
+        <p class="policy-help" id="policy-help">
+          「关闭」时不注入样式并移除已注入效果；与工具栏按钮共用同一设置（RFC 008）。
+        </p>
+        <div
+          class="policy-radios"
+          role="radiogroup"
+          aria-labelledby="policy-legend"
+          aria-describedby="policy-help"
+        >
+          <label class="policy-label">
+            <input type="radio" name="policy" value="auto" />
+            <span>自动</span>
+          </label>
+          <label class="policy-label">
+            <input type="radio" name="policy" value="on" />
+            <span>开启</span>
+          </label>
+          <label class="policy-label">
+            <input type="radio" name="policy" value="off" />
+            <span>关闭</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="filter-fieldset">
+        <legend id="filter-legend">主题滤镜（RFC 011）</legend>
+        <p class="filter-doc">顺序：<code>brightness → contrast → sepia → saturate</code>；100% 为中性。</p>
+        <div class="filter-row">
+          <label class="filter-label" for="tf-brightness">亮度</label>
+          <input id="tf-brightness" type="range" min="10" max="200" value="100" step="1" />
+          <span class="filter-val" id="tf-brightness-val" aria-live="polite">100</span>
+        </div>
+        <div class="filter-row">
+          <label class="filter-label" for="tf-contrast">对比度</label>
+          <input id="tf-contrast" type="range" min="10" max="200" value="100" step="1" />
+          <span class="filter-val" id="tf-contrast-val" aria-live="polite">100</span>
+        </div>
+        <div class="filter-row">
+          <label class="filter-label" for="tf-sepia">棕褐</label>
+          <input id="tf-sepia" type="range" min="0" max="100" value="0" step="1" />
+          <span class="filter-val" id="tf-sepia-val" aria-live="polite">0</span>
+        </div>
+        <div class="filter-row">
+          <label class="filter-label" for="tf-saturate">饱和度</label>
+          <input id="tf-saturate" type="range" min="0" max="200" value="100" step="1" />
+          <span class="filter-val" id="tf-saturate-val" aria-live="polite">100</span>
+        </div>
+      </fieldset>
+
+      <p class="hint" id="site-hint">加载中…</p>
+      <button type="button" class="site-btn" id="site-exemption" disabled aria-describedby="site-hint">
+        …
+      </button>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

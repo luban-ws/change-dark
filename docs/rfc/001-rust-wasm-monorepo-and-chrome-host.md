@@ -37,6 +37,7 @@ Superseded-By: —
 | `packages/dark-color-utils` | 纯 Rust 颜色与对比度相关函数；`cargo test`。 |
 | `packages/dark-engine` | `cdylib` + `rlib`；`wasm-pack` → `pkg/`（中间体）→ **Vite** → **`dist/`**（唯一发布面）。 |
 | `apps/chrome` | MV3 manifest、background、content script；依赖 `workspace:*` 的 `@luban-ws/dark-engine`。 |
+| `apps/site` | React 落地页（GitHub Pages）；规范见 [RFC 020](./020-github-pages-site.md)。 |
 
 ### 构建与工具链
 

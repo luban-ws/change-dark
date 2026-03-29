@@ -63,6 +63,7 @@ pnpm --filter @luban-ws/site dev   # 仅本地预览落地页
 ## Specs and tasks
 
 - **Architecture (Approved):** [`docs/rfc/001-rust-wasm-monorepo-and-chrome-host.md`](docs/rfc/001-rust-wasm-monorepo-and-chrome-host.md)
+- **GitHub Pages 站点 (Approved):** [`docs/rfc/020-github-pages-site.md`](docs/rfc/020-github-pages-site.md)
 - **Feature list + task IDs:** [`docs/rfc/README.md`](docs/rfc/README.md) and [`TASK_TRACKING.md`](TASK_TRACKING.md)
 - **Roadmap:** [`ROADMAP.md`](ROADMAP.md)
 

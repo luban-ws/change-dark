@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-020** |
 | 参考 | [Dark Reader Help — Top / On/Off](https://darkreader.org/help/en/) |
 
@@ -32,6 +32,16 @@
 
 - Vitest：policy → 应注入布尔规则（纯函数层）。
 
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 语义 | `change-dark:policy`：`off` → 不注入；`on` / `auto` → 注入（`auto` 暂同 `on`，待系统主题 RFC） |
+| 纯函数 | `resolvePolicyFromSnapshot` → `shouldInjectForcedDarkStyles` / `resolveApplyDarkFromPolicy`（`migration.ts`） |
+| 内容脚本 | `readApplyDark()` → 为 false 时移除 `ROOT_ATTR` 与样式节点；`storage.onChanged` 触发重算（缓解 Tab 缓存旧样式） |
+| Popup | 与 RFC 007 同一 `persistGlobalPolicy`；文案标明「关闭」= 不注入并移除效果 |
+
 ## Decision log
 
 - 2026-03-29：初稿。
+- 2026-03-29：实现 Approved；验收测试见 `policy-injection.test.ts`。

@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-011** |
 
 依赖：[001](./001-rust-wasm-monorepo-and-chrome-host.md)
@@ -37,8 +37,20 @@
 ## Testing
 
 - `cargo test` fixture 数组。
-- TS：可选 snapshot 小金样本（构建后）。
+- TS：可选 snapshot 小金样本（构建后）；当前以 `cargo test` + 扩展内批调用链路为主。
+
+## Implementation（落地）
+
+**输入布局（与 RFC 006 一致）**：`Uint8Array` 扁平 RGB，长度 = `3 × 像素数`。
+
+| 层级 | 内容 |
+|------|------|
+| `dark_color_utils` | `batch_relative_luminance`、`batch_mix_toward_black`、`k_means_rgb_flat`；`#[test]` 覆盖 |
+| `dark_engine`（wasm-bindgen） | `batch_relative_luminance`、`batch_mix_toward_black`、`kMeansRgbCentroids`；`max_batch_rgb_bytes()`；`MAX_BATCH_RGB_BYTES` / `MAX_K_MEANS_K` / `MAX_K_MEANS_ITER` 在 Rust 侧约束 |
+| 超限 | 超过 `max_batch_rgb_bytes()`（当前 `3 * 524_288` 字节）时 **抛错**（`Result` → JS 异常） |
+| `apps/chrome` 内容脚本 | 对单色基准优先调用 `batch_mix_toward_black`，失败回退 `mix_toward_black` |
 
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved；k-means 为确定性 Lloyd（前 `k_eff` 点初始化），`k` 与 `max_iter` 在引擎内夹紧。

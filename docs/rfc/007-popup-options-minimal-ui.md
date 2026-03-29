@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-013** |
 
 依赖：[004](./004-policy-storage-migration-from-enabled-boolean.md)
@@ -31,7 +31,20 @@
 ## Testing
 
 - 组件级测试（若引入框架）；否则手工清单。
+- Vitest：`persistGlobalPolicy` 对 `chrome.storage.local.set/remove` 的调用（mock）。
+
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 清单 | `action.default_popup` → `src/popup/index.html`（`default_title`） |
+| UI | `fieldset` + `legend` + 单选「自动 / 开启 / 关闭」；`popup.css` 暗色主题与 `:focus-visible` / `focus-within` |
+| 写入 | `persistGlobalPolicy`（`shared/storage.ts`）：写 `change-dark:policy` + schema，并 `remove` 遗留 `enabled` |
+| 同步 | `chrome.storage.onChanged` 更新单选状态（多窗口一致） |
+| 当前站豁免 | 占位按钮 `disabled` + 说明文案，待 **RFC 009** |
+| WASM | 未引入 popup（符合 Non-goals） |
 
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved；首版仅 `action` popup，未加独立 `options_page`（可后续渐进）。
