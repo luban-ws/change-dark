@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-027** |
 | 参考 | [Dark Reader Help — Static mode](https://darkreader.org/help/en/) |
 
@@ -32,6 +32,16 @@
 
 - Vitest：静态 CSS 生成纯函数；快照。
 
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 路径 | 用户选 Static 或 Dynamic 超预算/异常回退仍用 `STATIC_FALLBACK_RGB` + WASM（既有逻辑）；Popup 选 Static 时走 `buildStaticDarkCss` |
+| 最小集 | `buildDarkCss`（`color-scheme`、`:root` 变量、`html`/`body` 背景与字色）+ `buildStaticDarkCss` 追加 `:where(main, article, aside, section, nav, p, h1–h6, …)` 使用 `var(--cd-page-fg)` |
+| RFC 011 | **不**在 Static 单独关闭滤镜：非中性时仍在 `html[data-change-dark-root]` 上挂 `filter`，与 Dynamic 一致，避免两套心智 |
+| 互斥 | 仍单节点 `#change-dark-style` + `storage` 重绘，无残留矛盾规则 |
+
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved；RFC 011 采用「与 Dynamic 相同根 filter」。

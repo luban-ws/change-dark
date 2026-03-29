@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-024** |
 | 参考 | [Dark Reader Help — Dynamic mode](https://darkreader.org/help/en/) |
 
@@ -33,6 +33,17 @@
 
 - 单测覆盖颜色映射纯函数；浏览器手工矩阵。
 
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 存储 | `change-dark:theme-mode` → `dynamic` \| `static`（默认 `dynamic`，与历史单一路径一致） |
+| Dynamic | RFC 006：空闲采样 → k-means → WASM 混合 + RFC 011 滤镜 |
+| Static | 无采样，基色固定为 `STATIC_FALLBACK_RGB`（RFC 015 轻量子集）；与 Dynamic 互斥，依赖 `storage` 变更触发内容脚本整页重绘，避免残留 |
+| Popup | 「主题模式」单选：Dynamic / Static；`persistThemeMode`；监听 `STORAGE_KEY_THEME_MODE` 同步 UI |
+| 注入键 | `STORAGE_KEYS_AFFECTING_INJECTION` 含 `STORAGE_KEY_THEME_MODE` |
+
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved；Popup 提供 Dynamic/Static；Filter 类模式留待 RFC 013/014。

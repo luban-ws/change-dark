@@ -11,16 +11,70 @@ export const STORAGE_KEY_POLICY = 'change-dark:policy'
 export const STORAGE_KEY_ENABLED = 'change-dark:enabled'
 
 /**
- * RFC 009 / 017：站点列表 JSON（`{ denylist: string[] }`）；与「仅 invert 列表」等模式扩展兼容。
- * @deprecated 旧占位名，请使用 `STORAGE_KEY_SITE_LIST`
+ * RFC 009 / 017：站点列表真源为 `STORAGE_KEY_SITE_LIST`（`SiteListStateV2`）；此键名为历史占位。
+ * @deprecated 请使用 `STORAGE_KEY_SITE_LIST`
  */
 export const STORAGE_KEY_ORIGIN_OVERRIDES = 'change-dark:origin-overrides'
 
-/** 站点列表状态（`SiteListStateV1`），RFC 009。 */
+/** 站点列表（`SiteListStateV2`：模式 + glob/正则/精确），RFC 009 / 017。 */
 export const STORAGE_KEY_SITE_LIST = 'change-dark:site-list'
+
+/** 列表内站点 **不** 套用强制暗色（原 denylist 语义）。 */
+export const SITE_LIST_MODE_NOT_INVERT_LISTED = 'not-invert-listed' as const
+
+/** 仅列表内站点套用强制暗色（allowlist）。 */
+export const SITE_LIST_MODE_INVERT_LISTED_ONLY = 'invert-listed-only' as const
+
+export type SiteListMode =
+  | typeof SITE_LIST_MODE_NOT_INVERT_LISTED
+  | typeof SITE_LIST_MODE_INVERT_LISTED_ONLY
+
+/** RFC 016：按 origin 的主题模式 / 滤镜覆盖（`SiteOverridesStateV1`）。 */
+export const STORAGE_KEY_SITE_OVERRIDES = 'change-dark:site-overrides' as const
+
+/** RFC 018：全局字体与文本描边（`TypographyStateV1`）。 */
+export const STORAGE_KEY_TYPOGRAPHY = 'change-dark:typography' as const
+
+/** RFC 019：每站自定义 CSS（`SiteCustomCssStateV1`）。 */
+export const STORAGE_KEY_SITE_CUSTOM_CSS = 'change-dark:site-custom-css' as const
 
 /** 全局主题滤镜（`ThemeFiltersStateV1`），RFC 011。 */
 export const STORAGE_KEY_THEME_FILTERS = 'change-dark:theme-filters'
+
+/** 主题模式：`dynamic` | `static`（RFC 012 / 015）。 */
+export const STORAGE_KEY_THEME_MODE = 'change-dark:theme-mode'
+
+/** 网页强制暗色时的配色：`dark`（WASM）| `solarized-dark`。 */
+export const STORAGE_KEY_PAGE_PALETTE = 'change-dark:page-palette' as const
+
+/** Dark Reader 类「Dynamic」：采样 + k-means + WASM（RFC 006）。 */
+export const THEME_MODE_DYNAMIC = 'dynamic' as const
+
+/** 固定基色轻路径，无页面采样（RFC 015；与 Dynamic 互斥切换）。 */
+export const THEME_MODE_STATIC = 'static' as const
+
+/** RFC 013：整页 CSS `filter` 反相路径（与 Dynamic/Static 互斥）。 */
+export const THEME_MODE_FILTER_CSS = 'filter-css' as const
+
+/** RFC 014：SVG `filter`（feColorMatrix + feHueRotate）；非 Chromium 时读路径保留、运行降级。 */
+export const THEME_MODE_FILTER_PLUS = 'filter-plus' as const
+
+export type ThemeMode =
+  | typeof THEME_MODE_DYNAMIC
+  | typeof THEME_MODE_STATIC
+  | typeof THEME_MODE_FILTER_CSS
+  | typeof THEME_MODE_FILTER_PLUS
+
+/** RFC 014：注入到 `body` 的隐藏 SVG 宿主，`filter: url(#…)` 同文档引用。 */
+export const FILTER_PLUS_SVG_HOST_ID = 'change-dark-filter-plus-svg' as const
+
+/** RFC 014：`filter: url(#id)` 与 `<filter id>` 一致。 */
+export const FILTER_PLUS_SVG_FILTER_ID = 'cd-filter-plus-base' as const
+
+/**
+ * RFC 013：根节点反相链（与常见 Filter 模式一致）；`img`/`video` 等用同链再反相以抵消整页反相。
+ */
+export const FILTER_CSS_INVERT_CHAIN = 'invert(1) hue-rotate(180deg)' as const
 
 /** RFC 006：单次采样最多访问的元素节点数（可配置）。 */
 export const STORAGE_KEY_SAMPLING_MAX_NODES = 'change-dark:sampling-max-nodes'
@@ -57,6 +111,12 @@ export const ROOT_ATTR = 'data-change-dark-root'
 /** 注入的样式节点 id，避免重复插入。 */
 export const STYLE_ELEMENT_ID = 'change-dark-style'
 
+/** RFC 018：字体与描边第二条样式节点（与主暗色样式分离，便于单独移除）。 */
+export const STYLE_ELEMENT_TYPOGRAPHY_ID = 'change-dark-typography-style'
+
+/** RFC 019：每站用户 CSS 第三条样式节点。 */
+export const STYLE_ELEMENT_CUSTOM_CSS_ID = 'change-dark-site-custom-css'
+
 /** 注入到页面的自定义属性：由 WASM 计算的页面背景色。 */
 export const CSS_VAR_PAGE_BG = '--cd-page-bg'
 
@@ -71,5 +131,10 @@ export const STORAGE_KEYS_AFFECTING_INJECTION: readonly string[] = [
   STORAGE_KEY_SAMPLING_MAX_NODES,
   STORAGE_KEY_SAMPLING_MAX_MS,
   STORAGE_KEY_SITE_LIST,
+  STORAGE_KEY_SITE_OVERRIDES,
   STORAGE_KEY_THEME_FILTERS,
+  STORAGE_KEY_THEME_MODE,
+  STORAGE_KEY_PAGE_PALETTE,
+  STORAGE_KEY_TYPOGRAPHY,
+  STORAGE_KEY_SITE_CUSTOM_CSS,
 ]

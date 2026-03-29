@@ -35,6 +35,11 @@ export default defineManifest({
     default_title: '嫦娥 Change Dark',
     default_popup: 'src/popup/index.html',
   },
+  /** 与 popup 同页，便于在新标签页中编辑长表单（RFC 007 渐进 options）。 */
+  options_ui: {
+    page: 'src/popup/index.html',
+    open_in_tab: true,
+  },
   background: {
     service_worker: 'src/background.ts',
     type: 'module',

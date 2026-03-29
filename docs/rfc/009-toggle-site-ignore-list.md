@@ -16,7 +16,7 @@
 
 1. Popup 或快捷键（[RFC 010](./010-extension-hotkeys.md)）可触发 `toggleCurrentOrigin()`。
 2. 忽略后当前标签立即还原外观。
-3. 存储格式与 [RFC 017](./017-site-list-patterns-regex.md) 的 `denylist` / 模式兼容。
+3. 存储格式与 [RFC 017](./017-site-list-patterns-regex.md) 的 `SiteListStateV2`（模式 + `entries`）一致；Toggle 只读写 **精确 origin** 行。
 
 ## Non-goals
 
@@ -37,13 +37,14 @@
 
 | 项 | 说明 |
 |----|------|
-| 存储键 | `change-dark:site-list` → `{ denylist: string[] }`（RFC 017 模型子集，后续可扩展 `mode` / glob） |
+| 存储键 | `change-dark:site-list` → `SiteListStateV2`（`v: 2`，`mode`，`entries`），详见 [RFC 017](./017-site-list-patterns-regex.md) |
 | 归一化 | `normalizeHttpOriginFromUrl`：仅 `http`/`https` 的 `URL.origin`；否则 Popup 禁用切换 |
-| 内容脚本 | `readShouldApplyForcedDarkForPage()`：全局允许 **且** `location.origin` ∉ `denylist` 才注入 |
-| Popup | 当前标签页加入/移出 `denylist`；`activeTab` 读 URL；`storage.onChanged` 刷新按钮 |
+| 内容脚本 | `readShouldApplyForcedDarkForPage()`：全局允许 **且** `shouldApplyForcedDarkFromSiteList(location.origin, state)` 为真才注入 |
+| Popup | **Toggle site**：`toggleDenylistOrigin` 在当前 `mode` 下对 `entries` 增删精确 origin；多行规则与模式由 RFC 017 UI 编辑；`storage.onChanged` 刷新 |
 | 快捷键 | `toggleCurrentOriginInDenylist(origin)` 供 **RFC 010** 复用 |
 
 ## Decision log
 
 - 2026-03-29：独立 RFC。
 - 2026-03-29：实现 Approved；匹配为 **精确 origin**，pattern/正则留待 RFC 017。
+- 2026-03-29：RFC 017 落地后，存储与注入真源统一为 `SiteListStateV2` + `shouldApplyForcedDarkFromSiteList`；本 RFC 表格已同步。

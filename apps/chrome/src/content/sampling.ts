@@ -29,6 +29,17 @@ export function whenDomReady(): Promise<void> {
 }
 
 /**
+ * 等待 `window` `load`（`document.readyState === 'complete'`）。
+ * Dynamic 采样依赖视口尺寸与已计算样式；仅 `DOMContentLoaded` 时常见 `clientWidth === 0` 或样本过少。
+ */
+export function whenDocumentComplete(): Promise<void> {
+  if (document.readyState === 'complete') return Promise.resolve()
+  return new Promise((resolve) => {
+    window.addEventListener('load', () => resolve(), { once: true })
+  })
+}
+
+/**
  * 分层抽样：视口 `elementsFromPoint` 若干点 + 文档树深度优先遍历；
  * 在节点数与时间墙任一达到上限时停止。输出 RFC 005 扁平 RGB。
  */

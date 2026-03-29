@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-029** |
 | 参考 | [Dark Reader Help — Site list](https://darkreader.org/help/en/) |
 
@@ -30,8 +30,19 @@
 
 ## Testing
 
-- `#[test]` / Vitest：表格用例含 `google.*`、`/www\.google\..*/`。
+- Vitest：`apps/chrome/src/shared/site-list.test.ts` — 迁移、`glob`、斜杠正则、`shouldApplyForcedDarkFromSiteList`、`toggleDenylistOrigin`。
+
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 模型 | `SiteListStateV2`：`v: 2`，`mode`（`not-invert-listed` \| `invert-listed-only`），`entries: string[]`；`MAX_SITE_LIST_ENTRIES = 200` |
+| 匹配 | 精确 `https://` origin、hostname、段内 `*` 的 glob、`/pattern/flags` 正则；`shouldApplyForcedDarkFromSiteList(origin, state)` 为注入真源 |
+| 迁移 | `parseSiteListState`：遗留 `{ denylist: string[] }` → `not-invert-listed` + `entries`（去重截断） |
+| 存储 | `readSiteListState` / `persistSiteListState`；`readShouldApplyForcedDarkForPage` 使用 `shouldApplyForcedDarkFromSiteList` |
+| Popup | `#site-list-textarea`、`input[name="site-list-mode"]`：模式单选 + 多行规则；`loadSiteListPanel` / `persistSiteListFromPanel` / `wireSiteListPanel`；快捷键 Toggle site 仍经 `toggleDenylistOrigin` 写精确 origin |
 
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved（Popup 列表 UI + 共享匹配与单测）。

@@ -37,7 +37,7 @@
 
 | 项 | 说明 |
 |----|------|
-| 清单 | `action.default_popup` → `src/popup/index.html`（`default_title`） |
+| 清单 | `action.default_popup` → `src/popup/index.html`（`default_title`）；`options_ui` 同页 + `open_in_tab: true`（新标签「扩展选项」） |
 | UI | `fieldset` + `legend` + 单选「自动 / 开启 / 关闭」；`popup.css` 暗色主题与 `:focus-visible` / `focus-within` |
 | 写入 | `persistGlobalPolicy`（`shared/storage.ts`）：写 `change-dark:policy` + schema，并 `remove` 遗留 `enabled` |
 | 同步 | `chrome.storage.onChanged` 更新单选状态（多窗口一致） |
@@ -48,3 +48,4 @@
 
 - 2026-03-29：独立 RFC。
 - 2026-03-29：实现 Approved；首版仅 `action` popup，未加独立 `options_page`（可后续渐进）。
+- 2026-03-29：补充 `options_ui`（与 popup 同 HTML，`open_in_tab`），便于长列表/自定义 CSS 编辑。

@@ -4,7 +4,7 @@
 
 除 **[001](./001-rust-wasm-monorepo-and-chrome-host.md)** 作为架构基线外，**每一篇 RFC 只描述一件可交付的事**（一个任务 / 一条能力）。**不设伞形索引 RFC**；任务分组仅体现在本页的表格里。
 
-编号：`NNN-short-slug.md`。**下一个可用编号：021**。
+编号：`NNN-short-slug.md`。**下一个可用编号：023**。
 
 ## 状态枚举
 
@@ -47,3 +47,15 @@ Draft · Under Review · Approved · Superseded。归档：`completed/`、`rejec
 | RFC | 任务 | 标题 |
 |-----|------|------|
 | [020](./020-github-pages-site.md) | T-032 | GitHub Pages 落地页（`apps/site`） |
+
+## 扩展 UI 与品牌
+
+| RFC | 任务 | 标题 |
+|-----|------|------|
+| [022](./022-solarized-dark-popup-ui.md) | T-034 | Popup / Options：Solarized Dark 配色 |
+
+## 元文档（状态 / backlog）
+
+| RFC | 任务 | 标题 |
+|-----|------|------|
+| [021](./021-project-status-and-backlog.md) | T-033 | 项目状态快照与未立项能力 |

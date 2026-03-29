@@ -66,6 +66,8 @@ pnpm --filter @luban-ws/site dev   # 仅本地预览落地页
 - **GitHub Pages 站点 (Approved):** [`docs/rfc/020-github-pages-site.md`](docs/rfc/020-github-pages-site.md)
 - **Feature list + task IDs:** [`docs/rfc/README.md`](docs/rfc/README.md) and [`TASK_TRACKING.md`](TASK_TRACKING.md)
 - **Roadmap:** [`ROADMAP.md`](ROADMAP.md)
+- **Popup Solarized Dark（Approved）：** [`docs/rfc/022-solarized-dark-popup-ui.md`](docs/rfc/022-solarized-dark-popup-ui.md)
+- **Status / backlog（meta）：** [`docs/rfc/021-project-status-and-backlog.md`](docs/rfc/021-project-status-and-backlog.md)
 
 Product ideas are tracked with a **one-RFC-one-topic** rule; Dark Reader is used only as a **behavioral reference**, not as a code source ([Dark Reader Help](https://darkreader.org/help/en/)).
 

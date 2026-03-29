@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-031** |
 | 参考 | [Dark Reader Help — Developer tools](https://darkreader.org/help/en/) |
 
@@ -30,8 +30,19 @@
 
 ## Testing
 
-- 解析/校验单测；手工对已知问题站。
+- Vitest：`site-custom-css.test.ts`（sanitize、parse）；手工对已知问题站。
+
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 存储 | `STORAGE_KEY_SITE_CUSTOM_CSS` → `SiteCustomCssStateV1`（`v:1`，`byOrigin[origin].css`）；单条 `MAX_SITE_CUSTOM_CSS_CHARS`，最多 `MAX_SITE_CUSTOM_CSS_ORIGINS` 个 origin |
+| 净化 | `sanitizeSiteCustomCss`：空字节、长度、`</style` 片段、`javascript:` 前缀弱化 |
+| 注入 | 内容脚本 `ensureCustomCssStyleElement`（`STYLE_ELEMENT_CUSTOM_CSS_ID`）；与主暗色同生命周期；**不**作用于 Shadow root 内与跨域 iframe 文档（主文档 `<style>` 固有限制） |
+| Popup | 「每站自定义 CSS」fieldset 仅在「仅当前站」且 http(s) 时显示；`blur` 写入 `persistSiteCustomCssForOrigin`；「清除此站覆盖」同时清主题/字体与自定义 CSS（`clearSiteOverrideForOrigin`） |
+| 导入 JSON | `isSiteCustomCssStateV1` / `parseSiteCustomCssState` 可作导入校验入口 |
 
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved（存储 + Popup + 第三条样式节点 + 单测）。

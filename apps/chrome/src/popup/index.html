@@ -6,17 +6,37 @@
     <title>嫦娥 Change Dark</title>
     <link rel="stylesheet" href="./popup.css" />
   </head>
-  <body>
+  <body class="cd-popup-body">
     <main class="popup-root" aria-labelledby="popup-title">
-      <h1 id="popup-title" class="popup-title">嫦娥 Change Dark</h1>
+      <header class="cd-header">
+        <div class="cd-header__row">
+          <svg
+            class="cd-header__mark"
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              fill="currentColor"
+              d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"
+            />
+          </svg>
+          <div class="cd-header__text">
+            <h1 id="popup-title" class="popup-title">嫦娥 Change Dark</h1>
+            <p class="cd-subtitle">强制暗色 · 在此调整全局策略、主题与站点规则</p>
+          </div>
+        </div>
+      </header>
 
-      <fieldset class="policy-fieldset">
+      <fieldset class="cd-panel policy-fieldset">
         <legend id="policy-legend">全局开关</legend>
         <p class="policy-help" id="policy-help">
           「关闭」时不注入样式并移除已注入效果；与工具栏按钮共用同一设置（RFC 008）。
         </p>
         <div
-          class="policy-radios"
+          class="policy-radios cd-segmented cd-segmented--3"
           role="radiogroup"
           aria-labelledby="policy-legend"
           aria-describedby="policy-help"
@@ -36,7 +56,113 @@
         </div>
       </fieldset>
 
-      <fieldset class="filter-fieldset">
+      <fieldset class="cd-panel only-for-fieldset">
+        <legend id="only-for-legend">仅当前站（RFC 016）</legend>
+        <p class="theme-mode-help" id="only-for-help">
+          「全局」下模式与主题滤镜写入全站默认；「仅当前站」写入当前 origin 覆盖，未写的项跟全局。需 http/https 页面。
+        </p>
+        <div
+          class="policy-radios cd-segmented cd-segmented--2"
+          role="radiogroup"
+          aria-labelledby="only-for-legend"
+          aria-describedby="only-for-help"
+        >
+          <label class="policy-label">
+            <input type="radio" name="edit-scope" value="global" checked />
+            <span>全局</span>
+          </label>
+          <label class="policy-label" id="edit-scope-site-label">
+            <input type="radio" name="edit-scope" value="site" id="edit-scope-site-input" />
+            <span>仅当前站</span>
+          </label>
+        </div>
+        <button type="button" class="clear-override-btn" id="clear-site-override" hidden>
+          清除此站覆盖
+        </button>
+      </fieldset>
+
+      <fieldset class="cd-panel theme-mode-fieldset">
+        <legend id="theme-mode-legend">主题模式</legend>
+        <p class="theme-mode-lead" id="theme-mode-help">
+          Dynamic / Static 使用 WASM 着色；Filter 类为整页反相。滤镜链顺序见下方滑块。
+        </p>
+        <details class="cd-details" id="theme-mode-details">
+          <summary class="cd-details-summary">各模式说明</summary>
+          <div class="cd-details-body">
+            <p>
+              <strong>Dynamic</strong>：采样页面背景色 + k-means + WASM 混合。<strong>Static</strong>：固定基色、无采样、更省资源。
+            </p>
+            <p>
+              <strong>Filter（CSS）</strong> / <strong>Filter+（SVG）</strong>：整页反相；Filter+ 在 Chromium 上通常更稳，Firefox 会降级为 CSS
+              Filter。大页更耗性能；已偏暗的站点可能被提亮。跨域 iframe 内无法注入。
+            </p>
+          </div>
+        </details>
+        <div
+          class="policy-radios cd-radio-list"
+          role="radiogroup"
+          aria-labelledby="theme-mode-legend"
+          aria-describedby="theme-mode-help theme-mode-details"
+        >
+          <label class="policy-label cd-radio-row">
+            <input type="radio" name="theme-mode" value="dynamic" checked />
+            <span class="cd-radio-row__text">
+              <span class="cd-radio-row__title">Dynamic</span>
+              <span class="cd-radio-row__hint">采样 + WASM</span>
+            </span>
+          </label>
+          <label class="policy-label cd-radio-row">
+            <input type="radio" name="theme-mode" value="static" />
+            <span class="cd-radio-row__text">
+              <span class="cd-radio-row__title">Static</span>
+              <span class="cd-radio-row__hint">固定基色</span>
+            </span>
+          </label>
+          <label class="policy-label cd-radio-row">
+            <input type="radio" name="theme-mode" value="filter-css" />
+            <span class="cd-radio-row__text">
+              <span class="cd-radio-row__title">Filter（CSS）</span>
+              <span class="cd-radio-row__hint">整页反相</span>
+            </span>
+          </label>
+          <label class="policy-label cd-radio-row" id="theme-mode-filter-plus-label">
+            <input
+              type="radio"
+              name="theme-mode"
+              value="filter-plus"
+              id="theme-mode-filter-plus-input"
+            />
+            <span class="cd-radio-row__text">
+              <span class="cd-radio-row__title">Filter+（SVG）</span>
+              <span class="cd-radio-row__hint">Chromium 优先</span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="cd-panel page-palette-fieldset">
+        <legend id="page-palette-legend">页面配色</legend>
+        <p class="theme-mode-help" id="page-palette-help">
+          作用于 Dynamic / Static 的底色与字色；Solarized 为固定 base03/base1。Filter 类模式不改编页色，仅统一滚动条风格。
+        </p>
+        <div
+          class="policy-radios cd-segmented cd-segmented--2"
+          role="radiogroup"
+          aria-labelledby="page-palette-legend"
+          aria-describedby="page-palette-help"
+        >
+          <label class="policy-label">
+            <input type="radio" name="page-palette" value="dark" checked />
+            <span>深色</span>
+          </label>
+          <label class="policy-label">
+            <input type="radio" name="page-palette" value="solarized-dark" />
+            <span>Solarized</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="cd-panel filter-fieldset">
         <legend id="filter-legend">主题滤镜（RFC 011）</legend>
         <p class="filter-doc">顺序：<code>brightness → contrast → sepia → saturate</code>；100% 为中性。</p>
         <div class="filter-row">
@@ -61,10 +187,106 @@
         </div>
       </fieldset>
 
-      <p class="hint" id="site-hint">加载中…</p>
-      <button type="button" class="site-btn" id="site-exemption" disabled aria-describedby="site-hint">
-        …
-      </button>
+      <fieldset class="cd-panel typography-fieldset">
+        <legend id="typography-legend">字体与描边（RFC 018）</legend>
+        <p class="theme-mode-help" id="typography-help">
+          可选增强暗底可读性；图标字体异常时请关闭「自定义字体」或清除此站覆盖。描边仅作用于常见文本节点，默认关闭。
+        </p>
+        <div class="typography-row">
+          <label class="policy-label">
+            <input type="checkbox" id="typo-font-enabled" />
+            <span>使用自定义字体</span>
+          </label>
+        </div>
+        <div class="typography-row">
+          <label class="typography-inline-label" for="typo-font-preset">预设</label>
+          <select id="typo-font-preset" class="typography-select" aria-labelledby="typography-legend">
+            <option value="system">系统 UI</option>
+            <option value="sans">无衬线</option>
+            <option value="serif">衬线</option>
+            <option value="mono">等宽</option>
+            <option value="custom">自定义…</option>
+          </select>
+        </div>
+        <div class="typography-row typo-custom-row" id="typo-custom-row" hidden>
+          <label class="typography-inline-label" for="typo-font-custom">font-family</label>
+          <input
+            type="text"
+            id="typo-font-custom"
+            class="typography-text-input"
+            spellcheck="false"
+            maxlength="200"
+            autocomplete="off"
+            aria-describedby="typography-help"
+          />
+        </div>
+        <div class="typography-row">
+          <label class="policy-label">
+            <input type="checkbox" id="typo-stroke-enabled" />
+            <span>文本描边（-webkit-text-stroke）</span>
+          </label>
+        </div>
+        <div class="filter-row">
+          <label class="filter-label" for="typo-stroke-width">描边粗细</label>
+          <input id="typo-stroke-width" type="range" min="0" max="50" value="6" step="1" />
+          <span class="filter-val" id="typo-stroke-width-val" aria-live="polite">0.06</span>
+        </div>
+      </fieldset>
+
+      <fieldset class="cd-panel site-custom-css-fieldset" id="site-custom-css-fieldset" hidden>
+        <legend id="site-custom-css-legend">每站自定义 CSS（RFC 019）</legend>
+        <p class="theme-mode-help" id="site-custom-css-help">
+          仅「仅当前站」且 http(s) 页可编辑；写入主文档样式表，不作用于 Shadow DOM 内与跨域 iframe 文档。勿粘贴不可信内容；过长内容会被截断。
+        </p>
+        <label class="site-list-textarea-label" for="site-custom-css-textarea">CSS 片段</label>
+        <textarea
+          id="site-custom-css-textarea"
+          class="site-custom-css-textarea"
+          rows="5"
+          spellcheck="false"
+          aria-labelledby="site-custom-css-legend"
+          aria-describedby="site-custom-css-help"
+        ></textarea>
+      </fieldset>
+
+      <fieldset class="cd-panel site-list-fieldset">
+        <legend id="site-list-legend">站点列表（RFC 017）</legend>
+        <p class="theme-mode-help" id="site-list-help">
+          一行一条：完整 <code>https://</code> origin、hostname、段内 <code>*</code> glob（如
+          <code>*.google.com</code>、<code>google.*</code>），或 <code>/pattern/flags</code> 正则（正文尽量不含未转义的
+          <code>/</code>）。两种语义与 Dark Reader 一致。
+        </p>
+        <div
+          class="policy-radios cd-segmented cd-segmented--2"
+          role="radiogroup"
+          aria-labelledby="site-list-legend"
+          aria-describedby="site-list-help"
+        >
+          <label class="policy-label">
+            <input type="radio" name="site-list-mode" value="not-invert-listed" checked />
+            <span>列表内不套用</span>
+          </label>
+          <label class="policy-label">
+            <input type="radio" name="site-list-mode" value="invert-listed-only" />
+            <span>仅列表内套用</span>
+          </label>
+        </div>
+        <label class="site-list-textarea-label" for="site-list-textarea">规则（每行一条）</label>
+        <textarea
+          id="site-list-textarea"
+          class="site-list-textarea"
+          rows="4"
+          spellcheck="false"
+          aria-label="站点列表规则"
+        ></textarea>
+      </fieldset>
+
+      <div class="cd-site-action">
+        <p class="hint" id="site-hint">加载中…</p>
+        <button type="button" class="site-btn" id="site-exemption" disabled aria-describedby="site-hint">
+          …
+        </button>
+      </div>
     </main>
     <script type="module" src="./main.ts"></script>
   </body>

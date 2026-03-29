@@ -2,7 +2,7 @@
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | Draft |
+| 状态 | Approved |
 | 任务 ID | **T-026** |
 | 参考 | [Dark Reader Help — Filter+ / Firefox](https://darkreader.org/help/en/) |
 
@@ -32,6 +32,17 @@
 
 - Chromium 手工；Firefox 验证降级分支。
 
+## Implementation（落地）
+
+| 项 | 说明 |
+|----|------|
+| 存储 | `change-dark:theme-mode` = `filter-plus`（与 RFC 012/013 互斥） |
+| SVG | `body` 末挂隐藏 `<svg><defs><filter id="cd-filter-plus-base">`：`feColorMatrix` 反相 + `feHueRotate` 180° |
+| CSS | `buildFilterPlusCss`：`filter: url(#cd-filter-plus-base) [RFC011 链]`；`img`/`picture`/`video`/`canvas` 与 **页面内联 `svg`（排除宿主 `#change-dark-filter-plus-svg`）** 再套 `url(#id)` |
+| 降级 | `navigator` 含 Firefox → 不暴露 Popup 单选，内容脚本走 RFC 013；`ensureFilterPlusSvg` 失败或异常 → 013 |
+| Popup | 「Filter+（SVG）」；非 Chromium 系 UA 禁用并 `title` 说明 |
+
 ## Decision log
 
 - 2026-03-29：独立 RFC。
+- 2026-03-29：实现 Approved。

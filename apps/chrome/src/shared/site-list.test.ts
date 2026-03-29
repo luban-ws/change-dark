@@ -1,9 +1,16 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-  isOriginInDenylist,
+  SITE_LIST_MODE_INVERT_LISTED_ONLY,
+  SITE_LIST_MODE_NOT_INVERT_LISTED,
+} from './constants'
+import {
+  globMatchHostname,
+  matchesSiteRule,
   normalizeHttpOriginFromUrl,
   parseSiteListState,
+  shouldApplyForcedDarkFromSiteList,
+  siteListRulesMatch,
   toggleDenylistOrigin,
 } from './site-list'
 
@@ -19,28 +26,85 @@ describe('normalizeHttpOriginFromUrl', () => {
   })
 })
 
-describe('parseSiteListState', () => {
-  it('空或非法为 []', () => {
-    expect(parseSiteListState(undefined).denylist).toEqual([])
-    expect(parseSiteListState({}).denylist).toEqual([])
-    expect(parseSiteListState({ denylist: 1 }).denylist).toEqual([])
+describe('parseSiteListState（RFC 017 迁移）', () => {
+  it('空或非法为默认 not-invert + 空 entries', () => {
+    expect(parseSiteListState(undefined).entries).toEqual([])
+    expect(parseSiteListState({}).entries).toEqual([])
+    expect(parseSiteListState({ denylist: 1 }).entries).toEqual([])
   })
 
-  it('去重并排序', () => {
+  it('遗留 denylist → entries + not-invert', () => {
     expect(
       parseSiteListState({
         denylist: ['https://z.com', 'https://a.com', 'https://a.com'],
-      }).denylist,
+      }).entries,
     ).toEqual(['https://a.com', 'https://z.com'])
+  })
+
+  it('v2 保留 mode 与 entries', () => {
+    const s = parseSiteListState({
+      v: 2,
+      mode: SITE_LIST_MODE_INVERT_LISTED_ONLY,
+      entries: ['https://a.com'],
+    })
+    expect(s.mode).toBe(SITE_LIST_MODE_INVERT_LISTED_ONLY)
+    expect(s.entries).toEqual(['https://a.com'])
+  })
+})
+
+describe('globMatchHostname', () => {
+  it('google.* 与 *.google.com', () => {
+    expect(globMatchHostname('google.*', 'google.com')).toBe(true)
+    expect(globMatchHostname('*.google.com', 'www.google.com')).toBe(true)
+    expect(globMatchHostname('*.google.com', 'google.com')).toBe(false)
+  })
+})
+
+describe('matchesSiteRule 与正则', () => {
+  it('斜杠正则 /www\\.google\\..*/', () => {
+    const origin = 'https://www.google.com'
+    const hostname = 'www.google.com'
+    expect(matchesSiteRule('/www\\.google\\..*/', origin, hostname)).toBe(true)
+  })
+})
+
+describe('shouldApplyForcedDarkFromSiteList', () => {
+  const origin = 'https://www.example.com'
+
+  it('not-invert：列表命中 → 不套用', () => {
+    const s = parseSiteListState({
+      v: 2,
+      mode: SITE_LIST_MODE_NOT_INVERT_LISTED,
+      entries: ['https://www.example.com'],
+    })
+    expect(shouldApplyForcedDarkFromSiteList(origin, s)).toBe(false)
+  })
+
+  it('invert-only：列表命中 → 套用', () => {
+    const s = parseSiteListState({
+      v: 2,
+      mode: SITE_LIST_MODE_INVERT_LISTED_ONLY,
+      entries: ['https://www.example.com'],
+    })
+    expect(shouldApplyForcedDarkFromSiteList(origin, s)).toBe(true)
+  })
+
+  it('glob 命中 not-invert', () => {
+    const s = parseSiteListState({
+      v: 2,
+      mode: SITE_LIST_MODE_NOT_INVERT_LISTED,
+      entries: ['*.example.com'],
+    })
+    expect(shouldApplyForcedDarkFromSiteList(origin, s)).toBe(false)
   })
 })
 
 describe('toggleDenylistOrigin', () => {
-  it('增删切换', () => {
+  it('增删精确 origin', () => {
     let s = parseSiteListState({ denylist: [] })
     s = toggleDenylistOrigin('https://x.com', s)
-    expect(isOriginInDenylist('https://x.com', s)).toBe(true)
+    expect(siteListRulesMatch('https://x.com', 'x.com', s.entries)).toBe(true)
     s = toggleDenylistOrigin('https://x.com', s)
-    expect(s.denylist).toEqual([])
+    expect(s.entries).toEqual([])
   })
 })
