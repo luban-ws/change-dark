@@ -69,6 +69,15 @@ import {
   type TypographySettingsV1,
   typographyStateToSettings,
 } from '../shared/typography'
+import qrCodeImgUrl from './qr-code.png'
+import {
+  POPUP_PANEL_MAIN_ID,
+  POPUP_PANEL_SUPPORT_ID,
+  POPUP_TAB_MAIN_BTN_ID,
+  POPUP_TAB_PANEL_INACTIVE_CLASS,
+  POPUP_TAB_SUPPORT_BTN_ID,
+} from './popup-tab-ids'
+import { BUY_ME_A_COFFEE_URL } from './support-constants'
 
 const POLICY_INPUT_NAME = 'policy'
 
@@ -573,7 +582,104 @@ function wireSiteButton(): void {
   })
 }
 
+/** 赞助链接与二维码资源：由常量与打包后的 URL 注入，避免 HTML 与代码两处维护。 */
+function wireSupportLinks(): void {
+  const link = document.getElementById('bmc-link') as HTMLAnchorElement | null
+  const img = document.getElementById('bmc-qr') as HTMLImageElement | null
+  if (link) link.href = BUY_ME_A_COFFEE_URL
+  if (img) img.src = qrCodeImgUrl
+}
+
+/** 「设置 / 支持」标签：默认设置页，支持页放二维码以压缩首屏高度。 */
+function wirePopupTabs(): void {
+  const tabMain = document.getElementById(POPUP_TAB_MAIN_BTN_ID) as HTMLButtonElement | null
+  const tabSupport = document.getElementById(POPUP_TAB_SUPPORT_BTN_ID) as HTMLButtonElement | null
+  const panelMain = document.getElementById(POPUP_PANEL_MAIN_ID)
+  const panelSupport = document.getElementById(POPUP_PANEL_SUPPORT_ID)
+  if (!tabMain || !tabSupport || !panelMain || !panelSupport) return
+
+  const selectMain = (): void => {
+    tabMain.setAttribute('aria-selected', 'true')
+    tabSupport.setAttribute('aria-selected', 'false')
+    tabMain.tabIndex = 0
+    tabSupport.tabIndex = -1
+    tabMain.classList.add('cd-tabs__tab--active')
+    tabSupport.classList.remove('cd-tabs__tab--active')
+    panelMain.classList.remove(POPUP_TAB_PANEL_INACTIVE_CLASS)
+    panelSupport.classList.add(POPUP_TAB_PANEL_INACTIVE_CLASS)
+    panelMain.removeAttribute('aria-hidden')
+    panelSupport.setAttribute('aria-hidden', 'true')
+    panelMain.removeAttribute('inert')
+    panelSupport.setAttribute('inert', '')
+  }
+
+  const selectSupport = (): void => {
+    tabMain.setAttribute('aria-selected', 'false')
+    tabSupport.setAttribute('aria-selected', 'true')
+    tabMain.tabIndex = -1
+    tabSupport.tabIndex = 0
+    tabMain.classList.remove('cd-tabs__tab--active')
+    tabSupport.classList.add('cd-tabs__tab--active')
+    panelMain.classList.add(POPUP_TAB_PANEL_INACTIVE_CLASS)
+    panelSupport.classList.remove(POPUP_TAB_PANEL_INACTIVE_CLASS)
+    panelMain.setAttribute('aria-hidden', 'true')
+    panelSupport.removeAttribute('aria-hidden')
+    panelMain.setAttribute('inert', '')
+    panelSupport.removeAttribute('inert')
+  }
+
+  tabMain.addEventListener('click', () => {
+    selectMain()
+    tabMain.focus()
+  })
+  tabSupport.addEventListener('click', () => {
+    selectSupport()
+    tabSupport.focus()
+  })
+
+  tabMain.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      selectSupport()
+      tabSupport.focus()
+    }
+  })
+  tabSupport.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      selectMain()
+      tabMain.focus()
+    }
+  })
+}
+
+/** 内容区高度取两 tab 的较大 scrollHeight，避免切换时扩展 popup 被 Chrome 压扁再拉高。 */
+function wirePopupTabStackHeight(): void {
+  const stack = document.querySelector('.cd-tab-panels-stack') as HTMLElement | null
+  const main = document.getElementById(POPUP_PANEL_MAIN_ID)
+  const sup = document.getElementById(POPUP_PANEL_SUPPORT_ID)
+  if (!stack || !main || !sup) return
+
+  const sync = (): void => {
+    const h = Math.max(main.scrollHeight, sup.scrollHeight)
+    if (h > 0) stack.style.minHeight = `${h}px`
+  }
+
+  sync()
+  requestAnimationFrame(() => {
+    sync()
+    requestAnimationFrame(sync)
+  })
+
+  const ro = new ResizeObserver(sync)
+  ro.observe(main)
+  ro.observe(sup)
+}
+
 async function init(): Promise<void> {
+  wireSupportLinks()
+  wirePopupTabs()
+  wirePopupTabStackHeight()
   try {
     const policy = await readGlobalPolicy()
     setCheckedPolicy(policy)

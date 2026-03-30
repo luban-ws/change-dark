@@ -24,6 +24,8 @@
   --cd-popup-focus: #2aa198;
   --cd-popup-scrollbar-track: #001f27;
   --cd-popup-scrollbar-thumb: #586e75;
+  /** 「支持」标签咖啡图标选中色（略偏暖，呼应赞助 / Buy Me a Coffee） */
+  --cd-tab-support-icon-active: #e9c46a;
 }
 
 *,
@@ -122,6 +124,136 @@ body.cd-popup-body {
   margin: 4px 0 0;
   font-size: 12px;
   line-height: 1.45;
+  color: var(--cd-popup-muted);
+}
+
+/* 标签页：默认「设置」占满高度，「支持」另页展示二维码，避免首屏过长 */
+.cd-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-3);
+  min-width: 0;
+}
+
+.cd-tabs__list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0;
+  padding: 2px;
+  border-radius: var(--cd-radius-sm);
+  background: var(--cd-popup-surface-deep);
+  border: 1px solid var(--cd-popup-border);
+}
+
+.cd-tabs__tab {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 9px 10px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cd-popup-muted);
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--cd-radius-sm) - 2px);
+  cursor: pointer;
+  transition:
+    background var(--cd-duration) var(--cd-ease),
+    color var(--cd-duration) var(--cd-ease);
+}
+
+.cd-tabs__tab-icon {
+  flex-shrink: 0;
+  display: block;
+  opacity: 0.9;
+}
+
+.cd-tabs__tab-label {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 支持 tab：咖啡杯略提亮，与 Buy Me a Coffee 页气质一致 */
+.cd-tabs__tab-icon--support {
+  opacity: 1;
+}
+
+.cd-tabs__tab--active .cd-tabs__tab-icon--support {
+  color: var(--cd-tab-support-icon-active);
+}
+
+.cd-tabs__tab:hover {
+  color: var(--cd-popup-fg-soft);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.cd-tabs__tab--active,
+.cd-tabs__tab[aria-selected='true'] {
+  color: var(--cd-popup-fg);
+  background: var(--cd-popup-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.cd-tabs__tab--active .cd-tabs__tab-icon:not(.cd-tabs__tab-icon--support) {
+  color: var(--cd-popup-accent);
+}
+
+.cd-tabs__tab:focus-visible {
+  outline: 2px solid var(--cd-popup-focus);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* 两层面板叠在同一格：`visibility:hidden` 的面板仍占位，弹窗高度 = max(设置, 支持)，切 tab 不缩高 */
+.cd-tab-panels-stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  min-width: 0;
+}
+
+.cd-tab-panel {
+  grid-area: 1 / 1;
+  align-self: start;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--cd-space-3);
+}
+
+.cd-tab-panel--inactive {
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cd-support-panel {
+  margin: 0;
+  padding: 0;
+}
+
+.cd-support-panel__title {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--cd-popup-fg);
+}
+
+.cd-support-panel__help {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.55;
   color: var(--cd-popup-muted);
 }
 
@@ -613,13 +745,53 @@ fieldset.cd-panel {
   outline-offset: 3px;
 }
 
+/* Buy Me a Coffee：白底块便于手机扫码；尺寸不宜过小以免无法识别。 */
+.cd-support-panel .bmc-link {
+  display: inline-block;
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cd-popup-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cd-support-panel .bmc-link:hover {
+  color: var(--cd-popup-focus);
+}
+
+.cd-support-panel .bmc-link:focus-visible {
+  outline: 2px solid var(--cd-popup-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.bmc-qr-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 12px;
+  background: #fdfdfd;
+  border: 1px solid var(--cd-popup-border);
+  border-radius: var(--cd-radius-sm);
+}
+
+.bmc-qr {
+  width: 160px;
+  height: auto;
+  max-width: 100%;
+  display: block;
+  border-radius: 4px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cd-segmented .policy-label,
   .site-btn,
   .clear-override-btn,
   .cd-details-summary,
   .cd-details-summary::before,
-  .cd-radio-list .cd-radio-row {
+  .cd-radio-list .cd-radio-row,
+  .cd-tabs__tab {
     transition-duration: 0.01ms !important;
   }
 }

@@ -30,6 +30,80 @@
         </div>
       </header>
 
+      <div class="cd-tabs">
+        <div class="cd-tabs__list" role="tablist" aria-label="弹窗分区">
+          <button
+            type="button"
+            class="cd-tabs__tab cd-tabs__tab--active"
+            id="tab-main"
+            role="tab"
+            aria-selected="true"
+            aria-controls="panel-main"
+            tabindex="0"
+          >
+            <svg
+              class="cd-tabs__tab-icon"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <line x1="4" x2="4" y1="21" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="4" x2="4" y1="10" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="12" x2="12" y1="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="12" x2="12" y1="8" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="20" x2="20" y1="21" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="20" x2="20" y1="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="1" x2="7" y1="14" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="9" x2="15" y1="8" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="17" x2="23" y1="16" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="cd-tabs__tab-label">设置</span>
+          </button>
+          <button
+            type="button"
+            class="cd-tabs__tab"
+            id="tab-support"
+            role="tab"
+            aria-selected="false"
+            aria-controls="panel-support"
+            tabindex="-1"
+          >
+            <svg
+              class="cd-tabs__tab-icon cd-tabs__tab-icon--support"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M17 8h1a4 4 0 1 1 0 8h-1"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <line x1="6" x2="6" y1="2" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="10" x2="10" y1="2" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              <line x1="14" x2="14" y1="2" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <span class="cd-tabs__tab-label">支持</span>
+          </button>
+        </div>
+
+        <div class="cd-tab-panels-stack">
+        <div id="panel-main" class="cd-tab-panel" role="tabpanel" aria-labelledby="tab-main">
       <fieldset class="cd-panel policy-fieldset">
         <legend id="policy-legend">全局开关</legend>
         <p class="policy-help" id="policy-help">
@@ -286,6 +360,45 @@
         <button type="button" class="site-btn" id="site-exemption" disabled aria-describedby="site-hint">
           …
         </button>
+      </div>
+        </div>
+
+        <div
+          id="panel-support"
+          class="cd-tab-panel cd-tab-panel--inactive"
+          role="tabpanel"
+          aria-labelledby="tab-support"
+          aria-hidden="true"
+          inert
+        >
+          <section class="cd-support-panel" aria-labelledby="support-heading">
+            <p class="cd-support-panel__title" id="support-heading">支持作者</p>
+            <p class="cd-support-panel__help" id="support-help">
+              若本扩展对你有帮助，可扫码或点击下方链接在 Buy Me a Coffee 上支持维护。
+            </p>
+            <a
+              class="bmc-link"
+              id="bmc-link"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-describedby="support-help"
+            >
+              在 Buy Me a Coffee 上支持
+            </a>
+            <div class="bmc-qr-wrap">
+              <img
+                id="bmc-qr"
+                class="bmc-qr"
+                alt="Buy Me a Coffee 二维码，扫码打开赞助页"
+                width="160"
+                height="160"
+                decoding="async"
+              />
+            </div>
+          </section>
+        </div>
+        </div>
       </div>
     </main>
     <script type="module" src="./main.ts"></script>
