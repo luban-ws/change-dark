@@ -8,3 +8,4 @@ packages/dark-engine/dist
 packages/dark-color-utils/dist
 packages/**/target
 apps/chrome/dev
+apps/chrome/change-dark-extension.zip

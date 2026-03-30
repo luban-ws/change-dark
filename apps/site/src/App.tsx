@@ -263,6 +263,10 @@ export function App() {
             <a href={rfcLink(repo, repoUrl, 'docs/rfc/020-github-pages-site.md')} rel="noreferrer" target="_blank">
               RFC 020
             </a>
+            {' · '}
+            <a href={`${base}privacy.html`} rel="noreferrer">
+              隐私政策 / Privacy
+            </a>
           </p>
         </footer>
       </main>

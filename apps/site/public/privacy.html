@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy policy — 嫦娥 Change Dark</title>
+    <meta
+      name="description"
+      content="Privacy policy and Chrome Web Store Limited Use disclosure for 嫦娥 Change Dark (local processing, no developer servers for core features)."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f1419;
+        --fg: #e6edf3;
+        --muted: #8b949e;
+        --accent: #58a6ff;
+        --border: #30363d;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font:
+          16px/1.6 system-ui,
+          -apple-system,
+          'Segoe UI',
+          sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        padding: 2rem 1.25rem 3rem;
+        max-width: 44rem;
+        margin-inline: auto;
+      }
+      a {
+        color: var(--accent);
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin-top: 0;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin-top: 2rem;
+        border-top: 1px solid var(--border);
+        padding-top: 1.25rem;
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+      }
+      ul {
+        padding-left: 1.25rem;
+      }
+      .zh {
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+      .note {
+        font-size: 0.9rem;
+        color: var(--muted);
+        border-left: 3px solid var(--accent);
+        padding-left: 1rem;
+        margin: 1rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <p><a href="./">← Project site / 落地页</a></p>
+    <h1>Privacy policy — 嫦娥 / Change Dark</h1>
+    <p class="meta">
+      <strong>Effective date:</strong> 2026-03-30 ·
+      <strong>Operator:</strong> open-source project <strong>luban-ws/change-dark</strong> (see repository
+      <a href="https://github.com/luban-ws/change-dark" rel="noopener noreferrer">on GitHub</a>) ·
+      <strong>Contact / support:</strong>
+      <a href="https://github.com/luban-ws/change-dark/issues" rel="noopener noreferrer">GitHub Issues</a>
+    </p>
+    <p class="zh">
+      本政策适用于 Chromium 系浏览器中的「嫦娥 Change Dark」扩展；须与 Chrome 网上应用店开发者后台「隐私权实践」勾选及说明保持一致。如有冲突，以实际扩展行为与本页及后台披露为准。
+    </p>
+
+    <h2>1. What this extension does</h2>
+    <p>
+      Change Dark is a <strong>Manifest V3</strong> extension with a <strong>single user-facing purpose</strong>:
+      to apply <strong>forced dark appearance</strong> and related readability options (theme modes, filters,
+      typography, optional per-site CSS) on websites, according to settings chosen in the popup / options UI.
+    </p>
+
+    <h2>2. Data we process (and how)</h2>
+    <ul>
+      <li>
+        <strong>Extension settings</strong> — Stored locally with the <code>chrome.storage</code> API (e.g. global
+        on/off, theme mode, filter values, site list patterns, per-site overrides). Not transmitted to servers
+        operated by the publisher for core functionality.
+      </li>
+      <li>
+        <strong>Tab and page context</strong> — The active tab’s <strong>URL / origin</strong> may be read so the
+        popup, toolbar actions, and keyboard shortcuts can apply rules to the page you are viewing. This matches the
+        behavior described in the Chrome Web Store listing and in-product UI.
+      </li>
+      <li>
+        <strong>Page-derived information for theming (Dynamic mode)</strong> — To compute dark theme colors, the
+        content script reads <strong>computed style information</strong> (such as background colors) from elements in
+        the page, within documented sampling budgets. Processing runs <strong>in your browser</strong> (including
+        WebAssembly). It is <strong>not</strong> sent to the publisher’s servers as part of that feature.
+      </li>
+    </ul>
+    <p class="note">
+      Under the Chrome Web Store <a href="https://developer.chrome.com/docs/webstore/program-policies/user-data-faq">User Data FAQ</a>, this type of on-page processing can constitute handling of
+      <strong>sensitive user data categories</strong> (e.g. website content/resources). This policy and the
+      Developer Dashboard disclosures describe that handling transparently.
+    </p>
+
+    <h2>3. Data we do not sell; transfers</h2>
+    <p>
+      We do <strong>not</strong> sell personal information. We do <strong>not</strong> use or share user data for
+      personalized, re-targeted, or interest-based advertising. We do not operate the core extension atop a
+      first-party login or account database.
+    </p>
+    <p>
+      If you open an external link from the optional <strong>support / “Buy Me a Coffee”</strong> section in the popup,
+      you leave the extension UI; that site’s terms and privacy policy apply.
+    </p>
+
+    <h2>4. Limited use of user data (Chrome Web Store)</h2>
+    <p>
+      The publisher complies with the Chrome Web Store
+      <a href="https://developer.chrome.com/docs/webstore/program-policies/limited-use">Limited Use of user data</a>
+      requirements. In particular:
+    </p>
+    <ul>
+      <li>
+        <strong>Allowed use</strong> — Permissions and data access are used only to provide or improve this
+        extension’s <strong>single-purpose, user-facing</strong> forced-dark and related UI features described in the
+        store listing and the extension itself.
+      </li>
+      <li>
+        <strong>Allowed transfer</strong> — Any transfer of user data would be limited to what is necessary to
+        provide that functionality, to comply with law, for security (e.g. abuse investigation), or as part of a
+        permitted transaction of assets—consistent with Google’s Limited Use policy. The extension’s normal operation
+        does not transmit your browsing or page content to the publisher’s backend for theming.
+      </li>
+      <li>
+        <strong>Prohibited advertising</strong> — No use of user data for personalized or interest-based ads.
+      </li>
+      <li>
+        <strong>Prohibited human interaction</strong> — No routine human access to identifiable user browsing
+        content; any support would follow policy exceptions (e.g. explicit consent for a specific support case).
+      </li>
+    </ul>
+
+    <h2>5. Permissions (alignment with Chrome disclosure)</h2>
+    <ul>
+      <li>
+        <code>storage</code> — Persist your settings locally.
+      </li>
+      <li>
+        <code>&lt;all_urls&gt;</code> (host permission) — Inject the content script and apply styles on http(s) pages
+        you visit, according to your configuration; also allows reading sensitive tab properties (such as URL) for
+        matching tabs when required by the extension APIs, as explained in
+        <a href="https://developer.chrome.com/docs/extensions/reference/api/tabs#permissions">Chrome’s tabs permission documentation</a>.
+      </li>
+    </ul>
+    <p class="zh">上架时「权限理由」须与本节一致；若将来缩减主机模式，请同步更新 manifest 与本页。</p>
+
+    <h2>6. Remote code</h2>
+    <p>
+      The published package does <strong>not</strong> execute remotely hosted JavaScript logic: WebAssembly and
+      scripts are bundled with the extension package, consistent with
+      <a href="https://developer.chrome.com/docs/webstore/program-policies/mv3-requirements">Manifest V3 requirements</a>.
+    </p>
+
+    <h2>7. Security</h2>
+    <p>
+      Settings are stored using the browser’s extension storage APIs. If any future version transmits personal or
+      sensitive user data off-device, such transmission would use modern transport security (e.g. HTTPS) as required
+      by applicable Chrome program policies.
+    </p>
+
+    <h2>8. Children</h2>
+    <p>
+      The extension is general-purpose desktop browser software; it is not specifically directed at children under 13.
+    </p>
+
+    <h2>9. Changes</h2>
+    <p>
+      This policy may be updated when behavior or legal requirements change. The effective date at the top will be
+      revised. Continued use after updates constitutes acceptance of the revised policy where permitted by law.
+    </p>
+
+    <h2>10. Open-source license</h2>
+    <p>
+      The project source is offered under the <strong>MIT License</strong> (see the
+      <a href="https://github.com/luban-ws/change-dark/blob/main/LICENSE" rel="noopener noreferrer">LICENSE</a> file
+      in the repository). Third-party dependencies have their own licenses.
+    </p>
+    <p class="zh">上一段仓库地址若换域名，请改为当前默认分支下的 LICENSE。</p>
+  </body>
+</html>

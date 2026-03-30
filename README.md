@@ -73,6 +73,7 @@ pnpm --filter @luban-ws/site dev   # 仅预览落地页
 | [RFC 023](docs/rfc/023-dynamic-color-engine-pipeline.md) | Dynamic 配色管线（采样 / 聚合语义） |
 | [TASK_TRACKING.md](TASK_TRACKING.md) | 任务 ID 与 RFC 对应 |
 | [RFC 021](docs/rfc/021-project-status-and-backlog.md) | 状态快照与 backlog（元文档） |
+| [docs/chrome-web-store-listing.md](docs/chrome-web-store-listing.md) | Chrome 网上应用店：隐私 URL、权限说明英文稿、打包 ZIP |
 
 ## 打包说明（与实现一致）
 
@@ -87,4 +88,4 @@ Scope：**`@luban-ws/*`**。
 
 ## License
 
-仓库若尚未包含 `LICENSE` 文件，发布或分发前请自行补充许可条款。
+本仓库默认以根目录 [LICENSE](LICENSE)（MIT）为准；分发或上架前请确认与第三方依赖许可兼容。

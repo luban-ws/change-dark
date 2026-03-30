@@ -5,15 +5,23 @@ import {
   COMMAND_TOGGLE_CURRENT_SITE,
   COMMAND_TOGGLE_GLOBAL,
 } from './src/shared/constants'
+import { CWS_HOMEPAGE_URL, CWS_SHORT_DESCRIPTION } from './src/store-listing-meta'
 
 /** MV3 清单：全站内容脚本 + storage，用于嫦娥暗色模式开关。 */
 export default defineManifest({
   manifest_version: 3,
   name: '嫦娥 Change Dark',
   version: pkg.version,
-  description:
-    '为不支持暗色模式的站点强制暗色；核心计算在 Rust/WASM 中完成以减轻主线程压力。',
-  permissions: ['storage', 'activeTab', 'tabs'],
+  description: CWS_SHORT_DESCRIPTION,
+  homepage_url: CWS_HOMEPAGE_URL,
+  icons: {
+    '16': 'icons/icon-16.png',
+    '32': 'icons/icon-32.png',
+    '48': 'icons/icon-48.png',
+    '128': 'icons/icon-128.png',
+  },
+  /** 仅 `storage`：`tabs` / `activeTab` 在已声明 `<all_urls>` 主机权限时属冗余，避免「过度权限」拒审。 */
+  permissions: ['storage'],
   host_permissions: ['<all_urls>'],
   commands: {
     [COMMAND_TOGGLE_GLOBAL]: {
@@ -34,6 +42,10 @@ export default defineManifest({
   action: {
     default_title: '嫦娥 Change Dark',
     default_popup: 'src/popup/index.html',
+    default_icon: {
+      '16': 'icons/icon-16.png',
+      '32': 'icons/icon-32.png',
+    },
   },
   /** 与 popup 同页，便于在新标签页中编辑长表单（RFC 007 渐进 options）。 */
   options_ui: {
