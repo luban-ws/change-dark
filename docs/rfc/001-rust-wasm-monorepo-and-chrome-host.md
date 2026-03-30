@@ -84,9 +84,9 @@ Content script (TS) ──import──▶ dark_engine.js / .wasm
 |----|------|------|
 | T-001 | 维护 RFC 001 与 ROADMAP / TASK_TRACKING 一致 | Done |
 | T-002 | CI：`rust-toolchain.toml` + `wasm32` + Turbo / cargo 缓存 | Done |
-| T-003 | 后续能力：**一事一 RFC**，见 [RFC 目录](./README.md) **004–019** | Done |
+| T-003 | 后续能力：**一事一 RFC**，见 [ROADMAP](../../ROADMAP.md) **RFC 索引**（004–019） | Done |
 
 ## Decision log
 
 - 2026-03-29：初稿，对应已实现 monorepo + WASM + MV3 骨架。
-- 2026-03-29：**Approved**；T-001～T-003 收口，CI 工作流落地；功能规格见 **[RFC 目录](./README.md)** 中单篇 RFC。
+- 2026-03-29：**Approved**；T-001～T-003 收口，CI 工作流落地；功能规格见 **[ROADMAP](../../ROADMAP.md)**「RFC 索引」所列单篇 RFC。

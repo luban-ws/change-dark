@@ -1,6 +1,6 @@
 # Task tracking — 嫦娥 / Change Dark
 
-**一事一 RFC**：每个任务对应一篇 RFC（[目录](./docs/rfc/README.md)）。不设伞形索引文件。
+**一事一 RFC**：每个任务对应一篇 RFC；**索引与编号**见 [ROADMAP.md](./ROADMAP.md) 中的「RFC 索引」一节。
 
 ## RFC 001（基线）
 

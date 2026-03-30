@@ -53,12 +53,12 @@
 
 | 风险 | 缓解 |
 |------|------|
-| 本文滞后于主分支 | 重大里程碑或新增 RFC 时更新本文与 [README](./README.md) 下一编号 |
+| 本文滞后于主分支 | 重大里程碑或新增 RFC 时更新本文与 [ROADMAP](../../ROADMAP.md) 中「RFC 索引」下一编号 |
 | 与功能 RFC 表述冲突 | 以具体功能 RFC + `storage`/代码为准 |
 
 ## Testing
 
-- 人工：对照 `TASK_TRACKING.md`、`ROADMAP.md` 与 `docs/rfc/README.md` 表格一致性。
+- 人工：对照 `TASK_TRACKING.md` 与 `ROADMAP.md`（含 RFC 索引表）一致性。
 
 ## Decision log
 
