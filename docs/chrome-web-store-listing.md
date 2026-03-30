@@ -22,7 +22,7 @@
 | 字段 | 要求 | 本项目 |
 |------|------|--------|
 | `name` | 有意义、不误导 | `嫦娥 Change Dark` |
-| `version' | 每次上传必须大于上一版；建议早期可用小号版本 | `package.json` / manifest 同步 |
+| `version` | 每次上传必须大于上一版；建议早期可用小号版本 | `package.json` / manifest 同步 |
 | `icons` | 含多尺寸；ZIP 内路径有效 | `icons/icon-16.png` … `icon-128.png` |
 | `description` | **≤ 132 字符**（超出会导致无法解析等问题） | 见 `manifest.config.ts` 英文摘要 |
 | 注释 | 上传的 JSON **不得含注释** | 由构建生成，无注释 |
@@ -117,6 +117,8 @@
 ---
 
 ## 7. 构建与 ZIP
+
+**后台点「上传」之前的具体操作顺序（账号、首次创建商品、更新版本）见 [chrome-web-store-publish.md](./chrome-web-store-publish.md)。**
 
 ```bash
 pnpm install

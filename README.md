@@ -73,7 +73,8 @@ pnpm --filter @luban-ws/site dev   # 仅预览落地页
 | [RFC 023](docs/rfc/023-dynamic-color-engine-pipeline.md) | Dynamic 配色管线（采样 / 聚合语义） |
 | [TASK_TRACKING.md](TASK_TRACKING.md) | 任务 ID 与 RFC 对应 |
 | [RFC 021](docs/rfc/021-project-status-and-backlog.md) | 状态快照与 backlog（元文档） |
-| [docs/chrome-web-store-listing.md](docs/chrome-web-store-listing.md) | Chrome 网上应用店：隐私 URL、权限说明英文稿、打包 ZIP |
+| [docs/chrome-web-store-listing.md](docs/chrome-web-store-listing.md) | Chrome 网上应用店：政策对齐、隐私 URL、权限英文稿、素材规格、ZIP 说明 |
+| [docs/chrome-web-store-publish.md](docs/chrome-web-store-publish.md) | **发布步骤**：开发者账号、`pack`、后台上传/更新、（可选）Publish API |
 
 ## 打包说明（与实现一致）
 
