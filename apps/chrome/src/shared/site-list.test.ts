@@ -6,6 +6,7 @@ import {
 } from './constants'
 import {
   globMatchHostname,
+  hostnameLabelFromHttpOrigin,
   matchesSiteRule,
   normalizeHttpOriginFromUrl,
   parseSiteListState,
@@ -13,6 +14,14 @@ import {
   siteListRulesMatch,
   toggleDenylistOrigin,
 } from './site-list'
+
+describe('hostnameLabelFromHttpOrigin', () => {
+  it('从 http(s) origin 得到 hostname', () => {
+    expect(hostnameLabelFromHttpOrigin('https://sub.example.com')).toBe('sub.example.com')
+    expect(hostnameLabelFromHttpOrigin('http://localhost:3000')).toBe('localhost')
+    expect(hostnameLabelFromHttpOrigin('https://a.co:8443')).toBe('a.co')
+  })
+})
 
 describe('normalizeHttpOriginFromUrl', () => {
   it('仅 http/https 返回 origin', () => {

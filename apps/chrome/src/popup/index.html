@@ -130,6 +130,35 @@
         </div>
       </fieldset>
 
+      <fieldset class="cd-panel cd-current-site-fieldset" aria-labelledby="site-quick-legend">
+        <legend id="site-quick-legend">此站强制暗色</legend>
+        <p class="cd-current-site-lead" id="site-quick-lead">
+          当前域名在左侧；点击右侧开关切换此站是否套用强制暗色。仍写入下方站点列表中的精确 origin，与列表模式一致。
+        </p>
+        <div class="cd-current-site-row">
+          <div class="cd-current-site-meta">
+            <div class="cd-current-site-host" id="site-current-host" title="">加载中…</div>
+            <p class="cd-current-site-hint hint" id="site-hint"></p>
+          </div>
+          <div class="cd-current-site-control">
+            <span class="cd-current-site-switch-caption" id="site-switch-caption" aria-hidden="true">暗色</span>
+            <button
+              type="button"
+              class="cd-site-switch"
+              id="site-list-toggle"
+              role="switch"
+              aria-checked="false"
+              disabled
+              aria-describedby="site-hint site-quick-lead"
+            >
+              <span class="cd-site-switch__track" aria-hidden="true">
+                <span class="cd-site-switch__thumb"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </fieldset>
+
       <fieldset class="cd-panel only-for-fieldset">
         <legend id="only-for-legend">仅当前站（RFC 016）</legend>
         <p class="theme-mode-help" id="only-for-help">
@@ -158,17 +187,17 @@
       <fieldset class="cd-panel theme-mode-fieldset">
         <legend id="theme-mode-legend">主题模式</legend>
         <p class="theme-mode-lead" id="theme-mode-help">
-          Dynamic / Static 使用 WASM 着色；Filter 类为整页反相。滤镜链顺序见下方滑块。
+          默认使用 <strong>Filter</strong>（整页 CSS 反相）。<strong>Dynamic / Static</strong> 为实验性 WASM 路径；滤镜链顺序见下方滑块。
         </p>
         <details class="cd-details" id="theme-mode-details">
           <summary class="cd-details-summary">各模式说明</summary>
           <div class="cd-details-body">
             <p>
-              <strong>Dynamic</strong>：采样页面背景色 + k-means + WASM 混合。<strong>Static</strong>：固定基色、无采样、更省资源。
+              <strong>Filter</strong> / <strong>Filter+</strong>：整页反相；Filter+ 在 Chromium 上常用 SVG
+              滤镜，Firefox 等会降级为 CSS Filter。大页更耗性能；已偏暗的站点可能被提亮。跨域 iframe 内无法注入。
             </p>
             <p>
-              <strong>Filter（CSS）</strong> / <strong>Filter+（SVG）</strong>：整页反相；Filter+ 在 Chromium 上通常更稳，Firefox 会降级为 CSS
-              Filter。大页更耗性能；已偏暗的站点可能被提亮。跨域 iframe 内无法注入。
+              <strong>Dynamic（实验性）</strong>：采样背景色 + k-means + WASM。<strong>Static（实验性）</strong>：固定基色、无采样、更省资源。
             </p>
           </div>
         </details>
@@ -179,24 +208,10 @@
           aria-describedby="theme-mode-help theme-mode-details"
         >
           <label class="policy-label cd-radio-row">
-            <input type="radio" name="theme-mode" value="dynamic" checked />
+            <input type="radio" name="theme-mode" value="filter-css" checked />
             <span class="cd-radio-row__text">
-              <span class="cd-radio-row__title">Dynamic</span>
-              <span class="cd-radio-row__hint">采样 + WASM</span>
-            </span>
-          </label>
-          <label class="policy-label cd-radio-row">
-            <input type="radio" name="theme-mode" value="static" />
-            <span class="cd-radio-row__text">
-              <span class="cd-radio-row__title">Static</span>
-              <span class="cd-radio-row__hint">固定基色</span>
-            </span>
-          </label>
-          <label class="policy-label cd-radio-row">
-            <input type="radio" name="theme-mode" value="filter-css" />
-            <span class="cd-radio-row__text">
-              <span class="cd-radio-row__title">Filter（CSS）</span>
-              <span class="cd-radio-row__hint">整页反相</span>
+              <span class="cd-radio-row__title">Filter</span>
+              <span class="cd-radio-row__hint">整页 CSS 反相（默认）</span>
             </span>
           </label>
           <label class="policy-label cd-radio-row" id="theme-mode-filter-plus-label">
@@ -207,8 +222,22 @@
               id="theme-mode-filter-plus-input"
             />
             <span class="cd-radio-row__text">
-              <span class="cd-radio-row__title">Filter+（SVG）</span>
-              <span class="cd-radio-row__hint">Chromium 优先</span>
+              <span class="cd-radio-row__title">Filter+</span>
+              <span class="cd-radio-row__hint">SVG 滤镜，Chromium 优先</span>
+            </span>
+          </label>
+          <label class="policy-label cd-radio-row">
+            <input type="radio" name="theme-mode" value="dynamic" />
+            <span class="cd-radio-row__text">
+              <span class="cd-radio-row__title">Dynamic（实验性）</span>
+              <span class="cd-radio-row__hint">采样 + WASM</span>
+            </span>
+          </label>
+          <label class="policy-label cd-radio-row">
+            <input type="radio" name="theme-mode" value="static" />
+            <span class="cd-radio-row__text">
+              <span class="cd-radio-row__title">Static（实验性）</span>
+              <span class="cd-radio-row__hint">固定基色</span>
             </span>
           </label>
         </div>
@@ -217,7 +246,7 @@
       <fieldset class="cd-panel page-palette-fieldset">
         <legend id="page-palette-legend">页面配色</legend>
         <p class="theme-mode-help" id="page-palette-help">
-          作用于 Dynamic / Static 的底色与字色；Solarized 为固定 base03/base1。Filter 类模式不改编页色，仅统一滚动条风格。
+          作用于 Dynamic（实验性）/ Static（实验性）的底色与字色；Solarized 为固定 base03/base1。Filter / Filter+ 不改编页色，仅统一滚动条风格。
         </p>
         <div
           class="policy-radios cd-segmented cd-segmented--2"
@@ -354,13 +383,6 @@
           aria-label="站点列表规则"
         ></textarea>
       </fieldset>
-
-      <div class="cd-site-action">
-        <p class="hint" id="site-hint">加载中…</p>
-        <button type="button" class="site-btn" id="site-exemption" disabled aria-describedby="site-hint">
-          …
-        </button>
-      </div>
         </div>
 
         <div

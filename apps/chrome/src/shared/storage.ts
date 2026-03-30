@@ -165,7 +165,7 @@ export async function persistThemeFiltersState(state: ThemeFiltersStateV1): Prom
   })
 }
 
-/** RFC 012：当前主题模式（默认 Dynamic）。 */
+/** RFC 012 / 013：当前主题模式（未写入时由 `parseThemeMode` 默认为 Filter / `filter-css`）。 */
 export async function readThemeMode(): Promise<ThemeMode> {
   const snap = await chrome.storage.local.get([...THEME_MODE_KEYS])
   return parseThemeMode(snap[STORAGE_KEY_THEME_MODE])

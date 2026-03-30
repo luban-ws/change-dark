@@ -16,20 +16,20 @@ describe('RFC 012 / 013 / 014 — parseThemeMode', () => {
     expect(parseThemeMode(THEME_MODE_FILTER_PLUS)).toBe(THEME_MODE_FILTER_PLUS)
   })
 
-  it('未知或缺失时默认 Dynamic（与历史单一路径一致）', () => {
-    expect(parseThemeMode(undefined)).toBe(THEME_MODE_DYNAMIC)
-    expect(parseThemeMode(null)).toBe(THEME_MODE_DYNAMIC)
-    expect(parseThemeMode('')).toBe(THEME_MODE_DYNAMIC)
-    expect(parseThemeMode('filter-plus-svg')).toBe(THEME_MODE_DYNAMIC)
-    expect(parseThemeMode(1)).toBe(THEME_MODE_DYNAMIC)
+  it('未知或缺失时默认 Filter（CSS）', () => {
+    expect(parseThemeMode(undefined)).toBe(THEME_MODE_FILTER_CSS)
+    expect(parseThemeMode(null)).toBe(THEME_MODE_FILTER_CSS)
+    expect(parseThemeMode('')).toBe(THEME_MODE_FILTER_CSS)
+    expect(parseThemeMode('filter-plus-svg')).toBe(THEME_MODE_FILTER_CSS)
+    expect(parseThemeMode(1)).toBe(THEME_MODE_FILTER_CSS)
   })
 
   it('ALL_THEME_MODES 与常量枚举一致', () => {
     expect(ALL_THEME_MODES).toEqual([
-      THEME_MODE_DYNAMIC,
-      THEME_MODE_STATIC,
       THEME_MODE_FILTER_CSS,
       THEME_MODE_FILTER_PLUS,
+      THEME_MODE_DYNAMIC,
+      THEME_MODE_STATIC,
     ])
   })
 })

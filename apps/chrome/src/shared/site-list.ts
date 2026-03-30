@@ -163,6 +163,13 @@ export function toggleDenylistOrigin(origin: string, state: SiteListStateV2): Si
 }
 
 /**
+ * Popup 等 UI 展示用主机名（参数宜为 `normalizeHttpOriginFromUrl` 得到的 http(s) origin）。
+ */
+export function hostnameLabelFromHttpOrigin(origin: string): string {
+  return originToHostname(origin)
+}
+
+/**
  * 从标签页 URL 得到可用于列表的 `origin`；仅 `http`/`https`。
  */
 export function normalizeHttpOriginFromUrl(urlStr: string): string | null {

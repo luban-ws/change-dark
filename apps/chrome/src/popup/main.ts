@@ -23,6 +23,7 @@ import { shouldExposeFilterPlusMode } from '../shared/filter-plus-svg'
 import { parseGlobalPolicy } from '../shared/migration'
 import {
   MAX_SITE_LIST_ENTRIES,
+  hostnameLabelFromHttpOrigin,
   normalizeHttpOriginFromUrl,
   shouldApplyForcedDarkFromSiteList,
 } from '../shared/site-list'
@@ -70,6 +71,11 @@ import {
   typographyStateToSettings,
 } from '../shared/typography'
 import qrCodeImgUrl from './qr-code.png'
+import {
+  POPUP_SITE_HOST_ID,
+  POPUP_SITE_HINT_ID,
+  POPUP_SITE_LIST_TOGGLE_ID,
+} from './popup-current-site-ids'
 import {
   POPUP_PANEL_MAIN_ID,
   POPUP_PANEL_SUPPORT_ID,
@@ -237,43 +243,64 @@ function wireSiteListPanel(): void {
   }
 }
 
+/**
+ * 刷新「此站强制暗色」：开关位置与列表规则一致（仍读写禁用 / 白名单列表），
+ * 界面只强调域名 + 暗色开关，避免「开 / 关」字样。
+ */
 async function refreshSiteButton(): Promise<void> {
-  const btn = document.getElementById('site-exemption') as HTMLButtonElement | null
-  const hint = document.getElementById('site-hint')
+  const btn = document.getElementById(POPUP_SITE_LIST_TOGGLE_ID) as HTMLButtonElement | null
+  const hint = document.getElementById(POPUP_SITE_HINT_ID)
+  const hostEl = document.getElementById(POPUP_SITE_HOST_ID)
   if (!btn) return
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
     const url = tab?.url
     const origin = url ? normalizeHttpOriginFromUrl(url) : null
     cachedHttpOrigin = origin
+    const policy = await readGlobalPolicy()
+    const globalOff = policy === POLICY_OFF
     if (!origin) {
       btn.disabled = true
-      btn.textContent = '当前页不支持（需 http/https）'
-      if (hint) hint.textContent = '仅 Web 页面可使用站点忽略；系统页无 URL。'
+      btn.setAttribute('aria-checked', 'false')
+      btn.classList.remove('cd-site-switch--on')
+      btn.setAttribute('aria-label', '无法在仅系统页或扩展页上切换强制暗色，请打开 http 或 https 网页。')
+      if (hostEl) {
+        hostEl.textContent = '（无可用域名）'
+        hostEl.removeAttribute('title')
+      }
+      if (hint) hint.textContent = '请打开普通网页后再试。'
       return
     }
     btn.disabled = false
     const state = await readSiteListState()
     const apply = shouldApplyForcedDarkFromSiteList(origin, state)
-    const denied = !apply
-    if (state.mode === SITE_LIST_MODE_INVERT_LISTED_ONLY) {
-      btn.textContent = denied ? '将当前站加入列表以套用' : '从列表移除此站（不再套用）'
-      if (hint) {
-        hint.textContent = denied
-          ? '「仅列表内套用」：当前站未命中列表规则，不套暗色；可加入精确 origin。'
-          : '当前站命中列表，正在套用；可从列表移除精确 origin。'
-      }
-    } else {
-      btn.textContent = denied ? '在此站点启用强制暗色' : '在此站点禁用（加入列表）'
-      if (hint) {
-        hint.textContent = denied
-          ? '「列表内不套用」：当前站被规则命中，不套暗色。'
-          : '将当前 origin 加入列表后，与全局「开启」独立，本页不套暗色。'
-      }
+    btn.setAttribute('aria-checked', apply ? 'true' : 'false')
+    btn.classList.toggle('cd-site-switch--on', apply)
+    btn.setAttribute(
+      'aria-label',
+      apply
+        ? '切换此站强制暗色：当前将套用暗色。点击后此站不再套用。'
+        : '切换此站强制暗色：当前不套用。点击后此站将套用暗色。',
+    )
+    if (hostEl) {
+      hostEl.textContent = hostnameLabelFromHttpOrigin(origin)
+      hostEl.title = origin
     }
+    let hintText = apply ? '在站点列表允许的前提下，此站会套用强制暗色。' : '此站当前不套用强制暗色。'
+    if (globalOff) {
+      hintText += ' 全局为「关闭」时扩展不注入，页面仍保持原样。'
+    }
+    if (hint) hint.textContent = hintText
   } catch {
     btn.disabled = true
-    btn.textContent = '无法读取当前标签页'
+    btn.setAttribute('aria-checked', 'false')
+    btn.classList.remove('cd-site-switch--on')
+    btn.setAttribute('aria-label', '无法读取当前标签页')
+    if (hostEl) {
+      hostEl.textContent = '—'
+      hostEl.removeAttribute('title')
+    }
+    if (hint) hint.textContent = '无法读取标签页状态。'
   }
 }
 
@@ -569,7 +596,7 @@ function wireThemeFilterSliders(): void {
 }
 
 function wireSiteButton(): void {
-  const btn = document.getElementById('site-exemption') as HTMLButtonElement | null
+  const btn = document.getElementById(POPUP_SITE_LIST_TOGGLE_ID) as HTMLButtonElement | null
   if (!btn) return
   btn.addEventListener('click', async () => {
     if (!cachedHttpOrigin) return
@@ -747,6 +774,7 @@ async function init(): Promise<void> {
     if (ch) {
       const next = parseGlobalPolicy(ch.newValue)
       if (next) setCheckedPolicy(next)
+      void refreshSiteButton()
     }
     if (changes[STORAGE_KEY_SITE_LIST]) {
       void loadSiteListPanel()

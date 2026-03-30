@@ -274,6 +274,7 @@ fieldset.cd-panel {
 .only-for-fieldset legend,
 .filter-fieldset legend,
 .site-list-fieldset legend,
+.cd-current-site-fieldset legend,
 .typography-fieldset legend,
 .site-custom-css-fieldset legend {
   padding: var(--cd-space-3) var(--cd-space-3) 0;
@@ -690,10 +691,65 @@ fieldset.cd-panel {
   font-weight: 600;
 }
 
-.cd-site-action {
-  margin-top: var(--cd-space-1);
-  padding: var(--cd-space-3) 0 0;
-  border-top: 1px solid var(--cd-popup-border);
+/* —— 当前站点：主机名 + 列表规则开关（靠上，避免滚到底） —— */
+.cd-current-site-lead {
+  margin: 0;
+  padding: var(--cd-space-2) var(--cd-space-3);
+  font-size: 12px;
+  color: var(--cd-popup-muted);
+  line-height: 1.55;
+}
+
+.cd-current-site-row {
+  display: flex;
+  align-items: center;
+  gap: var(--cd-space-3);
+  padding: var(--cd-space-2) var(--cd-space-3) var(--cd-space-3);
+}
+
+.cd-current-site-control {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.cd-current-site-switch-caption {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  color: var(--cd-popup-muted);
+  text-transform: none;
+}
+
+.cd-current-site-control:has(.cd-site-switch--on) .cd-current-site-switch-caption {
+  color: var(--cd-popup-accent);
+}
+
+.cd-current-site-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.cd-current-site-host {
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--cd-popup-fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cd-current-site-hint {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.cd-current-site-hint.hint {
+  margin-top: 6px;
 }
 
 .hint {
@@ -703,44 +759,67 @@ fieldset.cd-panel {
   line-height: 1.5;
 }
 
-.site-btn {
+.cd-site-switch {
+  flex-shrink: 0;
+  width: 48px;
+  height: 30px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+.cd-site-switch:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.cd-site-switch__track {
+  display: block;
+  position: relative;
   width: 100%;
-  padding: 11px 16px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: var(--cd-radius-sm);
-  border: 1px solid transparent;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--cd-popup-bg);
+  border: 1px solid var(--cd-popup-border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
   transition:
     background var(--cd-duration) var(--cd-ease),
-    filter var(--cd-duration) var(--cd-ease);
+    border-color var(--cd-duration) var(--cd-ease);
 }
 
-.site-btn:disabled {
-  color: var(--cd-popup-muted);
-  background: var(--cd-popup-surface);
-  border-color: var(--cd-popup-border);
-  cursor: not-allowed;
-  opacity: 0.85;
+.cd-site-switch:not(:disabled):hover .cd-site-switch__track {
+  border-color: var(--cd-popup-muted);
 }
 
-.site-btn:not(:disabled) {
-  color: var(--cd-popup-fg);
+.cd-site-switch--on .cd-site-switch__track {
+  background: rgba(38, 139, 210, 0.35);
+  border-color: rgba(38, 139, 210, 0.55);
+}
+
+.cd-site-switch__thumb {
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--cd-popup-fg-soft);
+  transform: translateY(-50%);
+  transition:
+    transform var(--cd-duration) var(--cd-ease),
+    background var(--cd-duration) var(--cd-ease);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.cd-site-switch--on .cd-site-switch__thumb {
+  transform: translateY(-50%) translateX(18px);
   background: var(--cd-popup-accent);
-  border-color: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
-  cursor: pointer;
 }
 
-.site-btn:not(:disabled):hover {
-  filter: brightness(1.08);
-}
-
-.site-btn:not(:disabled):active {
-  filter: brightness(0.95);
-}
-
-.site-btn:focus-visible {
+.cd-site-switch:focus-visible .cd-site-switch__track {
   outline: 2px solid var(--cd-popup-focus);
   outline-offset: 3px;
 }
@@ -786,7 +865,8 @@ fieldset.cd-panel {
 
 @media (prefers-reduced-motion: reduce) {
   .cd-segmented .policy-label,
-  .site-btn,
+  .cd-site-switch__track,
+  .cd-site-switch__thumb,
   .clear-override-btn,
   .cd-details-summary,
   .cd-details-summary::before,
