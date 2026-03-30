@@ -1,5 +1,6 @@
 import {
   batch_mix_toward_black,
+  kMeansDarkerCentroid,
   kMeansRgbCentroids,
   mix_toward_black,
   suggested_foreground_for_dark_bg,
@@ -135,7 +136,7 @@ function paintFilterPlusPath(themeFilters: ThemeFiltersStateV1): void {
 
 /**
  * 用 WASM 生成背景/前景色并注入样式。失败时静默降级，避免破坏页面。
- * RFC 006：Dynamic 下空闲时采样 → k-means 代表色 → RFC 005 批混合；异常则回退静态色。
+ * RFC 006：Dynamic 下空闲时采样 → k=2 后取较暗质心（浅色顶栏+深色主区时更贴近主区）→ RFC 005 批混合；异常则 k=1 或静态色。
  * RFC 012：Static 下跳过采样，与 Dynamic 互斥。
  * RFC 013：Filter CSS 走反相路径。
  * RFC 014：Filter+ 走 SVG，失败则 013。
@@ -179,11 +180,19 @@ async function applyForcedDark(): Promise<void> {
       let baseRgb: Uint8Array
       try {
         const buffer = collectPageBackgroundRgbBuffer(budget, () => Date.now())
-        // 样本过少时 k-means 不稳定，与 Static 一致回退固定基色（RFC 006 / 012）。
-        if (buffer.length < 9) {
+        // 至少 2 个像素（6 字节）才做双簇；过少则与 Static 一致回退（RFC 006 / 012）。
+        if (buffer.length < 6) {
           baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
         } else {
-          baseRgb = kMeansRgbCentroids(buffer, 1, 40).subarray(0, 3)
+          try {
+            baseRgb = new Uint8Array(kMeansDarkerCentroid(buffer, 40))
+          } catch {
+            try {
+              baseRgb = kMeansRgbCentroids(buffer, 1, 40).subarray(0, 3)
+            } catch {
+              baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
+            }
+          }
         }
       } catch {
         baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)

@@ -72,3 +72,13 @@ pub fn k_means_rgb_centroids(rgb: &[u8], k: u8, max_iter: u32) -> Result<Vec<u8>
     dark_color_utils::k_means_rgb_flat(rgb, k, max_iter)
         .ok_or_else(|| JsValue::from_str("k_means_rgb_centroids failed"))
 }
+
+/// Lloyd(L)+Otsu 两路候选取更暗、暗簇中位数与条件暗分位（扁平 3 字节）；详见 RFC 023。
+#[wasm_bindgen(js_name = kMeansDarkerCentroid)]
+pub fn k_means_darker_centroid(rgb: &[u8], max_iter: u32) -> Result<Vec<u8>, JsValue> {
+    check_batch_rgb(rgb)?;
+    let max_iter = max_iter.min(MAX_K_MEANS_ITER).max(1);
+    dark_color_utils::k_means_darker_centroid_rgb(rgb, max_iter)
+        .filter(|v| v.len() == 3)
+        .ok_or_else(|| JsValue::from_str("kMeansDarkerCentroid failed"))
+}

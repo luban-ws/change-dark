@@ -31,6 +31,8 @@
 
 **状态与未完成项索引**（元文档，非功能真源）：[RFC 021](./docs/rfc/021-project-status-and-backlog.md)。
 
+**Dynamic 代表色管线（设计讨论与决策索引）**：[RFC 023](./docs/rfc/023-dynamic-color-engine-pipeline.md)（T-035）；技术真源仍以 [RFC 005](./docs/rfc/005-wasm-batch-color-api.md)、[RFC 006](./docs/rfc/006-content-script-sampling-budget-fallback.md) 的 Implementation 为准。
+
 ## Phase 2 — 质量与发布（部分进行）
 
 | 主题 | RFC | 说明 |
@@ -38,4 +40,4 @@
 | GitHub Pages 落地页 | [020](./docs/rfc/020-github-pages-site.md)（**Approved**） | `apps/site` + `deploy-github-pages`；全仓回归见 `ci.yml` |
 
 - Popup / Options **Solarized Dark** 配色：[RFC 022](./docs/rfc/022-solarized-dark-popup-ui.md)（T-034）。
-- e2e / Chrome Web Store 等 backlog：见 **[RFC 021](./docs/rfc/021-project-status-and-backlog.md)**（下一篇功能 RFC 预计从 **023** 起编号）。
+- e2e / Chrome Web Store 等 backlog：见 **[RFC 021](./docs/rfc/021-project-status-and-backlog.md)**（下一篇功能 RFC 预计从 **024** 起编号；[RFC 023](./docs/rfc/023-dynamic-color-engine-pipeline.md) 为管线设计记录）。

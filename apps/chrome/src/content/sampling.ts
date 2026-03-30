@@ -2,6 +2,25 @@ import { parseCssRgbToTriplet } from '../shared/color-parse'
 import type { SamplingBudget } from '../shared/sampling-budget'
 import { computeDeadlineMs, isPastDeadline } from '../shared/sampling-budget'
 
+/** 视口横纵比例（0..1），与 `VIEWPORT_FRAC_Y` 组合成 `elementsFromPoint` 命中点。 */
+const VIEWPORT_FRAC_X = {
+  LEFT: 0.15,
+  CENTER: 0.5,
+  RIGHT: 0.85,
+  INSET_LEFT: 0.22,
+  INSET_RIGHT: 0.78,
+} as const
+
+/** 纵坐标比例；含中下区以减轻「浅色顶栏」在 Dynamic 聚合里对样本的支配（与 Rust 亮度双簇正交）。 */
+const VIEWPORT_FRAC_Y = {
+  TOP: 0.15,
+  MID: 0.5,
+  MAIN_LOWER_1: 0.42,
+  MAIN_LOWER_2: 0.58,
+  MAIN_LOWER_3: 0.62,
+  BOTTOM: 0.85,
+} as const
+
 /**
  * 在 `requestIdleCallback` 不可用时用 `setTimeout(0)` 分片，避免长时间阻塞主线程（RFC 006）。
  */
@@ -68,11 +87,15 @@ export function collectPageBackgroundRgbBuffer(
   const h = rootEl.clientHeight
   if (w > 0 && h > 0) {
     const points = [
-      { x: Math.floor(w / 2), y: Math.floor(h / 2) },
-      { x: Math.floor(w * 0.15), y: Math.floor(h * 0.15) },
-      { x: Math.floor(w * 0.85), y: Math.floor(h * 0.15) },
-      { x: Math.floor(w * 0.15), y: Math.floor(h * 0.85) },
-      { x: Math.floor(w * 0.85), y: Math.floor(h * 0.85) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.CENTER), y: Math.floor(h * VIEWPORT_FRAC_Y.MID) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.LEFT), y: Math.floor(h * VIEWPORT_FRAC_Y.TOP) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.RIGHT), y: Math.floor(h * VIEWPORT_FRAC_Y.TOP) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.LEFT), y: Math.floor(h * VIEWPORT_FRAC_Y.BOTTOM) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.RIGHT), y: Math.floor(h * VIEWPORT_FRAC_Y.BOTTOM) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.CENTER), y: Math.floor(h * VIEWPORT_FRAC_Y.MAIN_LOWER_1) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.CENTER), y: Math.floor(h * VIEWPORT_FRAC_Y.MAIN_LOWER_2) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.INSET_LEFT), y: Math.floor(h * VIEWPORT_FRAC_Y.MAIN_LOWER_3) },
+      { x: Math.floor(w * VIEWPORT_FRAC_X.INSET_RIGHT), y: Math.floor(h * VIEWPORT_FRAC_Y.MAIN_LOWER_3) },
     ]
     for (const p of points) {
       if (isPastDeadline(now(), deadline) || seen.size >= budget.maxNodes) break

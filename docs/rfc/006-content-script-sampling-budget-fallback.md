@@ -5,7 +5,7 @@
 | 状态 | Approved |
 | 任务 ID | **T-012** |
 
-依赖：[001](./001-rust-wasm-monorepo-and-chrome-host.md)、[005](./005-wasm-batch-color-api.md)、[004](./004-policy-storage-migration-from-enabled-boolean.md)
+依赖：[001](./001-rust-wasm-monorepo-and-chrome-host.md)、[005](./005-wasm-batch-color-api.md)、[004](./004-policy-storage-migration-from-enabled-boolean.md)。采样与聚合 **为何** 如此设计见 [RFC 023](./023-dynamic-color-engine-pipeline.md)。
 
 ## Summary
 
@@ -48,12 +48,15 @@ Content script ──(budget)──▶ 采样 RGB 缓冲 ──▶ dark_engine�
 | 可配置键 | `change-dark:sampling-max-nodes`、`change-dark:sampling-max-ms`（未设置则用默认） |
 | 纯函数 | `resolveSamplingBudgetFromSnapshot`、`computeDeadlineMs` / `isPastDeadline`（`sampling-budget.ts`） |
 | 颜色解析 | `parseCssRgbToTriplet`（`color-parse.ts`，仅常见 `rgb`/`rgba`） |
-| DOM 采样 | `collectPageBackgroundRgbBuffer`：视口多点 `elementsFromPoint` + 文档树 DFS；时间墙与节点数双上限 |
+| DOM 采样 | `collectPageBackgroundRgbBuffer`：视口多点 `elementsFromPoint`（含中下纵带，减轻顶栏过亮支配）+ 文档树 DFS；时间墙与节点数双上限 |
 | 调度 | `scheduleIdleTask`（`requestIdleCallback` + `timeout`，否则 `setTimeout(0)`）；`whenDomReady` 等待 DOM |
-| 聚合 | `kMeansRgbCentroids(buffer, 1, 40)` 得代表色；样本不足或异常 → `STATIC_FALLBACK_RGB`（与 v1 固定色一致） |
+| 聚合 | `kMeansDarkerCentroid(buffer, 40)`（**亮度轴** k=2，各簇 RGB 均值后取较暗簇；非 RGB 欧氏 k=2）；样本少于 6 字节或失败 → 再试 `kMeansRgbCentroids(buffer, 1, 40)`，仍失败 → `STATIC_FALLBACK_RGB` |
 | 注入键 | 采样键已加入 `STORAGE_KEYS_AFFECTING_INJECTION`，改配置会重算样式 |
 
 ## Decision log
 
 - 2026-03-29：独立 RFC。
 - 2026-03-29：实现 Approved；代表色用 k=1 k-means，与后续 Dynamic RFC 可再接更复杂策略。
+- 2026-03-29：Dynamic 聚合改为优先 `kMeansDarkerCentroid`（双簇取暗），减轻浅色顶栏拉高整体代表色的问题。
+- 2026-03-29：`kMeansDarkerCentroid` 内部改为亮度轴 Lloyd k=2 + 簇内 RGB 均值，避免高饱和色在 RGB 空间被误分。
+- 2026-03-29：采样/聚合 **设计讨论** 成文为 [RFC 023](./023-dynamic-color-engine-pipeline.md)（T-035）。

@@ -4,7 +4,7 @@
 
 除 **[001](./001-rust-wasm-monorepo-and-chrome-host.md)** 作为架构基线外，**每一篇 RFC 只描述一件可交付的事**（一个任务 / 一条能力）。**不设伞形索引 RFC**；任务分组仅体现在本页的表格里。
 
-编号：`NNN-short-slug.md`。**下一个可用编号：023**。
+编号：`NNN-short-slug.md`。**下一个可用编号：024**。
 
 ## 状态枚举
 
@@ -53,6 +53,12 @@ Draft · Under Review · Approved · Superseded。归档：`completed/`、`rejec
 | RFC | 任务 | 标题 |
 |-----|------|------|
 | [022](./022-solarized-dark-popup-ui.md) | T-034 | Popup / Options：Solarized Dark 配色 |
+
+## 设计记录（管线语义，非新开关）
+
+| RFC | 任务 | 标题 |
+|-----|------|------|
+| [023](./023-dynamic-color-engine-pipeline.md) | T-035 | Dynamic 配色管线：采样、聚合与讨论 |
 
 ## 元文档（状态 / backlog）
 

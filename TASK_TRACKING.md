@@ -49,6 +49,12 @@
 |----|----------|------|
 | T-034 | [022](./docs/rfc/022-solarized-dark-popup-ui.md) | Done |
 
+## Dynamic 管线设计（RFC 023）
+
+| ID | 专属 RFC | 状态 |
+|----|----------|------|
+| T-035 | [023](./docs/rfc/023-dynamic-color-engine-pipeline.md) | Done |
+
 ## 习惯用法
 
 完成实现时：将对应 RFC 状态更新为 Approved（或归档），并在此表 **状态** 列增加 Done / 链接 PR。

@@ -6,11 +6,11 @@
 | 任务 ID | **T-024** |
 | 参考 | [Dark Reader Help — Dynamic mode](https://darkreader.org/help/en/) |
 
-依赖：[005](./005-wasm-batch-color-api.md)、[006](./006-content-script-sampling-budget-fallback.md)、[004](./004-policy-storage-migration-from-enabled-boolean.md)
+依赖：[005](./005-wasm-batch-color-api.md)、[006](./006-content-script-sampling-budget-fallback.md)、[004](./004-policy-storage-migration-from-enabled-boolean.md)、[023](./023-dynamic-color-engine-pipeline.md)（管线讨论）
 
 ## Summary
 
-**Dynamic** 路径：对页面样式与可视元素做较深分析，生成较自然的暗色主题（Help：效果最好、首屏资源中等）。工程实现落在 RFC 005/006；本 RFC 锁定 **产品行为、模式开关与验收口径**。
+**Dynamic** 路径：对页面样式与可视元素做较深分析，生成较自然的暗色主题（Help：效果最好、首屏资源中等）。工程实现落在 RFC 005/006；**代表色语义与备选方案讨论** 见 [RFC 023](./023-dynamic-color-engine-pipeline.md)。本 RFC 锁定 **产品行为、模式开关与验收口径**。
 
 ## Goals
 
@@ -38,7 +38,7 @@
 | 项 | 说明 |
 |----|------|
 | 存储 | `change-dark:theme-mode` → `dynamic` \| `static`（默认 `dynamic`，与历史单一路径一致） |
-| Dynamic | RFC 006：空闲采样 → k-means → WASM 混合 + RFC 011 滤镜 |
+| Dynamic | RFC 006：空闲采样 → `kMeansDarkerCentroid` 等（见 [RFC 023](./023-dynamic-color-engine-pipeline.md)）→ WASM 混合 + RFC 011 滤镜 |
 | Static | 无采样，基色固定为 `STATIC_FALLBACK_RGB`（RFC 015 轻量子集）；与 Dynamic 互斥，依赖 `storage` 变更触发内容脚本整页重绘，避免残留 |
 | Popup | 「主题模式」单选：Dynamic / Static；`persistThemeMode`；监听 `STORAGE_KEY_THEME_MODE` 同步 UI |
 | 注入键 | `STORAGE_KEYS_AFFECTING_INJECTION` 含 `STORAGE_KEY_THEME_MODE` |
@@ -47,3 +47,4 @@
 
 - 2026-03-29：独立 RFC。
 - 2026-03-29：实现 Approved；Popup 提供 Dynamic/Static；Filter 类模式留待 RFC 013/014。
+- 2026-03-29：与 [RFC 023](./023-dynamic-color-engine-pipeline.md) 交叉引用（管线设计记录）。
