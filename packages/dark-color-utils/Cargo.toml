@@ -2,7 +2,7 @@
 name = "dark_color_utils"
 version = "0.1.0"
 edition = "2021"
-description = "Shared color math for the Change Dark WASM core (no platform deps)."
+description = "Shared color math for the Selena WASM core (no platform deps)."
 
 [lib]
 path = "src/lib.rs"

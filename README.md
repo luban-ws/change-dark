@@ -1,4 +1,4 @@
-# 嫦娥 · Change Dark
+# 嫦娥 · Selena
 
 **English:** A **Chromium (Manifest V3)** extension that applies a **forced dark appearance** to websites. Heavy color math runs in **Rust → WebAssembly**; the host UI, content scripts, and bundling are **TypeScript** with **Vite** and [**CRXJS**](https://github.com/crxjs/chrome-extension-tools).
 

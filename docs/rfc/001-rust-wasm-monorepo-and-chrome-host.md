@@ -10,7 +10,7 @@ Superseded-By: —
 
 ## Summary
 
-将「嫦娥 / Change Dark」Chrome 扩展的重计算放在 **Rust → WASM** 中完成，宿主扩展由 **Vite + @crxjs/vite-plugin** 构建；仓库采用 **pnpm workspace + Turbo**，共享算法放在独立 crate `dark_color_utils`，WASM 边界 crate 为 `dark_engine`。
+将「嫦娥 / Selena」Chrome 扩展的重计算放在 **Rust → WASM** 中完成，宿主扩展由 **Vite + @crxjs/vite-plugin** 构建；仓库采用 **pnpm workspace + Turbo**，共享算法放在独立 crate `dark_color_utils`，WASM 边界 crate 为 `dark_engine`。
 
 ## Context / Problem
 

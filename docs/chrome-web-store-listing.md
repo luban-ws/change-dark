@@ -1,4 +1,4 @@
-# Chrome 网上应用店 — 与官方要求逐项对齐（嫦娥 Change Dark）
+# Chrome 网上应用店 — 与官方要求逐项对齐（嫦娥 Selena）
 
 下文对照 **现行** [开发者计划政策](https://developer.chrome.com/docs/webstore/program-policies/)、[上架准备](https://developer.chrome.com/docs/webstore/prepare)、[商品详情页](https://developer.chrome.com/docs/webstore/cws-dashboard-listing)、[隐私权实践](https://developer.chrome.com/docs/webstore/cws-dashboard-privacy)、[图片规格](https://developer.chrome.com/docs/webstore/images)、[MV3 附加要求](https://developer.chrome.com/docs/webstore/program-policies/mv3-requirements)、[疑难排解（权限）](https://developer.chrome.com/docs/webstore/troubleshooting#excessive_permissions)。依法合规以你方律师与最终提交内容为准。
 
@@ -21,7 +21,7 @@
 
 | 字段 | 要求 | 本项目 |
 |------|------|--------|
-| `name` | 有意义、不误导 | `嫦娥 Change Dark` |
+| `name` | 有意义、不误导 | `嫦娥 Selena` |
 | `version` | 每次上传必须大于上一版；建议早期可用小号版本 | `package.json` / manifest 同步 |
 | `icons` | 含多尺寸；ZIP 内路径有效 | `icons/icon-16.png` … `icon-128.png` |
 | `description` | **≤ 132 字符**（超出会导致无法解析等问题） | 见 `manifest.config.ts` 英文摘要 |
@@ -106,7 +106,7 @@
 
 **Detailed description（商品详情长文，可自行增删）**
 
-> **Change Dark** (嫦娥) is a Manifest V3 extension for Chromium-based browsers. Its **single purpose** is to apply a **forced dark appearance** on websites you visit, with optional per-site rules, theme modes (including Dynamic sampling with WebAssembly), filters, typography, and optional site-specific CSS snippets.
+> **Selena** (嫦娥) is a Manifest V3 extension for Chromium-based browsers. Its **single purpose** is to apply a **forced dark appearance** on websites you visit, with optional per-site rules, theme modes (including Dynamic sampling with WebAssembly), filters, typography, and optional site-specific CSS snippets.
 >
 > **Privacy**  
 > Settings are stored locally using Chrome extension storage. The privacy policy URL explains how page-related data is processed for theming. If you use the optional support link (e.g. Buy Me a Coffee), you leave the extension UI and third-party sites apply.

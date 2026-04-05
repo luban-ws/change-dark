@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "嫦娥 Selena",
+    "description": "The name of the extension"
+  },
+  "extDesc": {
+    "message": "强制网页使用暗色模式 (MV3)。使用 Rust/WASM 在本地进行颜色处理，支持全局和特定站点规则。",
+    "description": "Short description of the extension"
+  }
+}

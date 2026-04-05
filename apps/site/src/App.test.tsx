@@ -5,7 +5,7 @@ import { App } from './App'
 describe('App', () => {
   it('renders product title', () => {
     render(<App />)
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('嫦娥 Change Dark')
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('嫦娥 Selena')
   })
 
   it('renders screenshot with descriptive alt', () => {
@@ -14,7 +14,7 @@ describe('App', () => {
     expect(section).not.toBeNull()
     const img = within(section as HTMLElement).getByRole('img')
     expect(img.getAttribute('alt')).toBe(
-      '嫦娥 Change Dark 扩展选项界面：全局开关、仅当前站、主题模式等分段控件',
+      '嫦娥 Selena 扩展选项界面：全局开关、仅当前站、主题模式等分段控件',
     )
   })
 })

@@ -1,4 +1,4 @@
-# Roadmap — 嫦娥 / Change Dark
+# Roadmap — 嫦娥 / Selena
 
 **一事一 RFC**；**完整 RFC 索引与下一编号见下文「RFC 索引」**（单篇规格文件仍在 `docs/rfc/NNN-*.md`）。
 

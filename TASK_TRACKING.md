@@ -1,4 +1,4 @@
-# Task tracking — 嫦娥 / Change Dark
+# Task tracking — 嫦娥 / Selena
 
 **一事一 RFC**：每个任务对应一篇 RFC；**索引与编号**见 [ROADMAP.md](./ROADMAP.md) 中的「RFC 索引」一节。
 

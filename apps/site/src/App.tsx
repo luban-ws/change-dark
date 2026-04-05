@@ -64,8 +64,8 @@ export function App() {
               <IconMoon className="brand-moon-svg" width={28} height={28} />
             </div>
             <div>
-              <p className="eyebrow font-mono">嫦娥 · Change Dark</p>
-              <h1>嫦娥 Change Dark</h1>
+              <p className="eyebrow font-mono">嫦娥 · Selena</p>
+              <h1>嫦娥 Selena</h1>
               <p className="tagline">强制暗色 · 在此调整全局策略、主题与站点规则</p>
             </div>
           </div>
@@ -141,7 +141,7 @@ export function App() {
           <figure className="figure">
             <img
               src={screenshotSrc}
-              alt="嫦娥 Change Dark 扩展选项界面：全局开关、仅当前站、主题模式等分段控件"
+              alt="嫦娥 Selena 扩展选项界面：全局开关、仅当前站、主题模式等分段控件"
               width={720}
               height={420}
               loading="lazy"

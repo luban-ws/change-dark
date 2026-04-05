@@ -1,4 +1,4 @@
-# Chrome 网上应用店 — 发布操作指南（嫦娥 Change Dark）
+# Chrome 网上应用店 — 发布操作指南（嫦娥 Selena）
 
 **政策、素材规格、权限英文稿、隐私 URL** 等与后台表单一一对齐的内容见 [**chrome-web-store-listing.md**](./chrome-web-store-listing.md)。本文只讲 **账号 → 后台操作 → 更新版本 →（可选）API 自动化**。
 

@@ -1,0 +1,10 @@
+{
+  "extName": {
+    "message": "Selena",
+    "description": "The name of the extension"
+  },
+  "extDesc": {
+    "message": "Force dark appearance on websites (MV3). Heavy color work runs in Rust/WebAssembly; global, per-site rules.",
+    "description": "Short description of the extension"
+  }
+}

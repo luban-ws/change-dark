@@ -10,9 +10,10 @@ import { CWS_HOMEPAGE_URL, CWS_SHORT_DESCRIPTION } from './src/store-listing-met
 /** MV3 清单：全站内容脚本 + storage，用于嫦娥暗色模式开关。 */
 export default defineManifest({
   manifest_version: 3,
-  name: '嫦娥 Change Dark',
+  default_locale: 'en',
+  name: '__MSG_extName__',
   version: pkg.version,
-  description: CWS_SHORT_DESCRIPTION,
+  description: '__MSG_extDesc__',
   homepage_url: CWS_HOMEPAGE_URL,
   icons: {
     '16': 'icons/icon-16.png',
@@ -40,7 +41,7 @@ export default defineManifest({
     },
   },
   action: {
-    default_title: '嫦娥 Change Dark',
+    default_title: '__MSG_extName__',
     default_popup: 'src/popup/index.html',
     default_icon: {
       '16': 'icons/icon-16.png',
