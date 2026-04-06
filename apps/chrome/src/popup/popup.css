@@ -12,20 +12,20 @@
   --cd-space-4: 18px;
   --cd-duration: 180ms;
   --cd-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --cd-popup-bg: #002b36;
-  --cd-popup-surface: #073642;
-  --cd-popup-surface-deep: #001f27;
-  --cd-popup-border: rgba(101, 123, 131, 0.35);
-  --cd-popup-fg: #eee8d5;
-  --cd-popup-fg-soft: #93a1a1;
-  --cd-popup-muted: #657b83;
-  --cd-popup-accent: #268bd2;
-  --cd-popup-accent-dim: rgba(38, 139, 210, 0.18);
-  --cd-popup-focus: #2aa198;
-  --cd-popup-scrollbar-track: #001f27;
-  --cd-popup-scrollbar-thumb: #586e75;
-  /** 「支持」标签咖啡图标选中色（略偏暖，呼应赞助 / Buy Me a Coffee） */
-  --cd-tab-support-icon-active: #e9c46a;
+  /* Next Gen Pro Max UI Theme */
+  --cd-popup-bg: #0F172A;
+  --cd-popup-surface: #1E293B;
+  --cd-popup-surface-deep: #090E1A;
+  --cd-popup-border: rgba(255, 255, 255, 0.08);
+  --cd-popup-fg: #F8FAFC;
+  --cd-popup-fg-soft: #94A3B8;
+  --cd-popup-muted: #64748B;
+  --cd-popup-accent: #3B82F6;
+  --cd-popup-accent-dim: rgba(59, 130, 246, 0.15);
+  --cd-popup-focus: #60A5FA;
+  --cd-popup-scrollbar-track: #090E1A;
+  --cd-popup-scrollbar-thumb: #334155;
+  --cd-tab-support-icon-active: #FCD34D;
 }
 
 *,
@@ -55,7 +55,7 @@ body.cd-popup-body {
   scrollbar-width: thin;
   scrollbar-color: var(--cd-popup-scrollbar-thumb) var(--cd-popup-scrollbar-track);
   font:
-    13px/1.5 system-ui,
+    14px/1.5 'IBM Plex Sans',
     -apple-system,
     'Segoe UI',
     sans-serif;
@@ -198,7 +198,7 @@ body.cd-popup-body {
 .cd-tabs__tab[aria-selected='true'] {
   color: var(--cd-popup-fg);
   background: var(--cd-popup-surface);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
 }
 
 .cd-tabs__tab--active .cd-tabs__tab-icon:not(.cd-tabs__tab-icon--support) {
@@ -263,9 +263,11 @@ fieldset.cd-panel {
   padding: 0;
   border: none;
   border-radius: var(--cd-radius);
-  background: var(--cd-popup-surface);
+  background: rgba(30, 41, 59, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--cd-popup-border);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 4px 6px -1px rgba(0, 0, 0, 0.2);
 }
 
 .cd-panel legend,
@@ -281,11 +283,12 @@ fieldset.cd-panel {
   padding-bottom: var(--cd-space-3);
   border-bottom: 1px solid var(--cd-popup-border);
   border-radius: var(--cd-radius) var(--cd-radius) 0 0;
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   color: var(--cd-popup-fg);
-  background: rgba(0, 31, 39, 0.35);
+  background: rgba(15, 23, 42, 0.5);
   width: 100%;
   margin: 0;
   float: none;
@@ -415,16 +418,16 @@ fieldset.cd-panel {
 }
 
 .cd-segmented .policy-label:has(input:checked) {
-  background: var(--cd-popup-surface);
-  color: var(--cd-popup-fg);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  background: var(--cd-popup-accent);
+  color: #FFFFFF;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4), 0 2px 4px -1px rgba(59, 130, 246, 0.2);
 }
 
 .cd-segmented .policy-label input {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   margin: 0;
-  accent-color: var(--cd-popup-accent);
+  accent-color: #FFFFFF;
   cursor: pointer;
   flex-shrink: 0;
 }
