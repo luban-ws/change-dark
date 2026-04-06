@@ -35,6 +35,7 @@ import {
   THEME_MODE_FILTER_CSS,
   THEME_MODE_FILTER_PLUS,
   THEME_MODE_STATIC,
+  POLICY_AUTO,
 } from "@luban-ws/shared"
 import {
   PAGE_PALETTE_SOLARIZED_DARK,
@@ -50,6 +51,7 @@ import {
   readSamplingBudget,
   readShouldApplyForcedDarkForPage,
   readSiteCustomCssForPage,
+  readGlobalPolicy,
 } from "@luban-ws/shared"
 import type { ThemeFiltersStateV1 } from "@luban-ws/shared"
 
@@ -153,6 +155,7 @@ async function applyForcedDark(): Promise<void> {
     return
   }
 
+  const policy = await readGlobalPolicy()
   const budget = await readSamplingBudget()
   const { themeMode, themeFilters } = await readEffectiveThemeForPage()
   const pagePalette = await readEffectivePagePaletteForPage()
@@ -198,15 +201,16 @@ async function applyForcedDark(): Promise<void> {
         baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
       }
 
-      // Detect if the site is already dark natively
-      // Luminance formula: 0.2126 * R + 0.7152 * G + 0.0722 * B
-      const luma = 0.2126 * baseRgb[0]! + 0.7152 * baseRgb[1]! + 0.0722 * baseRgb[2]!
-      
-      // If the dominant centroid is already quite dark (luma < 80 corresponds roughly to a very dark grey)
-      if (luma < 80) {
-        document.documentElement.removeAttribute(ROOT_ATTR)
-        document.getElementById(STYLE_ELEMENT_ID)?.remove()
-        return
+      // AUTO mode: if site is already natively dark, skip dark injection
+      // Luminance: 0.2126*R + 0.7152*G + 0.0722*B  (0=black, 255=white)
+      if (policy === POLICY_AUTO) {
+        const luma = 0.2126 * baseRgb[0]! + 0.7152 * baseRgb[1]! + 0.0722 * baseRgb[2]!
+        if (luma < 80) {
+          // Page is already dark — remove any injected styles and bail
+          document.documentElement.removeAttribute(ROOT_ATTR)
+          document.getElementById(STYLE_ELEMENT_ID)?.remove()
+          return
+        }
       }
 
       const { pageBg, pageFg } = colorsForPalette(pagePalette, baseRgb)

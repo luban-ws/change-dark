@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePopupState } from './hooks/usePopupState'
 import {
-  POLICY_AUTO, POLICY_OFF, POLICY_ON, 
+  POLICY_AUTO, POLICY_OFF, POLICY_ON, type GlobalPolicy,
   THEME_MODE_DYNAMIC, THEME_MODE_STATIC, THEME_MODE_FILTER_CSS, THEME_MODE_FILTER_PLUS,
 } from "@luban-ws/shared"
 import { shouldExposeFilterPlusMode } from "@luban-ws/shared"
@@ -98,10 +98,10 @@ export default function App() {
                 {/* Global Switch Card */}
                 <Card size="1">
                   <Text as="div" size="2" weight="bold" mb="2">{t('globalSwitch', 'Global Switch')}</Text>
-                  <SegmentedControl.Root value={policy.toString()} onValueChange={(val) => actions.setPolicy(parseInt(val) as any)} size="2">
-                    <SegmentedControl.Item value={POLICY_AUTO.toString()}>{t('lblAuto', 'Auto')}</SegmentedControl.Item>
-                    <SegmentedControl.Item value={POLICY_ON.toString()}>{t('lblOn', 'On')}</SegmentedControl.Item>
-                    <SegmentedControl.Item value={POLICY_OFF.toString()}>{t('lblOff', 'Off')}</SegmentedControl.Item>
+                  <SegmentedControl.Root value={policy} onValueChange={(val) => actions.setPolicy(val as GlobalPolicy)} size="2">
+                    <SegmentedControl.Item value={POLICY_AUTO}>{t('lblAuto', 'Auto')}</SegmentedControl.Item>
+                    <SegmentedControl.Item value={POLICY_ON}>{t('lblOn', 'On')}</SegmentedControl.Item>
+                    <SegmentedControl.Item value={POLICY_OFF}>{t('lblOff', 'Off')}</SegmentedControl.Item>
                   </SegmentedControl.Root>
                 </Card>
 
@@ -130,18 +130,20 @@ export default function App() {
                       { value: THEME_MODE_DYNAMIC, label: 'Dynamic (Expr)' },
                       { value: THEME_MODE_STATIC, label: 'Static' },
                     ].map(opt => (
-                      <Flex key={opt.value} as="label" gap="2" align="center" style={{ opacity: opt.disabled ? 0.5 : 1 }}>
-                        <input 
-                          type="radio" 
-                          name="themeMode" 
-                          disabled={opt.disabled}
-                          checked={themeMode === opt.value} 
-                          onChange={() => actions.setThemeMode(opt.value)} 
-                          style={{ margin: 0 }}
-                        />
-                        <Text size="2" style={{ cursor: opt.disabled ? 'not-allowed' : 'pointer' }}>{opt.label}</Text>
-                        {opt.disabled && <Text size="1" color="red" style={{ marginLeft: 'auto' }}>{t('lblFxGate', 'Disabled on Firefox')}</Text>}
-                      </Flex>
+                      <Box key={opt.value} style={{ opacity: opt.disabled ? 0.5 : 1 }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: opt.disabled ? 'not-allowed' : 'pointer' }}>
+                          <input 
+                            type="radio" 
+                            name="themeMode" 
+                            disabled={opt.disabled}
+                            checked={themeMode === opt.value} 
+                            onChange={() => actions.setThemeMode(opt.value)} 
+                            style={{ margin: 0 }}
+                          />
+                          <Text size="2">{opt.label}</Text>
+                          {opt.disabled && <Text size="1" color="red" style={{ marginLeft: 'auto' }}>{t('lblFxGate', 'Disabled on Firefox')}</Text>}
+                        </label>
+                      </Box>
                     ))}
                   </Flex>
                 </Card>
