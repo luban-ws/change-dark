@@ -16,6 +16,10 @@
       "dependsOn": ["build"],
       "outputs": []
     },
+    "test:e2e:report": {
+      "cache": false,
+      "persistent": true
+    },
     "lint": {
       "outputs": []
     }

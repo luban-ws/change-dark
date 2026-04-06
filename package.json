@@ -7,6 +7,7 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
+    "test:e2e:report": "turbo run test:e2e:report",
     "lint": "turbo run lint"
   },
   "devDependencies": {
