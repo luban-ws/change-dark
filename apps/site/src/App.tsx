@@ -15,7 +15,6 @@ export function App() {
     { id: 'tech', label: t('tech') },
     { id: 'screenshot', label: t('screenshot') },
     { id: 'features', label: t('features') },
-    { id: 'install', label: t('install') },
   ] as const
 
   const toggleLanguage = () => {
@@ -131,15 +130,6 @@ export function App() {
               <p>{t('featWasmBody')}</p>
             </article>
           </div>
-        </section>
-
-        <section id="install" className="card install-card">
-          <h2>{t('installTitle')}</h2>
-          <ol className="install-list">
-            <li>{t('install1')}</li>
-            <li>{t('install2')}</li>
-            <li>{t('install3')}</li>
-          </ol>
         </section>
 
         <footer className="footer">
