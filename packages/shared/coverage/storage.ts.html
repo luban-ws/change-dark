@@ -1,0 +1,1258 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for storage.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="index.html">All files</a> storage.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">7.75% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>18/232</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>1/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">3.12% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>1/32</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">7.75% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>18/232</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a>
+<a name='L215'></a><a href='#L215'>215</a>
+<a name='L216'></a><a href='#L216'>216</a>
+<a name='L217'></a><a href='#L217'>217</a>
+<a name='L218'></a><a href='#L218'>218</a>
+<a name='L219'></a><a href='#L219'>219</a>
+<a name='L220'></a><a href='#L220'>220</a>
+<a name='L221'></a><a href='#L221'>221</a>
+<a name='L222'></a><a href='#L222'>222</a>
+<a name='L223'></a><a href='#L223'>223</a>
+<a name='L224'></a><a href='#L224'>224</a>
+<a name='L225'></a><a href='#L225'>225</a>
+<a name='L226'></a><a href='#L226'>226</a>
+<a name='L227'></a><a href='#L227'>227</a>
+<a name='L228'></a><a href='#L228'>228</a>
+<a name='L229'></a><a href='#L229'>229</a>
+<a name='L230'></a><a href='#L230'>230</a>
+<a name='L231'></a><a href='#L231'>231</a>
+<a name='L232'></a><a href='#L232'>232</a>
+<a name='L233'></a><a href='#L233'>233</a>
+<a name='L234'></a><a href='#L234'>234</a>
+<a name='L235'></a><a href='#L235'>235</a>
+<a name='L236'></a><a href='#L236'>236</a>
+<a name='L237'></a><a href='#L237'>237</a>
+<a name='L238'></a><a href='#L238'>238</a>
+<a name='L239'></a><a href='#L239'>239</a>
+<a name='L240'></a><a href='#L240'>240</a>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a>
+<a name='L270'></a><a href='#L270'>270</a>
+<a name='L271'></a><a href='#L271'>271</a>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a>
+<a name='L295'></a><a href='#L295'>295</a>
+<a name='L296'></a><a href='#L296'>296</a>
+<a name='L297'></a><a href='#L297'>297</a>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a>
+<a name='L313'></a><a href='#L313'>313</a>
+<a name='L314'></a><a href='#L314'>314</a>
+<a name='L315'></a><a href='#L315'>315</a>
+<a name='L316'></a><a href='#L316'>316</a>
+<a name='L317'></a><a href='#L317'>317</a>
+<a name='L318'></a><a href='#L318'>318</a>
+<a name='L319'></a><a href='#L319'>319</a>
+<a name='L320'></a><a href='#L320'>320</a>
+<a name='L321'></a><a href='#L321'>321</a>
+<a name='L322'></a><a href='#L322'>322</a>
+<a name='L323'></a><a href='#L323'>323</a>
+<a name='L324'></a><a href='#L324'>324</a>
+<a name='L325'></a><a href='#L325'>325</a>
+<a name='L326'></a><a href='#L326'>326</a>
+<a name='L327'></a><a href='#L327'>327</a>
+<a name='L328'></a><a href='#L328'>328</a>
+<a name='L329'></a><a href='#L329'>329</a>
+<a name='L330'></a><a href='#L330'>330</a>
+<a name='L331'></a><a href='#L331'>331</a>
+<a name='L332'></a><a href='#L332'>332</a>
+<a name='L333'></a><a href='#L333'>333</a>
+<a name='L334'></a><a href='#L334'>334</a>
+<a name='L335'></a><a href='#L335'>335</a>
+<a name='L336'></a><a href='#L336'>336</a>
+<a name='L337'></a><a href='#L337'>337</a>
+<a name='L338'></a><a href='#L338'>338</a>
+<a name='L339'></a><a href='#L339'>339</a>
+<a name='L340'></a><a href='#L340'>340</a>
+<a name='L341'></a><a href='#L341'>341</a>
+<a name='L342'></a><a href='#L342'>342</a>
+<a name='L343'></a><a href='#L343'>343</a>
+<a name='L344'></a><a href='#L344'>344</a>
+<a name='L345'></a><a href='#L345'>345</a>
+<a name='L346'></a><a href='#L346'>346</a>
+<a name='L347'></a><a href='#L347'>347</a>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a>
+<a name='L361'></a><a href='#L361'>361</a>
+<a name='L362'></a><a href='#L362'>362</a>
+<a name='L363'></a><a href='#L363'>363</a>
+<a name='L364'></a><a href='#L364'>364</a>
+<a name='L365'></a><a href='#L365'>365</a>
+<a name='L366'></a><a href='#L366'>366</a>
+<a name='L367'></a><a href='#L367'>367</a>
+<a name='L368'></a><a href='#L368'>368</a>
+<a name='L369'></a><a href='#L369'>369</a>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a>
+<a name='L372'></a><a href='#L372'>372</a>
+<a name='L373'></a><a href='#L373'>373</a>
+<a name='L374'></a><a href='#L374'>374</a>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a>
+<a name='L377'></a><a href='#L377'>377</a>
+<a name='L378'></a><a href='#L378'>378</a>
+<a name='L379'></a><a href='#L379'>379</a>
+<a name='L380'></a><a href='#L380'>380</a>
+<a name='L381'></a><a href='#L381'>381</a>
+<a name='L382'></a><a href='#L382'>382</a>
+<a name='L383'></a><a href='#L383'>383</a>
+<a name='L384'></a><a href='#L384'>384</a>
+<a name='L385'></a><a href='#L385'>385</a>
+<a name='L386'></a><a href='#L386'>386</a>
+<a name='L387'></a><a href='#L387'>387</a>
+<a name='L388'></a><a href='#L388'>388</a>
+<a name='L389'></a><a href='#L389'>389</a>
+<a name='L390'></a><a href='#L390'>390</a>
+<a name='L391'></a><a href='#L391'>391</a>
+<a name='L392'></a><a href='#L392'>392</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+  type GlobalPolicy,
+  type ThemeMode,
+  STORAGE_KEY_ENABLED,
+  STORAGE_KEY_POLICY,
+  STORAGE_KEY_SAMPLING_MAX_MS,
+  STORAGE_KEY_SAMPLING_MAX_NODES,
+  STORAGE_KEY_SCHEMA_VERSION,
+  STORAGE_KEY_SITE_LIST,
+  STORAGE_KEY_SITE_OVERRIDES,
+  STORAGE_KEY_THEME_FILTERS,
+  STORAGE_KEY_THEME_MODE,
+  STORAGE_KEY_PAGE_PALETTE,
+  STORAGE_KEY_TYPOGRAPHY,
+  STORAGE_KEY_SITE_CUSTOM_CSS,
+} from './constants'
+import {
+  CURRENT_STORAGE_SCHEMA_VERSION,
+  shouldInjectForcedDarkStyles,
+  resolvePolicyFromSnapshot,
+} from './migration'
+import {
+  type SamplingBudget,
+  resolveSamplingBudgetFromSnapshot,
+} from './sampling-budget'
+import {
+  type SiteListStateV2,
+  parseSiteListState,
+  shouldApplyForcedDarkFromSiteList,
+  toggleDenylistOrigin,
+} from './site-list'
+import {
+  type ThemeFiltersStateV1,
+  clampThemeFilters,
+  parseThemeFiltersState,
+} from './theme-filters'
+import {
+  type SiteOverrideEntryV1,
+  type SiteOverridesStateV1,
+  diffPartialThemeFilters,
+  isEmptySiteOverrideEntry,
+  parseSiteOverridesState,
+  resolveEffectivePagePalette,
+  resolveEffectiveTheme,
+  resolveEffectiveTypography,
+} from './site-overrides'
+import { type PagePalette, parsePagePalette } from './page-palette'
+import { parseThemeMode } from './theme-mode'
+import {
+  type TypographySettingsV1,
+  type TypographyStateV1,
+  TYPOGRAPHY_SCHEMA_VERSION,
+  clampTypographySettings,
+  DEFAULT_TYPOGRAPHY_STATE,
+  diffPartialTypography,
+  parseTypographyState,
+  typographyStateToSettings,
+} from './typography'
+import {
+  type SiteCustomCssStateV1,
+  parseSiteCustomCssState,
+  sanitizeSiteCustomCss,
+} from './site-custom-css'
+&nbsp;
+const READ_KEYS = [STORAGE_KEY_SCHEMA_VERSION, STORAGE_KEY_POLICY, STORAGE_KEY_ENABLED] as const
+&nbsp;
+const SAMPLING_KEYS = [STORAGE_KEY_SAMPLING_MAX_NODES, STORAGE_KEY_SAMPLING_MAX_MS] as const
+&nbsp;
+const SITE_LIST_KEYS = [STORAGE_KEY_SITE_LIST] as const
+&nbsp;
+const THEME_FILTER_KEYS = [STORAGE_KEY_THEME_FILTERS] as const
+&nbsp;
+const THEME_MODE_KEYS = [STORAGE_KEY_THEME_MODE] as const
+&nbsp;
+const PAGE_PALETTE_KEYS = [STORAGE_KEY_PAGE_PALETTE] as const
+&nbsp;
+const SITE_OVERRIDE_KEYS = [STORAGE_KEY_SITE_OVERRIDES] as const
+&nbsp;
+const TYPOGRAPHY_KEYS = [STORAGE_KEY_TYPOGRAPHY] as const
+&nbsp;
+const SITE_CUSTOM_CSS_KEYS = [STORAGE_KEY_SITE_CUSTOM_CSS] as const
+&nbsp;
+/**
+ * 读取当前全局策略（合并遗留 boolean，不写盘）。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readGlobalPolicy(): Promise&lt;GlobalPolicy&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...READ_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return resolvePolicyFromSnapshot(snap as Record&lt;string, unknown&gt;)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * 是否对当前标签页应用强制暗色（由策略推导）。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readApplyDark(): Promise&lt;boolean&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const policy = await readGlobalPolicy()</span>
+<span class="cstat-no" title="statement not covered" >  return shouldInjectForcedDarkStyles(policy)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * 内容脚本专用：全局策略允许 **且** 站点列表规则允许套用时才为 true（RFC 017）。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readShouldApplyForcedDarkForPage(pageOrigin?: string): Promise&lt;boolean&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const base = await readApplyDark()</span>
+<span class="cstat-no" title="statement not covered" >  if (!base) return false</span>
+<span class="cstat-no" title="statement not covered" >  const origin =</span>
+<span class="cstat-no" title="statement not covered" >    pageOrigin ?? (typeof globalThis.location !== 'undefined' ? globalThis.location.origin : '')</span>
+<span class="cstat-no" title="statement not covered" >  const state = await readSiteListState()</span>
+<span class="cstat-no" title="statement not covered" >  return shouldApplyForcedDarkFromSiteList(origin, state)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * 读取站点列表（RFC 009 / 017 模型子集）。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readSiteListState(): Promise&lt;SiteListStateV2&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...SITE_LIST_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return parseSiteListState(snap[STORAGE_KEY_SITE_LIST])</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** 持久化站点列表（RFC 017：`v:2` + `mode` + `entries`）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistSiteListState(state: SiteListStateV2): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  await chrome.storage.local.set({ [STORAGE_KEY_SITE_LIST]: state })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** 将某 http(s) origin 在站点列表 `entries` 中切换（保持当前 `mode`；Popup / 快捷键 RFC 010）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function toggleCurrentOriginInDenylist(origin: string): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const cur = await readSiteListState()</span>
+<span class="cstat-no" title="statement not covered" >  const next = toggleDenylistOrigin(origin, cur)</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteListState(next)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * @deprecated 使用 `readApplyDark`；保留别名以免外部引用断裂。
+ */
+export const readEnabled = readApplyDark
+&nbsp;
+/**
+ * RFC 006：读取采样预算（未写入 storage 时使用默认值）。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readSamplingBudget(): Promise&lt;SamplingBudget&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...SAMPLING_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return resolveSamplingBudgetFromSnapshot(snap as Record&lt;string, unknown&gt;)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * Popup / Options 写入全局策略（RFC 004 / 007）；与迁移后的键一致并移除遗留 `enabled`。
+ */
+export async function persistGlobalPolicy(policy: GlobalPolicy): Promise&lt;void&gt; {
+  await chrome.storage.local.set({
+    [STORAGE_KEY_POLICY]: policy,
+    [STORAGE_KEY_SCHEMA_VERSION]: CURRENT_STORAGE_SCHEMA_VERSION,
+  })
+  await chrome.storage.local.remove(STORAGE_KEY_ENABLED)
+}
+&nbsp;
+/** RFC 011：读取全局主题滤镜。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readThemeFiltersState(): Promise&lt;ThemeFiltersStateV1&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...THEME_FILTER_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return parseThemeFiltersState(snap[STORAGE_KEY_THEME_FILTERS])</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 011：写入全局主题滤镜（Popup 滑块）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistThemeFiltersState(state: ThemeFiltersStateV1): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  await chrome.storage.local.set({</span>
+<span class="cstat-no" title="statement not covered" >    [STORAGE_KEY_THEME_FILTERS]: clampThemeFilters(state),</span>
+<span class="cstat-no" title="statement not covered" >  })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 012 / 013：当前主题模式（未写入时由 `parseThemeMode` 默认为 Filter / `filter-css`）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readThemeMode(): Promise&lt;ThemeMode&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...THEME_MODE_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return parseThemeMode(snap[STORAGE_KEY_THEME_MODE])</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 012：Popup 单选写入主题模式；切换后内容脚本重绘以清除互斥路径残留。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistThemeMode(mode: ThemeMode): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  await chrome.storage.local.set({ [STORAGE_KEY_THEME_MODE]: mode })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** 网页配色：默认 `dark`（WASM）；可选 Solarized Dark 固定色。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readPagePalette(): Promise&lt;PagePalette&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...PAGE_PALETTE_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return parsePagePalette(snap[STORAGE_KEY_PAGE_PALETTE])</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistPagePalette(p: PagePalette): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  await chrome.storage.local.set({ [STORAGE_KEY_PAGE_PALETTE]: p })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 016：读取站点覆盖表。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readSiteOverridesState(): Promise&lt;SiteOverridesStateV1&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...SITE_OVERRIDE_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return parseSiteOverridesState(snap[STORAGE_KEY_SITE_OVERRIDES])</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 016：写入整表（内部使用）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistSiteOverridesState(state: SiteOverridesStateV1): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  await chrome.storage.local.set({ [STORAGE_KEY_SITE_OVERRIDES]: state })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 018：读取全局字体/描边。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readTypographyState(): Promise&lt;TypographyStateV1&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...TYPOGRAPHY_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return parseTypographyState(snap[STORAGE_KEY_TYPOGRAPHY])</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 018：写入全局字体/描边（Popup）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistTypographyState(state: TypographyStateV1): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const c = clampTypographySettings(</span>
+<span class="cstat-no" title="statement not covered" >    typographyStateToSettings({ ...DEFAULT_TYPOGRAPHY_STATE, ...state }),</span>
+<span class="cstat-no" title="statement not covered" >  )</span>
+<span class="cstat-no" title="statement not covered" >  await chrome.storage.local.set({</span>
+<span class="cstat-no" title="statement not covered" >    [STORAGE_KEY_TYPOGRAPHY]: { v: TYPOGRAPHY_SCHEMA_VERSION, ...c },</span>
+<span class="cstat-no" title="statement not covered" >  })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 019：读取每站自定义 CSS 表。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readSiteCustomCssState(): Promise&lt;SiteCustomCssStateV1&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const snap = await chrome.storage.local.get([...SITE_CUSTOM_CSS_KEYS])</span>
+<span class="cstat-no" title="statement not covered" >  return parseSiteCustomCssState(snap[STORAGE_KEY_SITE_CUSTOM_CSS])</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 019：写入整表（内部使用）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistSiteCustomCssState(state: SiteCustomCssStateV1): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  await chrome.storage.local.set({ [STORAGE_KEY_SITE_CUSTOM_CSS]: state })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * RFC 019：当前页 origin 的用户 CSS（已 sanitize）；无则为空串。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readSiteCustomCssForPage(pageOrigin?: string): Promise&lt;string&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const origin =</span>
+<span class="cstat-no" title="statement not covered" >    pageOrigin ?? (typeof globalThis.location !== 'undefined' ? globalThis.location.origin : '')</span>
+<span class="cstat-no" title="statement not covered" >  const state = await readSiteCustomCssState()</span>
+<span class="cstat-no" title="statement not covered" >  return state.byOrigin[origin]?.css ?? ''</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 019：写入或清空某 origin 的自定义 CSS（Popup）。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function persistSiteCustomCssForOrigin(origin: string, css: string): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const cur = await readSiteCustomCssState()</span>
+<span class="cstat-no" title="statement not covered" >  const byOrigin = { ...cur.byOrigin }</span>
+<span class="cstat-no" title="statement not covered" >  const s = sanitizeSiteCustomCss(css)</span>
+<span class="cstat-no" title="statement not covered" >  if (!s.trim()) {</span>
+<span class="cstat-no" title="statement not covered" >    delete byOrigin[origin]</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    byOrigin[origin] = { css: s }</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteCustomCssState({ v: 1, byOrigin })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 016 / 019：是否存在该 origin 的主题/字体覆盖或自定义 CSS。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function hasSiteScopedDataForOrigin(origin: string): Promise&lt;boolean&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const [ov, cssText] = await Promise.all([</span>
+<span class="cstat-no" title="statement not covered" >    readSiteOverridesState(),</span>
+<span class="cstat-no" title="statement not covered" >    readSiteCustomCssForPage(origin),</span>
+<span class="cstat-no" title="statement not covered" >  ])</span>
+<span class="cstat-no" title="statement not covered" >  return Boolean(ov.byOrigin[origin]) || cssText.trim().length &gt; 0</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * RFC 016：按当前页 origin 合并全局主题与覆盖，供内容脚本注入。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readEffectiveThemeForPage(pageOrigin?: string): Promise&lt;{</span></span>
+  themeMode: ThemeMode
+  themeFilters: ThemeFiltersStateV1
+<span class="cstat-no" title="statement not covered" >}&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const origin =</span>
+<span class="cstat-no" title="statement not covered" >    pageOrigin ?? (typeof globalThis.location !== 'undefined' ? globalThis.location.origin : '')</span>
+<span class="cstat-no" title="statement not covered" >  const [globalMode, globalFilters, overrides] = await Promise.all([</span>
+<span class="cstat-no" title="statement not covered" >    readThemeMode(),</span>
+<span class="cstat-no" title="statement not covered" >    readThemeFiltersState(),</span>
+<span class="cstat-no" title="statement not covered" >    readSiteOverridesState(),</span>
+<span class="cstat-no" title="statement not covered" >  ])</span>
+<span class="cstat-no" title="statement not covered" >  return resolveEffectiveTheme(origin, globalMode, globalFilters, overrides)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * 按当前页 origin 合并全局网页配色与单站覆盖（Dynamic/Static）。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readEffectivePagePaletteForPage(pageOrigin?: string): Promise&lt;PagePalette&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const origin =</span>
+<span class="cstat-no" title="statement not covered" >    pageOrigin ?? (typeof globalThis.location !== 'undefined' ? globalThis.location.origin : '')</span>
+<span class="cstat-no" title="statement not covered" >  const [globalPalette, overrides] = await Promise.all([</span>
+<span class="cstat-no" title="statement not covered" >    readPagePalette(),</span>
+<span class="cstat-no" title="statement not covered" >    readSiteOverridesState(),</span>
+<span class="cstat-no" title="statement not covered" >  ])</span>
+<span class="cstat-no" title="statement not covered" >  return resolveEffectivePagePalette(origin, globalPalette, overrides)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/**
+ * RFC 018：按当前页合并全局与单站字体/描边。
+ */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function readEffectiveTypographyForPage(pageOrigin?: string): Promise&lt;TypographySettingsV1&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const origin =</span>
+<span class="cstat-no" title="statement not covered" >    pageOrigin ?? (typeof globalThis.location !== 'undefined' ? globalThis.location.origin : '')</span>
+<span class="cstat-no" title="statement not covered" >  const [globalTy, overrides] = await Promise.all([</span>
+<span class="cstat-no" title="statement not covered" >    readTypographyState(),</span>
+<span class="cstat-no" title="statement not covered" >    readSiteOverridesState(),</span>
+<span class="cstat-no" title="statement not covered" >  ])</span>
+<span class="cstat-no" title="statement not covered" >  return resolveEffectiveTypography(origin, globalTy, overrides)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async function persistSiteOverrideEntry(</span></span>
+<span class="cstat-no" title="statement not covered" >  origin: string,</span>
+<span class="cstat-no" title="statement not covered" >  next: SiteOverrideEntryV1,</span>
+<span class="cstat-no" title="statement not covered" >  stateHint?: SiteOverridesStateV1,</span>
+<span class="cstat-no" title="statement not covered" >): Promise&lt;void&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const cur = stateHint ?? (await readSiteOverridesState())</span>
+<span class="cstat-no" title="statement not covered" >  const byOrigin = { ...cur.byOrigin }</span>
+<span class="cstat-no" title="statement not covered" >  if (isEmptySiteOverrideEntry(next)) {</span>
+<span class="cstat-no" title="statement not covered" >    delete byOrigin[origin]</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    byOrigin[origin] = next</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteOverridesState({ v: 1, byOrigin })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 016 Popup：仅当前站覆盖模式；与全局相同时去掉该字段。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function upsertSiteThemeModeOverride(origin: string, mode: ThemeMode): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const globalMode = await readThemeMode()</span>
+<span class="cstat-no" title="statement not covered" >  const state = await readSiteOverridesState()</span>
+<span class="cstat-no" title="statement not covered" >  const prev = state.byOrigin[origin] ?? {}</span>
+<span class="cstat-no" title="statement not covered" >  const next: SiteOverrideEntryV1 = { ...prev }</span>
+<span class="cstat-no" title="statement not covered" >  if (mode === globalMode) {</span>
+<span class="cstat-no" title="statement not covered" >    delete next.themeMode</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    next.themeMode = mode</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteOverrideEntry(origin, next, state)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 016 Popup：写入与全局差分后的滑块部分覆盖。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function upsertSiteThemeFiltersOverride(</span></span>
+<span class="cstat-no" title="statement not covered" >  origin: string,</span>
+<span class="cstat-no" title="statement not covered" >  current: ThemeFiltersStateV1,</span>
+<span class="cstat-no" title="statement not covered" >): Promise&lt;void&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const global = await readThemeFiltersState()</span>
+<span class="cstat-no" title="statement not covered" >  const partial = diffPartialThemeFilters(global, current)</span>
+<span class="cstat-no" title="statement not covered" >  const state = await readSiteOverridesState()</span>
+<span class="cstat-no" title="statement not covered" >  const prev = state.byOrigin[origin] ?? {}</span>
+<span class="cstat-no" title="statement not covered" >  const next: SiteOverrideEntryV1 = { ...prev }</span>
+<span class="cstat-no" title="statement not covered" >  if (Object.keys(partial).length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >    delete next.themeFilters</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    next.themeFilters = partial</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteOverrideEntry(origin, next, state)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** Popup：仅当前站覆盖网页配色；与全局相同时去掉该字段。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function upsertSitePagePaletteOverride(origin: string, palette: PagePalette): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const globalPalette = await readPagePalette()</span>
+<span class="cstat-no" title="statement not covered" >  const state = await readSiteOverridesState()</span>
+<span class="cstat-no" title="statement not covered" >  const prev = state.byOrigin[origin] ?? {}</span>
+<span class="cstat-no" title="statement not covered" >  const next: SiteOverrideEntryV1 = { ...prev }</span>
+<span class="cstat-no" title="statement not covered" >  if (palette === globalPalette) {</span>
+<span class="cstat-no" title="statement not covered" >    delete next.pagePalette</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    next.pagePalette = palette</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteOverrideEntry(origin, next, state)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 018：写入与全局差分后的字体/描边部分覆盖。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function upsertSiteTypographyOverride(</span></span>
+<span class="cstat-no" title="statement not covered" >  origin: string,</span>
+<span class="cstat-no" title="statement not covered" >  current: TypographySettingsV1,</span>
+<span class="cstat-no" title="statement not covered" >): Promise&lt;void&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  const global = typographyStateToSettings(await readTypographyState())</span>
+<span class="cstat-no" title="statement not covered" >  const partial = diffPartialTypography(global, current)</span>
+<span class="cstat-no" title="statement not covered" >  const state = await readSiteOverridesState()</span>
+<span class="cstat-no" title="statement not covered" >  const prev = state.byOrigin[origin] ?? {}</span>
+<span class="cstat-no" title="statement not covered" >  const next: SiteOverrideEntryV1 = { ...prev }</span>
+<span class="cstat-no" title="statement not covered" >  if (Object.keys(partial).length === 0) {</span>
+<span class="cstat-no" title="statement not covered" >    delete next.typography</span>
+<span class="cstat-no" title="statement not covered" >  } else {</span>
+<span class="cstat-no" title="statement not covered" >    next.typography = partial</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteOverrideEntry(origin, next, state)</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;
+/** RFC 016 / 019：移除此 origin 的主题/字体覆盖与自定义 CSS。 */
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function clearSiteOverrideForOrigin(origin: string): Promise&lt;void&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >  const state = await readSiteOverridesState()</span>
+<span class="cstat-no" title="statement not covered" >  const byOrigin = { ...state.byOrigin }</span>
+<span class="cstat-no" title="statement not covered" >  delete byOrigin[origin]</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteOverridesState({ v: 1, byOrigin })</span>
+<span class="cstat-no" title="statement not covered" >  const cssCur = await readSiteCustomCssState()</span>
+<span class="cstat-no" title="statement not covered" >  const cssByOrigin = { ...cssCur.byOrigin }</span>
+<span class="cstat-no" title="statement not covered" >  delete cssByOrigin[origin]</span>
+<span class="cstat-no" title="statement not covered" >  await persistSiteCustomCssState({ v: 1, byOrigin: cssByOrigin })</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-06T03:34:11.160Z
+            </div>
+        <script src="prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="sorter.js"></script>
+        <script src="block-navigation.js"></script>
+    </body>
+</html>
+    

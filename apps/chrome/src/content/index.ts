@@ -18,13 +18,13 @@ import {
   ensureCustomCssStyleElement,
   ensureStyleElement,
   ensureTypographyStyleElement,
-} from '../shared/css'
+} from "@luban-ws/shared"
 import {
   buildFilterPlusCss,
   ensureFilterPlusSvg,
   removeFilterPlusSvg,
   shouldExposeFilterPlusMode,
-} from '../shared/filter-plus-svg'
+} from "@luban-ws/shared"
 import {
   MIX_TOWARD_BLACK_AMOUNT,
   ROOT_ATTR,
@@ -35,14 +35,14 @@ import {
   THEME_MODE_FILTER_CSS,
   THEME_MODE_FILTER_PLUS,
   THEME_MODE_STATIC,
-} from '../shared/constants'
+} from "@luban-ws/shared"
 import {
   PAGE_PALETTE_SOLARIZED_DARK,
   SOLARIZED_PAGE_BG_CSS,
   SOLARIZED_PAGE_FG_CSS,
   type PagePalette,
-} from '../shared/page-palette'
-import { buildTypographyCss } from '../shared/typography'
+} from "@luban-ws/shared"
+import { buildTypographyCss } from "@luban-ws/shared"
 import {
   readEffectivePagePaletteForPage,
   readEffectiveThemeForPage,
@@ -50,8 +50,8 @@ import {
   readSamplingBudget,
   readShouldApplyForcedDarkForPage,
   readSiteCustomCssForPage,
-} from '../shared/storage'
-import type { ThemeFiltersStateV1 } from '../shared/theme-filters'
+} from "@luban-ws/shared"
+import type { ThemeFiltersStateV1 } from "@luban-ws/shared"
 
 /**
  * 将 RGB 分量格式化为 CSS rgb()，避免魔法字符串散落。

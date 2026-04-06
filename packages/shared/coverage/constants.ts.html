@@ -1,0 +1,505 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for constants.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="index.html">All files</a> constants.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>51/51</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/0</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>51/51</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/** 本地存储 schema 版本键（从 1 起递增）。 */
+export const STORAGE_KEY_SCHEMA_VERSION = 'change-dark:schema-version'
+&nbsp;
+/** 全局主开关语义：`auto` | `on` | `off`（RFC 004）。 */
+export const STORAGE_KEY_POLICY = 'change-dark:policy'
+&nbsp;
+/**
+ * 遗留布尔开关；迁移后由后台删除，读路径仍兼容直至字段消失。
+ * @deprecated 请使用 `STORAGE_KEY_POLICY`
+ */
+export const STORAGE_KEY_ENABLED = 'change-dark:enabled'
+&nbsp;
+/**
+ * RFC 009 / 017：站点列表真源为 `STORAGE_KEY_SITE_LIST`（`SiteListStateV2`）；此键名为历史占位。
+ * @deprecated 请使用 `STORAGE_KEY_SITE_LIST`
+ */
+export const STORAGE_KEY_ORIGIN_OVERRIDES = 'change-dark:origin-overrides'
+&nbsp;
+/** 站点列表（`SiteListStateV2`：模式 + glob/正则/精确），RFC 009 / 017。 */
+export const STORAGE_KEY_SITE_LIST = 'change-dark:site-list'
+&nbsp;
+/** 列表内站点 **不** 套用强制暗色（原 denylist 语义）。 */
+export const SITE_LIST_MODE_NOT_INVERT_LISTED = 'not-invert-listed' as const
+&nbsp;
+/** 仅列表内站点套用强制暗色（allowlist）。 */
+export const SITE_LIST_MODE_INVERT_LISTED_ONLY = 'invert-listed-only' as const
+&nbsp;
+export type SiteListMode =
+  | typeof SITE_LIST_MODE_NOT_INVERT_LISTED
+  | typeof SITE_LIST_MODE_INVERT_LISTED_ONLY
+&nbsp;
+/** RFC 016：按 origin 的主题模式 / 滤镜覆盖（`SiteOverridesStateV1`）。 */
+export const STORAGE_KEY_SITE_OVERRIDES = 'change-dark:site-overrides' as const
+&nbsp;
+/** RFC 018：全局字体与文本描边（`TypographyStateV1`）。 */
+export const STORAGE_KEY_TYPOGRAPHY = 'change-dark:typography' as const
+&nbsp;
+/** RFC 019：每站自定义 CSS（`SiteCustomCssStateV1`）。 */
+export const STORAGE_KEY_SITE_CUSTOM_CSS = 'change-dark:site-custom-css' as const
+&nbsp;
+/** 全局主题滤镜（`ThemeFiltersStateV1`），RFC 011。 */
+export const STORAGE_KEY_THEME_FILTERS = 'change-dark:theme-filters'
+&nbsp;
+/** 主题模式：`dynamic` | `static`（RFC 012 / 015）。 */
+export const STORAGE_KEY_THEME_MODE = 'change-dark:theme-mode'
+&nbsp;
+/** 网页强制暗色时的配色：`dark`（WASM）| `solarized-dark`。 */
+export const STORAGE_KEY_PAGE_PALETTE = 'change-dark:page-palette' as const
+&nbsp;
+/** Dark Reader 类「Dynamic」：采样 + k-means + WASM（RFC 006）。 */
+export const THEME_MODE_DYNAMIC = 'dynamic' as const
+&nbsp;
+/** 固定基色轻路径，无页面采样（RFC 015；与 Dynamic 互斥切换）。 */
+export const THEME_MODE_STATIC = 'static' as const
+&nbsp;
+/** RFC 013：整页 CSS `filter` 反相路径（与 Dynamic/Static 互斥）。 */
+export const THEME_MODE_FILTER_CSS = 'filter-css' as const
+&nbsp;
+/** RFC 014：SVG `filter`（feColorMatrix + feHueRotate）；非 Chromium 时读路径保留、运行降级。 */
+export const THEME_MODE_FILTER_PLUS = 'filter-plus' as const
+&nbsp;
+export type ThemeMode =
+  | typeof THEME_MODE_DYNAMIC
+  | typeof THEME_MODE_STATIC
+  | typeof THEME_MODE_FILTER_CSS
+  | typeof THEME_MODE_FILTER_PLUS
+&nbsp;
+/** RFC 014：注入到 `body` 的隐藏 SVG 宿主，`filter: url(#…)` 同文档引用。 */
+export const FILTER_PLUS_SVG_HOST_ID = 'change-dark-filter-plus-svg' as const
+&nbsp;
+/** RFC 014：`filter: url(#id)` 与 `&lt;filter id&gt;` 一致。 */
+export const FILTER_PLUS_SVG_FILTER_ID = 'cd-filter-plus-base' as const
+&nbsp;
+/**
+ * RFC 013：根节点反相链（与常见 Filter 模式一致）；`img`/`video` 等用同链再反相以抵消整页反相。
+ */
+export const FILTER_CSS_INVERT_CHAIN = 'invert(1) hue-rotate(180deg)' as const
+&nbsp;
+/** RFC 006：单次采样最多访问的元素节点数（可配置）。 */
+export const STORAGE_KEY_SAMPLING_MAX_NODES = 'change-dark:sampling-max-nodes'
+&nbsp;
+/** RFC 006：单次采样时间墙（毫秒，可配置）。 */
+export const STORAGE_KEY_SAMPLING_MAX_MS = 'change-dark:sampling-max-ms'
+&nbsp;
+/** 默认最大采样节点数（偏保守，避免弱机卡顿）。 */
+export const DEFAULT_SAMPLING_MAX_NODES = 120
+&nbsp;
+/** 默认采样时间墙（毫秒）。 */
+export const DEFAULT_SAMPLING_MAX_MS = 35
+&nbsp;
+/** RFC 006 回退：与 v1 固定「纸面」底一致（`mix` 前）。 */
+export const STATIC_FALLBACK_RGB = [248, 250, 252] as const
+&nbsp;
+/** 向黑色混合强度，与历史行为一致。 */
+export const MIX_TOWARD_BLACK_AMOUNT = 0.88
+&nbsp;
+export const POLICY_AUTO = 'auto' as const
+export const POLICY_ON = 'on' as const
+export const POLICY_OFF = 'off' as const
+&nbsp;
+export type GlobalPolicy = typeof POLICY_AUTO | typeof POLICY_ON | typeof POLICY_OFF
+&nbsp;
+/** `manifest.commands` 名称，须与 background `onCommand` 一致（RFC 010）。 */
+export const COMMAND_TOGGLE_GLOBAL = 'toggle-global-dark' as const
+&nbsp;
+export const COMMAND_TOGGLE_CURRENT_SITE = 'toggle-current-site' as const
+&nbsp;
+/** 标记在根元素上，便于样式与调试识别扩展已注入。 */
+export const ROOT_ATTR = 'data-change-dark-root'
+&nbsp;
+/** 注入的样式节点 id，避免重复插入。 */
+export const STYLE_ELEMENT_ID = 'change-dark-style'
+&nbsp;
+/** RFC 018：字体与描边第二条样式节点（与主暗色样式分离，便于单独移除）。 */
+export const STYLE_ELEMENT_TYPOGRAPHY_ID = 'change-dark-typography-style'
+&nbsp;
+/** RFC 019：每站用户 CSS 第三条样式节点。 */
+export const STYLE_ELEMENT_CUSTOM_CSS_ID = 'change-dark-site-custom-css'
+&nbsp;
+/** 注入到页面的自定义属性：由 WASM 计算的页面背景色。 */
+export const CSS_VAR_PAGE_BG = '--cd-page-bg'
+&nbsp;
+/** 注入到页面的自定义属性：由 WASM 计算的建议前景色。 */
+export const CSS_VAR_PAGE_FG = '--cd-page-fg'
+&nbsp;
+/** 内容脚本与迁移逻辑共同关心的 local 键（顺序无关）。 */
+export const STORAGE_KEYS_AFFECTING_INJECTION: readonly string[] = [
+  STORAGE_KEY_SCHEMA_VERSION,
+  STORAGE_KEY_POLICY,
+  STORAGE_KEY_ENABLED,
+  STORAGE_KEY_SAMPLING_MAX_NODES,
+  STORAGE_KEY_SAMPLING_MAX_MS,
+  STORAGE_KEY_SITE_LIST,
+  STORAGE_KEY_SITE_OVERRIDES,
+  STORAGE_KEY_THEME_FILTERS,
+  STORAGE_KEY_THEME_MODE,
+  STORAGE_KEY_PAGE_PALETTE,
+  STORAGE_KEY_TYPOGRAPHY,
+  STORAGE_KEY_SITE_CUSTOM_CSS,
+]
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-04-06T03:34:11.160Z
+            </div>
+        <script src="prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="sorter.js"></script>
+        <script src="block-navigation.js"></script>
+    </body>
+</html>
+    

@@ -13,11 +13,22 @@
         "lint": "tsc -p tsconfig.json --noEmit"
     },
     "dependencies": {
-        "@luban-ws/dark-engine": "workspace:*"
+        "@luban-ws/dark-engine": "workspace:*",
+        "@luban-ws/shared": "workspace:*",
+        "i18next": "^26.0.3",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-i18next": "^17.0.2"
     },
     "devDependencies": {
         "@crxjs/vite-plugin": "^2.0.0-beta.26",
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^16.2.0",
         "@types/chrome": "^0.0.279",
+        "@types/react": "^18.3.18",
+        "@types/react-dom": "^18.3.5",
+        "@vitejs/plugin-react": "^4.3.4",
+        "@vitest/coverage-v8": "2.1.9",
         "jsdom": "^25.0.1",
         "sharp": "^0.34.5",
         "typescript": "^5.7.3",
