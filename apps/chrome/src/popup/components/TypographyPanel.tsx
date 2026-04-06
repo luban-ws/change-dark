@@ -21,18 +21,20 @@ export const TypographyPanel = ({ typography, onChange }: TypographyPanelProps) 
         </Flex>
 
         <Select.Root 
-          value={typography.fontPreset} 
+          value={typography.fontPreset || 'system'} 
           onValueChange={(val) => onChange({ ...typography, fontPreset: val as any })}
         >
-          <Select.Trigger />
+          <Select.Trigger placeholder="Select font…" />
           <Select.Content>
-            <Select.Item value="system-ui">System UI</Select.Item>
-            <Select.Item value="sans-serif">Sans Serif</Select.Item>
+            <Select.Item value="system">System UI</Select.Item>
+            <Select.Item value="sans">Sans Serif</Select.Item>
             <Select.Item value="serif">Serif</Select.Item>
-            <Select.Item value="monospace">Monospace</Select.Item>
-            <Select.Item value="custom">Custom...</Select.Item>
+            <Select.Item value="mono">Monospace</Select.Item>
+            <Select.Item value="custom">Custom…</Select.Item>
           </Select.Content>
         </Select.Root>
+
+
 
         {typography.fontPreset === 'custom' && (
           <TextField.Root 

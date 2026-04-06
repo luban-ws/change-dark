@@ -10,7 +10,7 @@ import {
   upsertSiteThemeFiltersOverride, upsertSitePagePaletteOverride,
   upsertSiteTypographyOverride, readSiteCustomCssForPage,
   persistSiteCustomCssForOrigin, readSiteListState, persistSiteListState,
-  toggleCurrentOriginInDenylist
+  toggleCurrentOriginInDenylist, readAutoDarkThreshold, persistAutoDarkThreshold
 } from "@luban-ws/dark-shared"
 import { resolveEffectiveTheme, resolveEffectivePagePalette, resolveEffectiveTypography } from "@luban-ws/dark-shared"
 import { hostnameLabelFromHttpOrigin, normalizeHttpOriginFromUrl, shouldApplyForcedDarkFromSiteList } from "@luban-ws/dark-shared"
@@ -21,6 +21,7 @@ import {
   STORAGE_KEY_POLICY, STORAGE_KEY_SITE_LIST, STORAGE_KEY_THEME_FILTERS, 
   STORAGE_KEY_THEME_MODE, STORAGE_KEY_PAGE_PALETTE, STORAGE_KEY_SITE_OVERRIDES, 
   STORAGE_KEY_TYPOGRAPHY, STORAGE_KEY_SITE_CUSTOM_CSS,
+  STORAGE_KEY_AUTO_DARK_THRESHOLD, DEFAULT_AUTO_DARK_THRESHOLD,
   type ThemeMode, type GlobalPolicy
 } from "@luban-ws/dark-shared"
 import { typographyStateToSettings, clampTypographySettings, type TypographySettingsV1 } from "@luban-ws/dark-shared"
@@ -35,9 +36,10 @@ export function usePopupState() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(THEME_MODE_FILTER_CSS)
   const [filters, setFilters] = useState<ThemeFiltersStateV1>({ brightness: 100, contrast: 100, sepia: 0, saturate: 100 })
   const [palette, setPalette] = useState<PagePalette>('dark')
-  const [typography, setTypography] = useState<TypographySettingsV1>({ fontEnabled: false, fontPreset: 'system-ui', customFontFamily: '', textStrokeEnabled: false, textStrokeWidthPx: 0.06 })
+  const [typography, setTypography] = useState<TypographySettingsV1>({ fontEnabled: false, fontPreset: 'system', customFontFamily: '', textStrokeEnabled: false, textStrokeWidthPx: 0.06 })
   const [siteCss, setSiteCss] = useState('')
   const [siteList, setSiteList] = useState({ mode: 'not-invert-listed', entries: [] as string[] })
+  const [autoDarkThreshold, setAutoDarkThreshold] = useState(DEFAULT_AUTO_DARK_THRESHOLD)
 
   async function refreshSiteButton(currentOrigin: string | null) {
     try {
@@ -82,6 +84,9 @@ export function usePopupState() {
 
       const slState = await readSiteListState()
       setSiteList(slState)
+      
+      const threshold = await readAutoDarkThreshold()
+      setAutoDarkThreshold(threshold)
     } catch {}
   }
 
@@ -99,7 +104,8 @@ export function usePopupState() {
       
       const mustRefreshUi = [
         STORAGE_KEY_THEME_FILTERS, STORAGE_KEY_THEME_MODE, STORAGE_KEY_PAGE_PALETTE,
-        STORAGE_KEY_SITE_OVERRIDES, STORAGE_KEY_TYPOGRAPHY, STORAGE_KEY_SITE_CUSTOM_CSS
+        STORAGE_KEY_SITE_OVERRIDES, STORAGE_KEY_TYPOGRAPHY, STORAGE_KEY_SITE_CUSTOM_CSS,
+        STORAGE_KEY_AUTO_DARK_THRESHOLD
       ].some(k => changes[k])
       
       if (changes[STORAGE_KEY_POLICY] || changes[STORAGE_KEY_SITE_LIST] || mustRefreshUi) {
@@ -128,13 +134,14 @@ export function usePopupState() {
     setSiteCustomCss: (css: string) => { if (origin) persistSiteCustomCssForOrigin(origin, css) },
     clearSiteOverride: async () => { if (origin) { await clearSiteOverrideForOrigin(origin); setEditScope('global'); } },
     updateSiteListMode: (mode: 'not-invert-listed' | 'invert-listed-only') => persistSiteListState({ v: 2, mode, entries: siteList.entries }),
-    updateSiteListEntries: (entries: string[]) => persistSiteListState({ v: 2, mode: siteList.mode as any, entries })
+    updateSiteListEntries: (entries: string[]) => persistSiteListState({ v: 2, mode: siteList.mode as any, entries }),
+    setAutoDarkThreshold: (val: number) => persistAutoDarkThreshold(val)
   }
 
   return { 
     origin, hostnameTitle: origin ? hostnameLabelFromHttpOrigin(origin) : '', 
     editScope, hasSiteOverride, isSiteForcedDark, 
-    policy, themeMode, filters, palette, typography, siteCss, siteList,
+    policy, themeMode, filters, palette, typography, siteCss, siteList, autoDarkThreshold,
     actions 
   }
 }

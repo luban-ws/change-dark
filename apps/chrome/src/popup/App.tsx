@@ -1,5 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import i18n, { STORAGE_KEY_LANG } from './i18n'
+
 import { usePopupState } from './hooks/usePopupState'
 import {
   POLICY_AUTO, POLICY_OFF, POLICY_ON, type GlobalPolicy,
@@ -11,7 +13,7 @@ import { TypographyPanel } from './components/TypographyPanel'
 import { SiteToolsPanel } from './components/SiteToolsPanel'
 import qrCodeImgUrl from './qr-code.png'
 
-import { Flex, Box, Text, Heading, Tabs, Card, Switch, ScrollArea, SegmentedControl, Button, Select } from '@radix-ui/themes'
+import { Flex, Box, Text, Heading, Tabs, Card, Switch, ScrollArea, SegmentedControl, Button, Select, Slider } from '@radix-ui/themes'
 import { Settings, Heart, Moon } from 'lucide-react'
 
 export default function App() {
@@ -19,7 +21,7 @@ export default function App() {
   
   const { 
     origin, hostnameTitle, editScope, hasSiteOverride, isSiteForcedDark, 
-    policy, themeMode, filters, palette, typography, siteCss, siteList, actions 
+    policy, themeMode, filters, palette, typography, siteCss, siteList, autoDarkThreshold, actions 
   } = usePopupState()
 
   const isFirefoxUiGateActive = !shouldExposeFilterPlusMode()
@@ -39,7 +41,11 @@ export default function App() {
           <Box>
             <Select.Root 
               value={i18n.language === 'zh_CN' ? 'zh_CN' : 'en'} 
-              onValueChange={(val) => i18n.changeLanguage(val)}
+              onValueChange={(val) => {
+                void i18n.changeLanguage(val)
+                void chrome.storage.local.set({ [STORAGE_KEY_LANG]: val })
+              }}
+
               size="1"
             >
               <Select.Trigger variant="ghost" />
@@ -97,12 +103,34 @@ export default function App() {
 
                 {/* Global Switch Card */}
                 <Card size="1">
-                  <Text as="div" size="2" weight="bold" mb="2">{t('globalSwitch', 'Global Switch')}</Text>
-                  <SegmentedControl.Root value={policy} onValueChange={(val) => actions.setPolicy(val as GlobalPolicy)} size="2">
+                  <Flex justify="between" align="center" mb="2">
+                    <Text size="2" weight="bold">{t('globalSwitch', 'Global Switch')}</Text>
+                    {policy === POLICY_AUTO && (
+                      <Text size="1" color="gray">
+                        {t('lblThreshold', 'Threshold')}: {autoDarkThreshold}
+                      </Text>
+                    )}
+                  </Flex>
+                  <SegmentedControl.Root value={policy} onValueChange={(val) => actions.setPolicy(val as GlobalPolicy)} size="2" mb={policy === POLICY_AUTO ? "3" : "0"}>
                     <SegmentedControl.Item value={POLICY_AUTO}>{t('lblAuto', 'Auto')}</SegmentedControl.Item>
                     <SegmentedControl.Item value={POLICY_ON}>{t('lblOn', 'On')}</SegmentedControl.Item>
                     <SegmentedControl.Item value={POLICY_OFF}>{t('lblOff', 'Off')}</SegmentedControl.Item>
                   </SegmentedControl.Root>
+
+                  {policy === POLICY_AUTO && (
+                    <Flex direction="column" gap="1">
+                      <Slider 
+                        size="1"
+                        min={0} max={255} step={5}
+                        value={[autoDarkThreshold]}
+                        onValueChange={([val]) => actions.setAutoDarkThreshold(val)}
+                      />
+                      <Flex justify="between">
+                        <Text size="1" color="gray">{t('lblStrict', 'Strict')}</Text>
+                        <Text size="1" color="gray">{t('lblRelaxed', 'Relaxed')}</Text>
+                      </Flex>
+                    </Flex>
+                  )}
                 </Card>
 
                 {/* Scope Mode */}
@@ -114,10 +142,17 @@ export default function App() {
                     </SegmentedControl.Item>
                   </SegmentedControl.Root>
                   {hasSiteOverride && (
-                    <Button size="1" color="red" variant="soft" onClick={() => actions.clearSiteOverride()}>
-                      {t('lblClearOverride', 'Clear Site Override')}
+                    <Button
+                      size="1"
+                      color="red"
+                      variant="soft"
+                      onClick={() => actions.clearSiteOverride()}
+                      style={{ fontSize: '11px', padding: '2px 7px', height: '22px', lineHeight: 1 }}
+                    >
+                      ✕
                     </Button>
                   )}
+
                 </Flex>
 
                 {/* Theme Mode Card */}

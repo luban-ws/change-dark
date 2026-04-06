@@ -1,6 +1,6 @@
 # Roadmap — 嫦娥 / Selena
 
-**下一个可用 RFC 编号：025**。  
+**下一个可用 RFC 编号：026**。  
 已完成的 RFC 归档于 `docs/rfc/completed/`。  
 WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)  
 任务追踪：[TASK_TRACKING.md](./TASK_TRACKING.md)
@@ -59,19 +59,18 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
 | [023](./docs/rfc/completed/023-dynamic-color-engine-pipeline.md) | T-035 | Dynamic 配色管线：采样、聚合语义讨论 | ✅ |
+| [025](./docs/rfc/completed/025-policy-mode-behavior-matrix.md) | T-037 | 策略×模式行为矩阵：Auto/On/Off × Filter/Filter+/Dynamic/Static | ✅ |
 
 ---
 
 ## 当前进行中 / Backlog
 
-> 以下项尚无独立 RFC，下一个从 **025** 起编号。
+> 以下项尚无独立 RFC，下一个从 **026** 起编号。
 
 | 方向 | 说明 | 优先级 |
 |------|------|--------|
 | **E2E 测试** | 加载未打包扩展 → 打开页面 → 断言注入/存储行为 | 高 |
 | **Chrome Web Store 上架** | 打包、隐私政策、审核素材与说明 | 中 |
-| **Auto 暗检测阈值配置化** | 当前亮度阈值 `luma < 80` 写死；考虑 per-site 覆盖或用户可调 | 低 |
-| **Auto + filter-css/filter-plus 暗检测** | RFC 024 仅覆盖 Dynamic 模式；其他模式与 auto 组合暂不检测 | 低 |
 
 ---
 

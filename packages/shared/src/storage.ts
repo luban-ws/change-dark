@@ -13,6 +13,8 @@ import {
   STORAGE_KEY_PAGE_PALETTE,
   STORAGE_KEY_TYPOGRAPHY,
   STORAGE_KEY_SITE_CUSTOM_CSS,
+  STORAGE_KEY_AUTO_DARK_THRESHOLD,
+  DEFAULT_AUTO_DARK_THRESHOLD,
 } from './constants'
 import {
   CURRENT_STORAGE_SCHEMA_VERSION,
@@ -388,4 +390,17 @@ export async function clearSiteOverrideForOrigin(origin: string): Promise<void> 
   const cssByOrigin = { ...cssCur.byOrigin }
   delete cssByOrigin[origin]
   await persistSiteCustomCssState({ v: 1, byOrigin: cssByOrigin })
+}
+
+/** RFC 024：读取智能暗色检测阈值。 */
+export async function readAutoDarkThreshold(): Promise<number> {
+  const result = await chrome.storage.local.get(STORAGE_KEY_AUTO_DARK_THRESHOLD)
+  const val = result[STORAGE_KEY_AUTO_DARK_THRESHOLD]
+  if (typeof val === 'number') return val
+  return DEFAULT_AUTO_DARK_THRESHOLD
+}
+
+/** RFC 024：持久化智能暗色检测阈值。 */
+export async function persistAutoDarkThreshold(val: number): Promise<void> {
+  await chrome.storage.local.set({ [STORAGE_KEY_AUTO_DARK_THRESHOLD]: val })
 }

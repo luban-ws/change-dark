@@ -88,6 +88,12 @@ export const DEFAULT_SAMPLING_MAX_NODES = 120
 /** 默认采样时间墙（毫秒）。 */
 export const DEFAULT_SAMPLING_MAX_MS = 35
 
+/** RFC 024：Auto 模式原生深色检测亮度阈值（0-255，越小越严格）。 */
+export const STORAGE_KEY_AUTO_DARK_THRESHOLD = 'change-dark:auto-dark-threshold'
+
+/** 默认 Auto 模式深色检测阈值。 */
+export const DEFAULT_AUTO_DARK_THRESHOLD = 80
+
 /** RFC 006 回退：与 v1 固定「纸面」底一致（`mix` 前）。 */
 export const STATIC_FALLBACK_RGB = [248, 250, 252] as const
 
@@ -137,4 +143,5 @@ export const STORAGE_KEYS_AFFECTING_INJECTION: readonly string[] = [
   STORAGE_KEY_PAGE_PALETTE,
   STORAGE_KEY_TYPOGRAPHY,
   STORAGE_KEY_SITE_CUSTOM_CSS,
+  STORAGE_KEY_AUTO_DARK_THRESHOLD,
 ]

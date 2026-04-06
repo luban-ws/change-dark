@@ -10,3 +10,4 @@ packages/**/target
 apps/chrome/dev
 apps/chrome/change-dark-extension.zip
 logs/
+coverage/

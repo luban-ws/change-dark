@@ -52,6 +52,7 @@ import {
   readShouldApplyForcedDarkForPage,
   readSiteCustomCssForPage,
   readGlobalPolicy,
+  readAutoDarkThreshold,
 } from "@luban-ws/dark-shared"
 import type { ThemeFiltersStateV1 } from "@luban-ws/dark-shared"
 
@@ -161,9 +162,43 @@ async function applyForcedDark(): Promise<void> {
   const pagePalette = await readEffectivePagePaletteForPage()
   const typoSettings = await readEffectiveTypographyForPage()
   const siteCustomCss = await readSiteCustomCssForPage()
+  const autoDarkThreshold = await readAutoDarkThreshold()
 
   const runPaint = (): void => {
     try {
+      // AUTO mode: if the page is natively dark, skip ALL injection regardless of theme mode.
+      // Read html/body computed background BEFORE mode-specific branches.
+      // We cannot use k-means baseRgb for this check (many dark SPAs return transparent
+      // backgrounds and trigger STATIC_FALLBACK_RGB = [248,250,252]).
+      if (policy === POLICY_AUTO) {
+        const parseLuma = (css: string): number | null => {
+          const m = css.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/)
+          if (!m) return null
+          const alphaM = css.match(/rgba\([^)]+,\s*([\d.]+)\)/)
+          if (alphaM && parseFloat(alphaM[1]) < 0.05) return null
+          return 0.2126 * +m[1] + 0.7152 * +m[2] + 0.0722 * +m[3]
+        }
+        // Temporarily strip our ROOT_ATTR so !important overrides don't mask native colors.
+        const hadAttr = document.documentElement.hasAttribute(ROOT_ATTR)
+        if (hadAttr) document.documentElement.removeAttribute(ROOT_ATTR)
+        const htmlBg = getComputedStyle(document.documentElement).backgroundColor
+        const bodyBg = document.body ? getComputedStyle(document.body).backgroundColor : ''
+        if (hadAttr) document.documentElement.setAttribute(ROOT_ATTR, '')
+
+        const htmlLuma = parseLuma(htmlBg)
+        const bodyLuma = parseLuma(bodyBg)
+        const nativelyDark =
+          (htmlLuma !== null && htmlLuma < autoDarkThreshold) ||
+          (bodyLuma !== null && bodyLuma < autoDarkThreshold)
+
+        if (nativelyDark) {
+          document.documentElement.removeAttribute(ROOT_ATTR)
+          document.getElementById(STYLE_ELEMENT_ID)?.remove()
+          removeFilterPlusSvg(document)
+          return
+        }
+      }
+
       if (themeMode !== THEME_MODE_FILTER_PLUS) {
         removeFilterPlusSvg(document)
       }
@@ -199,18 +234,6 @@ async function applyForcedDark(): Promise<void> {
         }
       } catch {
         baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
-      }
-
-      // AUTO mode: if site is already natively dark, skip dark injection
-      // Luminance: 0.2126*R + 0.7152*G + 0.0722*B  (0=black, 255=white)
-      if (policy === POLICY_AUTO) {
-        const luma = 0.2126 * baseRgb[0]! + 0.7152 * baseRgb[1]! + 0.0722 * baseRgb[2]!
-        if (luma < 80) {
-          // Page is already dark — remove any injected styles and bail
-          document.documentElement.removeAttribute(ROOT_ATTR)
-          document.getElementById(STYLE_ELEMENT_ID)?.remove()
-          return
-        }
       }
 
       const { pageBg, pageFg } = colorsForPalette(pagePalette, baseRgb)

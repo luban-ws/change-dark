@@ -56,17 +56,22 @@
 |----|----------|------|------|
 | T-036 | [024](./docs/rfc/completed/024-popup-modernization-radix-ui-auto-dark-detection.md) | Radix UI Themes + 嫦娥品牌 + 固定标头 + Auto 智能暗检测 | ✅ Done |
 
-## Backlog（无 RFC 编号，下一个从 025 起）
+## 策略×模式行为矩阵（RFC 025）
+
+| ID | 专属 RFC | 内容 | 状态 |
+|----|----------|------|------|
+| T-037 | [025](./docs/rfc/completed/025-policy-mode-behavior-matrix.md) | Auto/On/Off × Filter/Filter+/Dynamic/Static 行为矩阵；Dynamic Auto 检测修复 | ✅ Done |
+
+
+## Backlog（无 RFC 编号，下一个从 **026** 起）
 
 | 方向 | 说明 |
 |------|------|
 | E2E 测试 | 扩展加载、内容注入自动化断言 |
 | Chrome Web Store | 上架材料与隐私政策 |
-| Auto 暗检测配置化 | 阈值 per-site 覆盖或用户可调 |
 
 ## 设计文档
 
 | 文档 | 路径 |
 |------|------|
-| WASM 暗色引擎设计 | [docs/dark-engine-design.md](./docs/dark-engine-design.md) |
 
