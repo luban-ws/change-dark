@@ -52,7 +52,7 @@ export function App() {
               <IconMoon className="brand-moon-svg" width={28} height={28} />
             </div>
             <div>
-              <p className="eyebrow font-mono">Selena v{pkg.version} · Extension</p>
+              <p className="eyebrow font-mono">嫦娥 (Selena) v{pkg.version} · Extension</p>
               <h1>{t('fullName')}</h1>
               <p className="tagline">{t('tagline')}</p>
             </div>

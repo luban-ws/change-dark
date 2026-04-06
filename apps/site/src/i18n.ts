@@ -14,6 +14,28 @@ const resources = {
       heroDesc5: ' for maximum performance.',
       viewRepo: 'View Repository',
       preview: 'Preview UI',
+      techTitle: 'Extension Features',
+      techDesc: 'Optimized for modern browsers with granular per-site control and flexible theme modes.',
+      extensionTitle: 'Smart Theme Engine',
+      extensionBody: 'Analyses page content and applies a balanced dark appearance that respects the original design.',
+      rustTitle: 'Native Performance',
+      rustBody: 'Uses Rust-based color calculations to ensure zero-lag styling even on heavy pages.',
+      siteTitle: 'Privacy Focused',
+      siteBody: 'Zero tracking. Your settings and browsing history never leave your computer.',
+      screenshotTitle: 'Feature Overview',
+      screenshotDesc: 'Beautiful, intuitive UI for managing your dark mode preferences globally or per-site.',
+      featureTitle: 'Core Capabilities',
+      featureLede: 'Master your web reading experience with pixel-perfect control.',
+      featGlobalTitle: 'Global Control',
+      featGlobalBody: 'Toggle dark mode globally. Choose between On, Off, or Auto (System Sync).',
+      featSiteTitle: 'Per-site Overrides',
+      featSiteBody: 'Custom origin settings; inheritance from global if not specified for individual sites.',
+      featThemeTitle: 'Theme Modes',
+      featThemeBody: 'Supports Dynamic (sampling), Static (base colors), and Inverted filter paths.',
+      featWasmTitle: 'Fast & Lightweight',
+      featWasmBody: 'Native performance with a tiny footprint for smooth, non-blocking injection.',
+      privacy: 'Privacy Policy',
+      footer1: 'MIT License · Built by apps/site',
       overview: 'Overview',
       tech: 'Features',
       screenshot: 'UI',
@@ -64,8 +86,9 @@ const resources = {
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'zh', // 默认中文
+  lng: 'zh',
   fallbackLng: 'en',
+  load: 'languageOnly', // 强制 zh-CN 找 zh
   interpolation: {
     escapeValue: false
   }
