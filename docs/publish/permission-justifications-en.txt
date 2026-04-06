@@ -1,0 +1,9 @@
+【 Permission Justification - Selena 】
+
+1. Storage Permission (storage):
+Justification: This permission is essential for local preference persistence across browser sessions.
+Specific Usage: The extension uses the storage API to save and retrieve user settings such as the global on/off state, selected theme modes (e.g., Dynamic or Static), and origin-specific override rules. This ensures a consistent user experience while respecting the user's custom reading environment.
+
+2. Host Permissions (<all_urls> or specific Origins):
+Justification: The core functionality of the "Selena" extension is to provide forced dark mode rendering across any website the user visits.
+Specific Usage: To achieve its single purpose, the extension must inject CSS and content scripts into diverse websites browsed by the user to apply high-fidelity styling and local color analysis. This requires host permissions to handle rendering across an unpredictable range of domains, ensuring that the dark mode engine is active whenever the user navigates to any third-party background that requires vision-protecting styling.
