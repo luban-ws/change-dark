@@ -18,13 +18,13 @@ import {
   ensureCustomCssStyleElement,
   ensureStyleElement,
   ensureTypographyStyleElement,
-} from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
 import {
   buildFilterPlusCss,
   ensureFilterPlusSvg,
   removeFilterPlusSvg,
   shouldExposeFilterPlusMode,
-} from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
 import {
   MIX_TOWARD_BLACK_AMOUNT,
   ROOT_ATTR,
@@ -36,14 +36,14 @@ import {
   THEME_MODE_FILTER_PLUS,
   THEME_MODE_STATIC,
   POLICY_AUTO,
-} from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
 import {
   PAGE_PALETTE_SOLARIZED_DARK,
   SOLARIZED_PAGE_BG_CSS,
   SOLARIZED_PAGE_FG_CSS,
   type PagePalette,
-} from "@luban-ws/shared"
-import { buildTypographyCss } from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
+import { buildTypographyCss } from "@luban-ws/dark-shared"
 import {
   readEffectivePagePaletteForPage,
   readEffectiveThemeForPage,
@@ -52,8 +52,8 @@ import {
   readShouldApplyForcedDarkForPage,
   readSiteCustomCssForPage,
   readGlobalPolicy,
-} from "@luban-ws/shared"
-import type { ThemeFiltersStateV1 } from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
+import type { ThemeFiltersStateV1 } from "@luban-ws/dark-shared"
 
 /**
  * 将 RGB 分量格式化为 CSS rgb()，避免魔法字符串散落。
@@ -156,13 +156,11 @@ async function applyForcedDark(): Promise<void> {
   }
 
   const policy = await readGlobalPolicy()
-  const [budget, { themeMode, themeFilters }, pagePalette, typoSettings, siteCustomCss] = await Promise.all([
-    readSamplingBudget(),
-    readEffectiveThemeForPage(),
-    readEffectivePagePaletteForPage(),
-    readEffectiveTypographyForPage(),
-    readSiteCustomCssForPage(),
-  ])
+  const budget = await readSamplingBudget()
+  const { themeMode, themeFilters } = await readEffectiveThemeForPage()
+  const pagePalette = await readEffectivePagePaletteForPage()
+  const typoSettings = await readEffectiveTypographyForPage()
+  const siteCustomCss = await readSiteCustomCssForPage()
 
   const runPaint = (): void => {
     try {

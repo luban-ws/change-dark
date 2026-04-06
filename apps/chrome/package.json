@@ -14,7 +14,7 @@
     },
     "dependencies": {
         "@luban-ws/dark-engine": "workspace:*",
-        "@luban-ws/shared": "workspace:*",
+        "@luban-ws/dark-shared": "workspace:*",
         "@radix-ui/themes": "^3.3.0",
         "i18next": "^26.0.3",
         "lucide-react": "^1.7.0",

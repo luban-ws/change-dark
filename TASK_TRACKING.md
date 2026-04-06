@@ -9,7 +9,7 @@
 |----|------|------|-----|
 | T-001 | 文档与追踪一致 | ✅ Done | [001](./docs/rfc/completed/001-rust-wasm-monorepo-and-chrome-host.md) |
 | T-002 | CI：工具链与 Turbo 缓存 | ✅ Done | `.github/workflows/ci.yml` |
-| T-003 | 功能规格拆分为单篇 RFC | ✅ Done | 004–024；元文档 [021](./docs/rfc/021-project-status-and-backlog.md) |
+| T-003 | 功能规格拆分为单篇 RFC | ✅ Done | 004–024；见 [ROADMAP.md](./ROADMAP.md) |
 
 ## T-010～T-031（各一篇 RFC，全部完成）
 
@@ -37,12 +37,6 @@
 | ID | 专属 RFC | 状态 |
 |----|----------|------|
 | T-032 | [020](./docs/rfc/completed/020-github-pages-site.md) | ✅ Done |
-
-## 元文档（RFC 021）
-
-| ID | 专属 RFC | 状态 |
-|----|----------|------|
-| T-033 | [021](./docs/rfc/021-project-status-and-backlog.md) | 🔄 持续维护 |
 
 ## Popup Solarized Dark（RFC 022）
 

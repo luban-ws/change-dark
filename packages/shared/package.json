@@ -1,5 +1,5 @@
 {
-  "name": "@luban-ws/shared",
+  "name": "@luban-ws/dark-shared",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.cjs",

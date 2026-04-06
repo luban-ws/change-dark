@@ -1,6 +1,6 @@
-import { parseCssRgbToTriplet } from "@luban-ws/shared"
-import type { SamplingBudget } from "@luban-ws/shared"
-import { computeDeadlineMs, isPastDeadline } from "@luban-ws/shared"
+import { parseCssRgbToTriplet } from "@luban-ws/dark-shared"
+import type { SamplingBudget } from "@luban-ws/dark-shared"
+import { computeDeadlineMs, isPastDeadline } from "@luban-ws/dark-shared"
 
 /** 视口横纵比例（0..1），与 `VIEWPORT_FRAC_Y` 组合成 `elementsFromPoint` 命中点。 */
 const VIEWPORT_FRAC_X = {

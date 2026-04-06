@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import type { TypographySettingsV1 } from "@luban-ws/shared"
+import type { TypographySettingsV1 } from "@luban-ws/dark-shared"
 import { Card, Text, Flex, Switch, Select, TextField, Slider } from '@radix-ui/themes'
 
 export interface TypographyPanelProps {

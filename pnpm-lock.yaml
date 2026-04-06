@@ -20,7 +20,7 @@ importers:
       '@luban-ws/dark-engine':
         specifier: workspace:*
         version: link:../../packages/dark-engine
-      '@luban-ws/shared':
+      '@luban-ws/dark-shared':
         specifier: workspace:*
         version: link:../../packages/shared
       '@radix-ui/themes':

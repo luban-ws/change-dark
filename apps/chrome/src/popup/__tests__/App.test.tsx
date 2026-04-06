@@ -20,7 +20,7 @@ vi.mock('react-i18next', () => ({
   }),
 }))
 
-vi.mock("@luban-ws/shared", async (importOriginal) => {
+vi.mock("@luban-ws/dark-shared", async (importOriginal) => {
   const actual = await importOriginal<any>()
   return {
     ...actual,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ThemeFiltersStateV1 } from "@luban-ws/shared"
+import type { ThemeFiltersStateV1 } from "@luban-ws/dark-shared"
 import { Card, Text, Flex, Box, Slider } from '@radix-ui/themes'
 
 export interface ThemeFiltersPanelProps {

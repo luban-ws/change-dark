@@ -1,15 +1,15 @@
 import {
   COMMAND_TOGGLE_CURRENT_SITE,
   COMMAND_TOGGLE_GLOBAL,
-} from "@luban-ws/shared"
-import { normalizeHttpOriginFromUrl } from "@luban-ws/shared"
-import { ensureStorageMigrated } from "@luban-ws/shared"
-import { policyAfterGlobalHotkeyToggle } from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
+import { normalizeHttpOriginFromUrl } from "@luban-ws/dark-shared"
+import { ensureStorageMigrated } from "@luban-ws/dark-shared"
+import { policyAfterGlobalHotkeyToggle } from "@luban-ws/dark-shared"
 import {
   persistGlobalPolicy,
   readGlobalPolicy,
   toggleCurrentOriginInDenylist,
-} from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
 
 /** 安装、更新与浏览器启动时规范化存储（RFC 004）。 */
 chrome.runtime.onInstalled.addListener(() => {

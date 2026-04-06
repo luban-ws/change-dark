@@ -4,8 +4,8 @@ import { usePopupState } from './hooks/usePopupState'
 import {
   POLICY_AUTO, POLICY_OFF, POLICY_ON, type GlobalPolicy,
   THEME_MODE_DYNAMIC, THEME_MODE_STATIC, THEME_MODE_FILTER_CSS, THEME_MODE_FILTER_PLUS,
-} from "@luban-ws/shared"
-import { shouldExposeFilterPlusMode } from "@luban-ws/shared"
+} from "@luban-ws/dark-shared"
+import { shouldExposeFilterPlusMode } from "@luban-ws/dark-shared"
 import { ThemeFiltersPanel } from './components/ThemeFiltersPanel'
 import { TypographyPanel } from './components/TypographyPanel'
 import { SiteToolsPanel } from './components/SiteToolsPanel'
