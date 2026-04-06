@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Support — Selena Extension</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: hsl(220, 30%, 5%);
+            --bg-card: hsl(220, 25%, 10%);
+            --fg: hsl(210, 20%, 95%);
+            --fg-muted: hsl(210, 15%, 70%);
+            --accent: hsl(215, 100%, 65%);
+            --border: hsl(220, 20%, 15%);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font: 16px/1.6 Inter, -apple-system, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            padding: 4rem 1.5rem;
+            max-width: 48rem;
+            margin-inline: auto;
+        }
+        a { color: var(--accent); text-decoration: none; font-weight: 600; }
+        a:hover { text-decoration: underline; }
+        h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 2rem; }
+        h2 { font-size: 1.5rem; margin-top: 3rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 1.25rem;
+            margin-top: 2rem;
+        }
+        .meta { color: var(--fg-muted); margin-bottom: 3rem; }
+        ul { padding-left: 1.5rem; }
+        li { margin-bottom: 1rem; }
+        code { background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
+        footer { margin-top: 5rem; color: var(--fg-muted); font-size: 0.9rem; border-top: 1px solid var(--border); padding-top: 2rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <p><a href="./">← Back to Site</a></p>
+    <h1>Support for Selena</h1>
+    <p class="meta">
+        Need help with the <strong>Selena (嫦娥)</strong> extension? We're here to assist you in getting the best dark mode experience.
+    </p>
+
+    <div class="card">
+        <h2>Report a Bug or Suggest Features</h2>
+        <p>
+            The official way to get support is through our GitHub Issues page. 
+            Before opening a new issue, please search existing ones to see if your problem has already been addressed.
+        </p>
+        <p style="margin-top: 1.5rem;">
+            <a href="https://github.com/luban-ws/change-dark/issues" target="_blank" rel="noopener">Open a Support Request on GitHub →</a>
+        </p>
+    </div>
+
+    <h2>How to Report an Issue</h2>
+    <p>To help us resolve your problem quickly, please include the following details in your report:</p>
+    <ul>
+        <li><strong>Affected URL:</strong> The specific website where Selena isn't displaying correctly.</li>
+        <li><strong>Browser Version:</strong> Your Chrome or Edge version (e.g., Chrome 123.0.x).</li>
+        <li><strong>Selected Mode:</strong> Whether you are using Dynamic, Static, or Filter mode.</li>
+        <li><strong>Screenshots:</strong> Visual evidence of the rendering issue is extremely helpful.</li>
+    </ul>
+
+    <h2>Frequently Asked Questions</h2>
+    <ul>
+        <li><strong>Why does a page flash white?</strong> Selena injects styles as fast as possible, but if a site is very heavy, you might see a brief flash. Try enabling <code>Static</code> mode for faster rendering on simple pages.</li>
+        <li><strong>It broke a website's layout!</strong> Some sites have complex JS-based coloring. You can disable Selena specifically for that site by clicking the toolbar icon and toggling the switch.</li>
+        <li><strong>Is my data safe?</strong> Yes. All calculations are performed 100% locally on your machine via WebAssembly. We never track or upload your browsing history.</li>
+    </ul>
+
+    <footer>
+        &copy; 2026 Selena Extension · Distributed under the MIT License.
+    </footer>
+</body>
+</html>

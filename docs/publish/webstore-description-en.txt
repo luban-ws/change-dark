@@ -1,0 +1,21 @@
+【 Selena — Professional High-Fidelity Forced Dark Engine 】
+
+Selena is a high-performance dark mode extension powered by advanced on-device calculations. Unlike generic filter-based tools that simply invert colors, Selena intelligently analyzes page context to provide a balanced, high-fidelity dark UI that respects the original design intent.
+
+【 Why choose Selena? 】
+
+● High-Fidelity Visuals: We prioritize design integrity. Selena intelligently identifies images, icons, and complex components, only balancing the backgrounds and text contrast. This ensures your images remain vivid and accurate while the backgrounds fade into a deep, comfortable dark.
+
+● Native Performance Experience: No more lag when loading complex websites. We've optimized the core coloring logic into a Rust / WebAssembly module. This native-level execution ensures millisecond-level style injection for a smooth, fluent browsing experience.
+
+● Zero-Tracking Privacy: Built on the modern Manifest V3 platform, Selena is committed to a privacy-first experience. All rule processing and style calculations run 100% locally on your computer—no browsing data ever leaves your device.
+
+● Granular Per-Site Control: Fine-tune your experience for individual domains. Choose between Dynamic (sampling), Static (base colors), or Filter modes to perfectly match the reading atmosphere for every site you visit.
+
+【 Key Features 】
+
+- Easy Toggle: Switch dark mode manually or sync automatically with your system theme.
+- High-Performance Rendering: Driven by a built-in WASM core, ensuring zero-lag injection.
+- Ad-Free & Tracker-Free: Dedicated to a clean, focused, and secure reading experience.
+
+Experience Selena — and bring a premium dark look to every corner of the web.

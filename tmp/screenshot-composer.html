@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Screenshot Composer</title>
+    <style>
+        :root {
+            --bg: hsl(220, 30%, 5%);
+            --accent: hsl(215, 100%, 65%);
+            --border: hsl(220, 20%, 25%);
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 800px;
+            background-color: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-family: -apple-system, system-ui, sans-serif;
+        }
+        .container {
+            position: relative;
+            background: #111;
+            padding: 2px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 0 1px hsla(215, 100%, 65%, 0.1);
+        }
+        img {
+            display: block;
+            border-radius: 9px;
+            /* Scale small image up nicely for display */
+            width: 320px;
+            height: auto;
+            image-rendering: -webkit-optimize-contrast;
+        }
+        .branding {
+            position: absolute;
+            bottom: -50px;
+            width: 100%;
+            text-align: center;
+            color: var(--accent);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="screenshot" src="" alt="Selenium UI">
+        <div class="branding" id="label">Selena · Chromium Extension</div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const lang = params.get('lang') || 'en';
+        document.getElementById('screenshot').src = `../apps/site/public/${lang}.jpg`;
+        document.getElementById('label').textContent = lang === 'en' ? 'Selena · Chromium Extension' : '嫦娥 (Selena) · 智能暗色模式扩展';
+    </script>
+</body>
+</html>
