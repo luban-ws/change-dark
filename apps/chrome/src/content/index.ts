@@ -198,6 +198,17 @@ async function applyForcedDark(): Promise<void> {
         baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
       }
 
+      // Detect if the site is already dark natively
+      // Luminance formula: 0.2126 * R + 0.7152 * G + 0.0722 * B
+      const luma = 0.2126 * baseRgb[0]! + 0.7152 * baseRgb[1]! + 0.0722 * baseRgb[2]!
+      
+      // If the dominant centroid is already quite dark (luma < 80 corresponds roughly to a very dark grey)
+      if (luma < 80) {
+        document.documentElement.removeAttribute(ROOT_ATTR)
+        document.getElementById(STYLE_ELEMENT_ID)?.remove()
+        return
+      }
+
       const { pageBg, pageFg } = colorsForPalette(pagePalette, baseRgb)
       const css = buildStaticDarkCss(pageBg, pageFg, themeFilters)
       document.documentElement.setAttribute(ROOT_ATTR, '')

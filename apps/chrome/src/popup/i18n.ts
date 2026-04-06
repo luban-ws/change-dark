@@ -9,7 +9,7 @@ i18n
     resources: {
       en: {
         translation: {
-          extName: chrome.i18n.getMessage('extName') || 'Selena',
+          extName: 'Selena',
           extSubtitle: 'Force dark · Adjust global rules and site themes here',
           tabSettings: 'Settings',
           tabSupport: 'Support',
@@ -27,7 +27,7 @@ i18n
       },
       zh_CN: {
         translation: {
-          extName: chrome.i18n.getMessage('extName') || '嫦娥',
+          extName: '嫦娥',
           extSubtitle: '强制暗色 · 在此调整全局策略、主题与站点规则',
           tabSettings: '设置',
           tabSupport: '支持',

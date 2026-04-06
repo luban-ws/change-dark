@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePopupState } from './hooks/usePopupState'
 import {
@@ -6,15 +6,16 @@ import {
   THEME_MODE_DYNAMIC, THEME_MODE_STATIC, THEME_MODE_FILTER_CSS, THEME_MODE_FILTER_PLUS,
 } from "@luban-ws/shared"
 import { shouldExposeFilterPlusMode } from "@luban-ws/shared"
-import { Toggle } from './components/Toggle'
 import { ThemeFiltersPanel } from './components/ThemeFiltersPanel'
 import { TypographyPanel } from './components/TypographyPanel'
 import { SiteToolsPanel } from './components/SiteToolsPanel'
 import qrCodeImgUrl from './qr-code.png'
 
+import { Flex, Box, Text, Heading, Tabs, Card, Switch, ScrollArea, SegmentedControl, Button, Select } from '@radix-ui/themes'
+import { Settings, Heart, Moon } from 'lucide-react'
+
 export default function App() {
   const { t, i18n } = useTranslation()
-  const [activeTab, setActiveTab] = useState<'main' | 'support'>('main')
   
   const { 
     origin, hostnameTitle, editScope, hasSiteOverride, isSiteForcedDark, 
@@ -24,170 +25,166 @@ export default function App() {
   const isFirefoxUiGateActive = !shouldExposeFilterPlusMode()
 
   return (
-    <main className="popup-root">
-      <header className="cd-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex' }}>
-          <svg className="cd-header__mark" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" style={{ marginRight: '8px', color: 'var(--cd-accent, #58a6ff)' }}>
-            <path fill="currentColor" d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-          </svg>
-          <div className="cd-header__text">
-            <h1 className="popup-title">{t('extName', 'Selena')}</h1>
-            <p className="cd-subtitle">{t('extSubtitle', 'Force dark rules')}</p>
-          </div>
-        </div>
-        <div style={{ marginLeft: '12px', marginTop: '4px', flexShrink: 0 }}>
-          <select 
-            value={i18n.language === 'zh_CN' ? 'zh_CN' : 'en'} 
-            onChange={(e) => i18n.changeLanguage(e.target.value)}
-            style={{ 
-              padding: '2px 6px', fontSize: '12px', background: 'transparent', 
-              color: 'inherit', border: '1px solid var(--cd-border, #ccc)', 
-              borderRadius: '4px', cursor: 'pointer' 
-            }}
-          >
-            <option value="zh_CN" style={{ color: 'initial' }}>中文</option>
-            <option value="en" style={{ color: 'initial' }}>EN</option>
-          </select>
-        </div>
-      </header>
+    <Flex className={`theme-mode-${palette}`} direction="column" style={{ height: '600px', width: '380px', backgroundColor: 'var(--color-page-background)' }}>
+      {/* Header - Fixed */}
+      <Box p="3" style={{ borderBottom: '1px solid var(--gray-a4)', backgroundColor: 'var(--color-panel-solid)' }}>
+        <Flex justify="between" align="start">
+          <Flex gap="2" align="center">
+            <Moon size={20} color="var(--accent-a10)" />
+            <Box>
+              <Heading size="3">{t('extName', 'Selena')}</Heading>
+              <Text size="1" color="gray">{t('extSubtitle', 'Force dark rules')}</Text>
+            </Box>
+          </Flex>
+          <Box>
+            <Select.Root 
+              value={i18n.language === 'zh_CN' ? 'zh_CN' : 'en'} 
+              onValueChange={(val) => i18n.changeLanguage(val)}
+              size="1"
+            >
+              <Select.Trigger variant="ghost" />
+              <Select.Content>
+                <Select.Item value="zh_CN">中文</Select.Item>
+                <Select.Item value="en">EN</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Box>
+        </Flex>
+      </Box>
 
-      <div className="cd-tabs">
-        <div className="cd-tabs__list">
-          <button 
-             className={`cd-tabs__tab ${activeTab === 'main' ? 'cd-tabs__tab--active' : ''}`}
-             onClick={() => setActiveTab('main')}
-          >
-             {t('tabSettings', 'Settings')}
-          </button>
-          <button 
-             className={`cd-tabs__tab ${activeTab === 'support' ? 'cd-tabs__tab--active' : ''}`}
-             onClick={() => setActiveTab('support')}
-          >
-             {t('tabSupport', 'Support')}
-          </button>
-        </div>
+      {/* Tabs Layout */}
+      <Tabs.Root defaultValue="main" style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <Tabs.List size="2">
+          <Tabs.Trigger value="main">
+            <Flex gap="2" align="center">
+              <Settings size={14} />
+              {t('tabSettings', 'Settings')}
+            </Flex>
+          </Tabs.Trigger>
+          <Tabs.Trigger value="support">
+            <Flex gap="2" align="center">
+              <Heart size={14} />
+              {t('tabSupport', 'Support')}
+            </Flex>
+          </Tabs.Trigger>
+        </Tabs.List>
 
-        <div className="cd-tab-panels-stack">
-          {activeTab === 'main' && (
-            <div className="cd-tab-panel">
-              
-              <fieldset className="cd-panel">
-                <legend className="cd-panel__legend">
-                  {t('lblCurrentSite', 'Current Site')}
-                  <span className="cd-current-site-host" title={origin || ''}>{hostnameTitle || '—'}</span>
-                </legend>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                  <Toggle 
-                    disabled={!origin}
-                    checked={isSiteForcedDark}
-                    onChange={() => actions.toggleCurrentSiteForcedDark()}
-                  />
-                  <p className="cd-current-site-hint" style={{ fontSize: '12px', flex: 1 }}>
-                    {!origin ? t('lblNoOrigin', 'Open a valid web page to enable rules.') : 
-                      isSiteForcedDark ? t('lblSiteForced', 'This site is forced dark by site list rules.') : 
-                      t('lblSiteNotForced', 'This site follows global dark mode rules.')
-                    }
-                  </p>
-                </div>
-              </fieldset>
+        <Box style={{ flex: 1, minHeight: 0 }}>
+          <Tabs.Content value="main" style={{ height: '100%', outline: 'none' }}>
+            <ScrollArea type="auto" scrollbars="vertical" style={{ height: '100%' }}>
+              <Flex direction="column" gap="4" p="3">
+                
+                {/* Current Site Card */}
+                <Card size="1">
+                  <Flex justify="between" align="center" mb="2">
+                    <Text size="2" weight="bold">{t('lblCurrentSite', 'Current Site')}</Text>
+                    <Text size="1" color="gray" truncate style={{ maxWidth: '140px' }} title={origin || ''}>{hostnameTitle || '—'}</Text>
+                  </Flex>
+                  <Flex justify="between" align="start" gap="3">
+                    <Switch 
+                      disabled={!origin}
+                      checked={isSiteForcedDark}
+                      onCheckedChange={() => actions.toggleCurrentSiteForcedDark()}
+                    />
+                    <Text size="1" color="gray" style={{ flex: 1 }}>
+                      {!origin ? t('lblNoOrigin', 'Open a valid web page to enable rules.') : 
+                        isSiteForcedDark ? t('lblSiteForced', 'This site is forced dark by site list rules.') : 
+                        t('lblSiteNotForced', 'This site follows global dark mode rules.')
+                      }
+                    </Text>
+                  </Flex>
+                </Card>
 
-              <fieldset className="cd-panel policy-fieldset">
-                <legend>{t('globalSwitch', 'Global Switch')}</legend>
-                <div className="policy-radios cd-segmented cd-segmented--3">
-                  <label className="policy-label">
-                    <input type="radio" checked={policy === POLICY_AUTO} onChange={() => actions.setPolicy(POLICY_AUTO)} /> <span>{t('lblAuto', 'Auto')}</span>
-                  </label>
-                  <label className="policy-label">
-                    <input type="radio" checked={policy === POLICY_ON} onChange={() => actions.setPolicy(POLICY_ON)} /> <span>{t('lblOn', 'On')}</span>
-                  </label>
-                  <label className="policy-label">
-                    <input type="radio" checked={policy === POLICY_OFF} onChange={() => actions.setPolicy(POLICY_OFF)} /> <span>{t('lblOff', 'Off')}</span>
-                  </label>
-                </div>
-              </fieldset>
+                {/* Global Switch Card */}
+                <Card size="1">
+                  <Text as="div" size="2" weight="bold" mb="2">{t('globalSwitch', 'Global Switch')}</Text>
+                  <SegmentedControl.Root value={policy.toString()} onValueChange={(val) => actions.setPolicy(parseInt(val) as any)} size="2">
+                    <SegmentedControl.Item value={POLICY_AUTO.toString()}>{t('lblAuto', 'Auto')}</SegmentedControl.Item>
+                    <SegmentedControl.Item value={POLICY_ON.toString()}>{t('lblOn', 'On')}</SegmentedControl.Item>
+                    <SegmentedControl.Item value={POLICY_OFF.toString()}>{t('lblOff', 'Off')}</SegmentedControl.Item>
+                  </SegmentedControl.Root>
+                </Card>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                <div className="cd-segmented cd-segmented--2" style={{ display: 'inline-flex' }}>
-                  <label>
-                    <input type="radio" name="scope" value="global" checked={editScope === 'global'} onChange={() => actions.setEditScope('global')} />
-                    <span>{t('lblScopeGlobal', 'Global Edit')}</span>
-                  </label>
-                  <label title={!origin ? t('lblNeedOrigin', 'Need valid origin') : ''}>
-                    <input type="radio" name="scope" value="site" checked={editScope === 'site'} disabled={!origin} onChange={() => actions.setEditScope('site')} />
-                    <span>{t('lblScopeSite', 'Only Current Site')}</span>
-                  </label>
-                </div>
-                {hasSiteOverride && (
-                  <button onClick={() => actions.clearSiteOverride()} style={{ fontSize: '11px', color: 'var(--cd-fg-danger)', background: 'transparent', border: '1px solid currentColor', borderRadius: '4px', padding: '2px 6px', cursor: 'pointer' }}>
-                    {t('lblClearOverride', 'Clear Site Override')}
-                  </button>
-                )}
-              </div>
+                {/* Scope Mode */}
+                <Flex align="center" justify="between">
+                  <SegmentedControl.Root value={editScope} onValueChange={(val) => actions.setEditScope(val as any)} size="1">
+                    <SegmentedControl.Item value="global">{t('lblScopeGlobal', 'Global Edit')}</SegmentedControl.Item>
+                    <SegmentedControl.Item value="site" style={{ opacity: !origin ? 0.5 : 1, pointerEvents: !origin ? 'none' : 'auto' }}>
+                      {t('lblScopeSite', 'Only Current Site')}
+                    </SegmentedControl.Item>
+                  </SegmentedControl.Root>
+                  {hasSiteOverride && (
+                    <Button size="1" color="red" variant="soft" onClick={() => actions.clearSiteOverride()}>
+                      {t('lblClearOverride', 'Clear Site Override')}
+                    </Button>
+                  )}
+                </Flex>
 
-              <fieldset className="cd-panel theme-mode-fieldset">
-                <legend>{t('themeMode', 'Theme Mode')}</legend>
-                <div className="policy-radios cd-radio-list">
-                  <label className="policy-label cd-radio-row">
-                    <input type="radio" checked={themeMode === THEME_MODE_FILTER_CSS} onChange={() => actions.setThemeMode(THEME_MODE_FILTER_CSS)} />
-                    <span className="cd-radio-row__text"><span className="cd-radio-row__title">Filter</span></span>
-                  </label>
-                  <label className="policy-label cd-radio-row" title={isFirefoxUiGateActive ? t('lblFxGate', 'Disabled on Firefox') : ''}>
-                    <input type="radio" checked={themeMode === THEME_MODE_FILTER_PLUS} disabled={isFirefoxUiGateActive} onChange={() => actions.setThemeMode(THEME_MODE_FILTER_PLUS)} />
-                    <span className="cd-radio-row__text"><span className="cd-radio-row__title">Filter+</span></span>
-                  </label>
-                  <label className="policy-label cd-radio-row">
-                    <input type="radio" checked={themeMode === THEME_MODE_DYNAMIC} onChange={() => actions.setThemeMode(THEME_MODE_DYNAMIC)} />
-                    <span className="cd-radio-row__text"><span className="cd-radio-row__title">Dynamic (Expr)</span></span>
-                  </label>
-                  <label className="policy-label cd-radio-row">
-                    <input type="radio" checked={themeMode === THEME_MODE_STATIC} onChange={() => actions.setThemeMode(THEME_MODE_STATIC)} />
-                    <span className="cd-radio-row__text"><span className="cd-radio-row__title">Static</span></span>
-                  </label>
-                </div>
-              </fieldset>
+                {/* Theme Mode Card */}
+                <Card size="1">
+                  <Text as="div" size="2" weight="bold" mb="2">{t('themeMode', 'Theme Mode')}</Text>
+                  <Flex direction="column" gap="2">
+                    {[
+                      { value: THEME_MODE_FILTER_CSS, label: 'Filter' },
+                      { value: THEME_MODE_FILTER_PLUS, label: 'Filter+', disabled: isFirefoxUiGateActive },
+                      { value: THEME_MODE_DYNAMIC, label: 'Dynamic (Expr)' },
+                      { value: THEME_MODE_STATIC, label: 'Static' },
+                    ].map(opt => (
+                      <Flex key={opt.value} as="label" gap="2" align="center" style={{ opacity: opt.disabled ? 0.5 : 1 }}>
+                        <input 
+                          type="radio" 
+                          name="themeMode" 
+                          disabled={opt.disabled}
+                          checked={themeMode === opt.value} 
+                          onChange={() => actions.setThemeMode(opt.value)} 
+                          style={{ margin: 0 }}
+                        />
+                        <Text size="2" style={{ cursor: opt.disabled ? 'not-allowed' : 'pointer' }}>{opt.label}</Text>
+                        {opt.disabled && <Text size="1" color="red" style={{ marginLeft: 'auto' }}>{t('lblFxGate', 'Disabled on Firefox')}</Text>}
+                      </Flex>
+                    ))}
+                  </Flex>
+                </Card>
 
-              <fieldset className="cd-panel">
-                <legend>{t('pagePalette', 'Page Palette')}</legend>
-                <div className="policy-radios cd-segmented cd-segmented--2">
-                  <label className="policy-label">
-                    <input type="radio" checked={palette === 'dark'} onChange={() => actions.setPagePalette('dark')} /> <span>Dark</span>
-                  </label>
-                  <label className="policy-label">
-                    <input type="radio" checked={palette === 'solarized-dark'} onChange={() => actions.setPagePalette('solarized-dark')} /> <span>Solarized</span>
-                  </label>
-                </div>
-              </fieldset>
+                {/* Page Palette Card */}
+                <Card size="1">
+                  <Text as="div" size="2" weight="bold" mb="2">{t('pagePalette', 'Page Palette')}</Text>
+                  <SegmentedControl.Root value={palette} onValueChange={(val) => actions.setPagePalette(val as any)} size="2">
+                    <SegmentedControl.Item value="dark">Dark</SegmentedControl.Item>
+                    <SegmentedControl.Item value="solarized-dark">Solarized</SegmentedControl.Item>
+                  </SegmentedControl.Root>
+                </Card>
 
-              <ThemeFiltersPanel filters={filters} onChange={actions.setFilters} />
-              
-              <TypographyPanel typography={typography} onChange={actions.setTypography} />
+                <ThemeFiltersPanel filters={filters} onChange={actions.setFilters} />
+                <TypographyPanel typography={typography} onChange={actions.setTypography} />
+                <SiteToolsPanel 
+                  editScope={editScope} 
+                  siteCss={siteCss} 
+                  siteList={siteList} 
+                  onSiteCssChange={actions.setSiteCustomCss}
+                  onSiteCssBlur={actions.setSiteCustomCss}
+                  onSiteListModeChange={actions.updateSiteListMode}
+                  onSiteListEntriesChange={actions.updateSiteListEntries}
+                />
+              </Flex>
+            </ScrollArea>
+          </Tabs.Content>
 
-              <SiteToolsPanel 
-                editScope={editScope} 
-                siteCss={siteCss} 
-                siteList={siteList} 
-                onSiteCssChange={actions.setSiteCustomCss}
-                onSiteCssBlur={actions.setSiteCustomCss}
-                onSiteListModeChange={actions.updateSiteListMode}
-                onSiteListEntriesChange={actions.updateSiteListEntries}
-              />
-
-            </div>
-          )}
-
-          {activeTab === 'support' && (
-            <div className="cd-tab-panel">
-              <section className="cd-support-panel">
-                <p className="cd-support-panel__title">{t('supportTitle', 'Support the author')}</p>
-                <p className="cd-support-panel__help">{t('supportHelp', 'If this extension helps you...')}</p>
-                <a href="https://buymeacoffee.com/your-link" target="_blank" rel="noreferrer" style={{ display: 'block', textAlign: 'center', marginTop: '16px' }}>
-                   <img src={qrCodeImgUrl} alt="QR Code" style={{ maxWidth: '150px', background: 'white', padding: '8px', borderRadius: '8px' }} />
+          <Tabs.Content value="support" style={{ height: '100%', outline: 'none' }}>
+            <ScrollArea type="auto" scrollbars="vertical" style={{ height: '100%' }}>
+              <Flex direction="column" align="center" gap="4" p="4" mt="4">
+                <Text size="3" weight="bold">{t('supportTitle', 'Support the author')}</Text>
+                <Text size="2" color="gray" align="center" style={{ maxWidth: '280px' }}>
+                  {t('supportHelp', 'If this extension helps you...')}
+                </Text>
+                <a href="https://buymeacoffee.com/your-link" target="_blank" rel="noreferrer" style={{ marginTop: '16px' }}>
+                  <img src={qrCodeImgUrl} alt="QR Code" style={{ maxWidth: '150px', background: 'white', padding: '8px', borderRadius: '8px' }} />
                 </a>
-              </section>
-            </div>
-          )}
-        </div>
-      </div>
-    </main>
+              </Flex>
+            </ScrollArea>
+          </Tabs.Content>
+        </Box>
+      </Tabs.Root>
+    </Flex>
   )
 }
