@@ -348,8 +348,9 @@ h1 {
 .screenshot {
   display: block;
   width: 100%;
-  max-width: 48rem;
+  max-width: 40rem;
   height: auto;
+  margin: 0 auto;
   border-radius: 0.5rem;
   border: 1px solid var(--border-strong);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);

@@ -96,21 +96,30 @@ importers:
 
   apps/site:
     dependencies:
+      i18next:
+        specifier: ^26.0.3
+        version: 26.0.3(typescript@5.9.3)
+      lucide-react:
+        specifier: ^1.7.0
+        version: 1.7.0(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-i18next:
+        specifier: ^17.0.2
+        version: 17.0.2(i18next@26.0.3(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)
     devDependencies:
       '@testing-library/react':
         specifier: ^16.2.0
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/react':
-        specifier: ^18.3.18
+        specifier: ^18.3.28
         version: 18.3.28
       '@types/react-dom':
-        specifier: ^18.3.5
+        specifier: ^18.3.7
         version: 18.3.7(@types/react@18.3.28)
       '@vitejs/plugin-react':
         specifier: ^4.3.4
