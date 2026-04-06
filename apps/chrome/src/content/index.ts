@@ -156,11 +156,13 @@ async function applyForcedDark(): Promise<void> {
   }
 
   const policy = await readGlobalPolicy()
-  const budget = await readSamplingBudget()
-  const { themeMode, themeFilters } = await readEffectiveThemeForPage()
-  const pagePalette = await readEffectivePagePaletteForPage()
-  const typoSettings = await readEffectiveTypographyForPage()
-  const siteCustomCss = await readSiteCustomCssForPage()
+  const [budget, { themeMode, themeFilters }, pagePalette, typoSettings, siteCustomCss] = await Promise.all([
+    readSamplingBudget(),
+    readEffectiveThemeForPage(),
+    readEffectivePagePaletteForPage(),
+    readEffectiveTypographyForPage(),
+    readSiteCustomCssForPage(),
+  ])
 
   const runPaint = (): void => {
     try {
