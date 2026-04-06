@@ -4,6 +4,10 @@
 Justification: This permission is essential for local preference persistence across browser sessions.
 Specific Usage: The extension uses the storage API to save and retrieve user settings such as the global on/off state, selected theme modes (e.g., Dynamic or Static), and origin-specific override rules. This ensures a consistent user experience while respecting the user's custom reading environment.
 
-2. Host Permissions (<all_urls> or specific Origins):
-Justification: The core functionality of the "Selena" extension is to provide forced dark mode rendering across any website the user visits.
-Specific Usage: To achieve its single purpose, the extension must inject CSS and content scripts into diverse websites browsed by the user to apply high-fidelity styling and local color analysis. This requires host permissions to handle rendering across an unpredictable range of domains, ensuring that the dark mode engine is active whenever the user navigates to any third-party background that requires vision-protecting styling.
+2. Host Permissions (<all_urls> or broad wildcard):
+Justification: The core utility of "Selena" is to provide instant, high-fidelity dark mode rendering across any URL the user navigates to.
+
+Critical Defense for Broad Host Permission Policy (Addressing Review Concerns):
+- Failure of 'activeTab': `activeTab` requires a manual user click for every new tab. For a vision-protection utility, this manual delay would result in severe "White Flashes" during every page load, fundamentally breaking the product's primary mission of providing a continuous dark-themed environment.
+- Need for Immediate Injection: To prevent eye strain, dark mode styles must be applied at `document_start`. This necessitates broad host permissions to ensure the rendering engine is authorized to inject CSS instantly without per-page user intervention.
+- Ubiquity of Use Case: Users expect dark mode protection on every corner of the web. Given the unpredictable nature of domains visited, broad host permission is the only technical way to deliver a seamless, high-performance visual experience that honors the "Single Purpose" of global dark mode.
