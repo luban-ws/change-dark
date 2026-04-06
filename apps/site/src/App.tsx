@@ -8,7 +8,7 @@ export function App() {
   const repo = import.meta.env.VITE_GITHUB_REPO as string | undefined
   const repoUrl = repo ? `https://github.com/${repo}` : 'https://github.com'
   const base = import.meta.env.BASE_URL
-  const screenshotSrc = `${base}popup-options.png`
+  const screenshotSrc = i18n.language === 'zh' ? `${base}zh.jpg` : `${base}en.jpg`
 
   const NAV_LINKS = [
     { id: 'overview', label: t('overview') },
