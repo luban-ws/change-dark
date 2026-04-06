@@ -64,40 +64,40 @@ describe('App & usePopupState Integration Coverage', () => {
     vi.clearAllMocks()
   })
 
-  it('mounts and switches to Support tab', () => {
+  it('mounts and switches to Support tab', async () => {
     render(<App />)
-    expect(screen.getByText('Force dark rules')).toBeDefined()
-    fireEvent.click(screen.getByText('Support'))
-    expect(screen.getByText('Support the author')).toBeDefined()
+    expect(await screen.findByText('Force dark rules')).toBeDefined()
+    fireEvent.click(await screen.findByText('Support'))
+    expect(await screen.findByText('Support the author')).toBeDefined()
   })
 
   it('dispatches global policy storage changes', async () => {
     render(<App />)
-    fireEvent.click(screen.getByText('Off'))
+    fireEvent.click(await screen.findByText('Off'))
     expect(mockPersistGlobalPolicy).toHaveBeenCalledWith('off')
   })
 
   it('dispatches theme mode storage changes', async () => {
     render(<App />)
-    fireEvent.click(screen.getByText('Dynamic (Expr)'))
+    fireEvent.click(await screen.findByText('Dynamic (Expr)'))
     expect(mockPersistThemeMode).toHaveBeenCalledWith('dynamic')
   })
 
   it('dispatches page palette storage changes', async () => {
     render(<App />)
-    fireEvent.click(screen.getByText('Solarized'))
+    fireEvent.click(await screen.findByText('Solarized'))
     expect(mockPersistPagePalette).toHaveBeenCalledWith('solarized-dark')
   })
   
   it('dispatches typography changes', async () => {
     render(<App />)
-    fireEvent.click(screen.getByText('Override Font'))
+    fireEvent.click(await screen.findByText('Override Font'))
     expect(mockPersistTypographyState).toHaveBeenCalled()
   })
   
   it('dispatches specific site origin toggle', async () => {
     const { container } = render(<App />)
-    await waitFor(() => expect(screen.getByText('example.com')).toBeDefined())
+    await screen.findByText('example.com')
     const toggleBtn = container.querySelector('.cd-site-switch') as HTMLButtonElement
     fireEvent.click(toggleBtn)
     expect(mockToggleCurrentOrigin).toHaveBeenCalledWith('http://example.com')
@@ -105,7 +105,8 @@ describe('App & usePopupState Integration Coverage', () => {
 
   it('dispatches site list mode changes', async () => {
     render(<App />)
-    fireEvent.click(screen.getByText('Whitelist'))
+    fireEvent.click(await screen.findByText(/Current Site/i))
+    fireEvent.click(await screen.findByText('Whitelist'))
     expect(mockPersistSiteListState).toHaveBeenCalledWith(expect.objectContaining({
       mode: 'invert-listed-only'
     }))
