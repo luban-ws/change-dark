@@ -33,29 +33,40 @@ vi.mock("@luban-ws/dark-shared", async (importOriginal) => {
     readSiteOverridesState: vi.fn(() => Promise.resolve({ origins: {} })),
     readSiteCustomCssForPage: vi.fn(() => Promise.resolve('')),
     hasSiteScopedDataForOrigin: vi.fn(() => Promise.resolve(false)),
-    persistGlobalPolicy: (...args: any[]) => mockPersistGlobalPolicy(...args),
-    persistThemeMode: (...args: any[]) => mockPersistThemeMode(...args),
-    persistPagePalette: (...args: any[]) => mockPersistPagePalette(...args),
-    persistThemeFiltersState: (...args: any[]) => mockPersistThemeFiltersState(...args),
-    persistTypographyState: (...args: any[]) => mockPersistTypographyState(...args),
-    persistSiteCustomCssForOrigin: (...args: any[]) => mockPersistSiteCustomCss(...args),
-    persistSiteListState: (...args: any[]) => mockPersistSiteListState(...args),
-    toggleCurrentOriginInDenylist: (...args: any[]) => mockToggleCurrentOrigin(...args),
-    clearSiteOverrideForOrigin: (...args: any[]) => mockClearSiteOverride(...args),
+    persistGlobalPolicy: (p: any) => mockPersistGlobalPolicy(p),
+    persistThemeMode: (m: any) => mockPersistThemeMode(m),
+    persistPagePalette: (p: any) => mockPersistPagePalette(p),
+    persistThemeFiltersState: (f: any) => mockPersistThemeFiltersState(f),
+    persistTypographyState: (t: any) => mockPersistTypographyState(t),
+    persistSiteCustomCssForOrigin: (o: any, c: any) => mockPersistSiteCustomCss(o, c),
+    persistSiteListState: (s: any) => mockPersistSiteListState(s),
+    toggleCurrentOriginInDenylist: (o: any) => mockToggleCurrentOrigin(o),
+    clearSiteOverrideForOrigin: (o: any) => mockClearSiteOverride(o),
     upsertSiteThemeModeOverride: vi.fn(),
     upsertSitePagePaletteOverride: vi.fn(),
     upsertSiteThemeFiltersOverride: vi.fn(),
     upsertSiteTypographyOverride: vi.fn(),
+    readAutoDarkThreshold: vi.fn(() => Promise.resolve(80)),
+    persistAutoDarkThreshold: vi.fn(() => Promise.resolve()),
   }
 })
 
 global.chrome = {
   // @ts-ignore
   storage: {
-    onChanged: { addListener: vi.fn(), removeListener: vi.fn() },
+    onChanged: { 
+      addListener: vi.fn(), 
+      removeListener: vi.fn(),
+      hasListener: vi.fn(),
+      hasListeners: vi.fn(),
+      addRules: vi.fn(),
+      getRules: vi.fn(),
+      removeRules: vi.fn()
+    } as any,
   },
   tabs: {
-    query: vi.fn(() => Promise.resolve([{ url: 'http://example.com' }]))
+    // @ts-ignore
+    query: vi.fn(() => Promise.resolve([{ url: 'http://example.com' } as any]))
   }
 }
 

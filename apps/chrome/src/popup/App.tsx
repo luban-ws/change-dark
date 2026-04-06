@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import i18n, { STORAGE_KEY_LANG } from './i18n'
+import i18nConfig, { STORAGE_KEY_LANG } from './i18n'
 
 import { usePopupState } from './hooks/usePopupState'
 import {

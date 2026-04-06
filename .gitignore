@@ -11,3 +11,8 @@ apps/chrome/dev
 apps/chrome/change-dark-extension.zip
 logs/
 coverage/
+test-results/
+playwright-report/
+playwright-video/
+test-results
+.test-user-data
