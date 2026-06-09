@@ -26,14 +26,13 @@ import {
  * 含 audio/video、object/embed（插件/PDF）、iframe（父文档视图中整框合成）、[role="img"]（无 img 的图像语义）。
  */
 export function buildFilterInvertMediaSelectorList(
-  /** 媒体补偿规则的前缀：整页 filter 在 `html[root]` 时用其本身；filter 仅在 `body` 上时用 `html[root] body`。 */
+  /** 媒体补偿规则的前缀：与整页反相作用域一致（统一为 `html[root] body`）。 */
   scopePrefix: string,
   /** 完整 `svg…` 片段，如 `svg` 或 `svg:not(#change-dark-filter-plus-svg)`。 */
   svgSelector: string,
 ): string {
   return [
     `${scopePrefix} img`,
-    `${scopePrefix} picture`,
     `${scopePrefix} ${svgSelector}`,
     `${scopePrefix} video`,
     `${scopePrefix} audio`,
@@ -57,11 +56,12 @@ export function resolveFilterCssInjectionScope(pagePalette?: PagePalette): {
 } {
   const htmlRoot = `html[${ROOT_ATTR}]`
   const useSolarizedHtmlShell = pagePalette === PAGE_PALETTE_SOLARIZED_DARK
+  /** 整页反相始终挂在 `body`，避免 `html` 级 filter 与媒体补偿层叠顺序不稳定。 */
   const bodyScoped = `${htmlRoot} body`
   return {
     htmlRoot,
-    mediaScope: useSolarizedHtmlShell ? bodyScoped : htmlRoot,
-    filterCascadeTarget: useSolarizedHtmlShell ? bodyScoped : htmlRoot,
+    mediaScope: bodyScoped,
+    filterCascadeTarget: bodyScoped,
     useSolarizedHtmlShell,
   }
 }
@@ -168,11 +168,13 @@ export function buildFilterInvertCss(
       min-height: 100%;
     }
     ${filterCascadeTarget} {
+      -webkit-filter: ${rootFilter} !important;
       filter: ${rootFilter} !important;
       min-height: 100%;
     }
     ${buildFilterScrollbarCss()}
     ${mediaSelectors} {
+      -webkit-filter: ${FILTER_CSS_INVERT_CHAIN} !important;
       filter: ${FILTER_CSS_INVERT_CHAIN} !important;
     }
   `
@@ -183,10 +185,13 @@ export function buildFilterInvertCss(
       color-scheme: dark !important;
     }
     ${filterCascadeTarget} {
+      -webkit-filter: ${rootFilter} !important;
       filter: ${rootFilter} !important;
+      min-height: 100%;
     }
     ${buildFilterScrollbarCss()}
     ${mediaSelectors} {
+      -webkit-filter: ${FILTER_CSS_INVERT_CHAIN} !important;
       filter: ${FILTER_CSS_INVERT_CHAIN} !important;
     }
   `
@@ -227,8 +232,12 @@ export function buildStaticDarkCss(
   `
 }
 
+/** Dynamic 模式下不改动像素型媒体（照片/视频/canvas），避免误加 filter。 */
+export const CD_MEDIA_ELEMENT_SELECTORS =
+  ':where(img, picture, video, canvas, object, embed, iframe, [role="img"])' as const
+
 /**
- * RFC 031 Dynamic 主路径：逐规则改色覆盖层 + 可选 RFC 011 根滤镜（无全局 pageBg/pageFg 铺色）。
+ * RFC 031 Dynamic 主路径：逐规则改色覆盖层 + 可选 RFC 011 主题滤镜（挂在 body，不挂 html）。
  */
 export function buildRecolorShellCss(themeFilters?: ThemeFiltersStateV1): string {
   const tf = themeFilters ? clampThemeFilters(themeFilters) : undefined
@@ -236,23 +245,43 @@ export function buildRecolorShellCss(themeFilters?: ThemeFiltersStateV1): string
     tf && !isIdentityThemeFilters(tf)
       ? `filter: ${buildThemeFilterValue(tf)} !important;`
       : ''
+  const bodyFilterRule = filterBlock
+    ? `
+    html[${ROOT_ATTR}] body {
+      ${filterBlock}
+    }`
+    : ''
 
   return `
     html[${ROOT_ATTR}] {
       color-scheme: dark !important;
-      ${filterBlock}
+    }${bodyFilterRule}
+  `.trim()
+}
+
+/**
+ * Dynamic：媒体元素不参与改色/filter 注入（对齐 DR「照片不动」）。
+ * 仅用于 Dynamic 壳层，Filter/Filter+ 仍依赖 `buildFilterInvertMediaSelectorList` 二次反相。
+ */
+export function buildRecolorMediaProtectCss(): string {
+  const sel = `html[${ROOT_ATTR}] ${CD_MEDIA_ELEMENT_SELECTORS}`
+  return `
+    ${sel} {
+      filter: none !important;
     }
   `.trim()
 }
 
-/** 壳层 + RFC 031 改色覆盖 CSS（`buildRecolorOverrideStylesheet` 输出）。 */
+/** 壳层 + 媒体保护 + RFC 031 改色覆盖 CSS（`buildRecolorOverrideStylesheet` 输出）。 */
 export function buildRecolorDynamicCss(
   overrideCss: string,
   themeFilters?: ThemeFiltersStateV1,
 ): string {
   const shell = buildRecolorShellCss(themeFilters)
+  const mediaProtect = buildRecolorMediaProtectCss()
   const body = overrideCss.trim()
-  return body ? `${shell}\n\n${body}` : shell
+  const parts = [shell, mediaProtect, body].filter(Boolean)
+  return parts.join('\n\n')
 }
 
 /** 将样式写入页面，若已存在则更新文本内容。 */

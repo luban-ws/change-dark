@@ -117,11 +117,13 @@ export function buildFilterPlusCss(
       min-height: 100%;
     }
     ${filterCascadeTarget} {
+      -webkit-filter: ${rootFilter} !important;
       filter: ${rootFilter} !important;
       min-height: 100%;
     }
     ${buildFilterScrollbarCss()}
     ${mediaSelectors} {
+      -webkit-filter: url(#${FILTER_PLUS_SVG_FILTER_ID}) !important;
       filter: url(#${FILTER_PLUS_SVG_FILTER_ID}) !important;
     }
   `
@@ -132,10 +134,13 @@ export function buildFilterPlusCss(
       color-scheme: dark !important;
     }
     ${filterCascadeTarget} {
+      -webkit-filter: ${rootFilter} !important;
       filter: ${rootFilter} !important;
+      min-height: 100%;
     }
     ${buildFilterScrollbarCss()}
     ${mediaSelectors} {
+      -webkit-filter: url(#${FILTER_PLUS_SVG_FILTER_ID}) !important;
       filter: url(#${FILTER_PLUS_SVG_FILTER_ID}) !important;
     }
   `

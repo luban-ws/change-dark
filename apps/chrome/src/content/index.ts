@@ -16,6 +16,7 @@ import {
   stopRecolorDynamicObserver,
 } from './recolor-observer'
 import { scheduleBackgroundImageRecolor } from './recolor-background-images'
+import { scheduleFilterMediaCompensation } from './filter-media-compensate'
 import type { SamplingBudget } from '@luban-ws/dark-shared'
 import {
   buildFilterInvertCss,
@@ -30,6 +31,7 @@ import {
   removeFilterPlusSvg,
   restoreInlineStylesInDocument,
   restoreBackgroundImageFiltersInDocument,
+  restoreFilterMediaCompensationInDocument,
   shouldExposeFilterPlusMode,
 } from "@luban-ws/dark-shared"
 import {
@@ -147,6 +149,7 @@ function paintFilterCssPath(
   const css = buildFilterInvertCss(themeFilters, pagePalette)
   document.documentElement.setAttribute(ROOT_ATTR, '')
   ensureStyleElement(css)
+  scheduleFilterMediaCompensation('css-invert')
 }
 
 /**
@@ -168,6 +171,7 @@ function paintFilterPlusPath(
     const css = buildFilterPlusCss(themeFilters, pagePalette)
     document.documentElement.setAttribute(ROOT_ATTR, '')
     ensureStyleElement(css)
+    scheduleFilterMediaCompensation('filter-plus-svg')
   } catch {
     paintFilterCssPath(themeFilters, pagePalette)
   }
@@ -177,6 +181,7 @@ function paintFilterPlusPath(
 function clearForcedDarkSurface(): void {
   stopRecolorDynamicObserver()
   restoreBackgroundImageFiltersInDocument(document)
+  restoreFilterMediaCompensationInDocument(document)
   restoreInlineStylesInDocument(document)
   document.documentElement.removeAttribute(ROOT_ATTR)
   document.getElementById(STYLE_ELEMENT_ID)?.remove()
@@ -226,6 +231,7 @@ async function applyForcedDark(): Promise<void> {
     try {
       stopRecolorDynamicObserver()
       restoreBackgroundImageFiltersInDocument(document)
+      restoreFilterMediaCompensationInDocument(document)
       // 重绘前先还原上一轮 Dynamic 内联改色，避免二次 modifyColor 漂移。
       restoreInlineStylesInDocument(document)
 

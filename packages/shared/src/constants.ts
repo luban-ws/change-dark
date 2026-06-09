@@ -117,8 +117,20 @@ export const ROOT_ATTR = 'data-change-dark-root'
 /** RFC 031 P1-3：内联 style 改色前备份原始 `style` 属性，便于重绘/关闭时还原。 */
 export const INLINE_STYLE_BACKUP_ATTR = 'data-change-dark-inline-backup'
 
-/** RFC 031 P1-5：位图背景亮度滤镜注入前备份原始 `filter`。 */
+/** RFC 013/014：Filter 媒体二次反相前备份 inline `filter`。 */
+export const FILTER_MEDIA_FILTER_BACKUP_ATTR = 'data-change-dark-filter-media-backup'
+
+/** RFC 031 P1-5：位图背景改色前备份（legacy：整元素 filter）。 */
 export const BG_IMAGE_FILTER_BACKUP_ATTR = 'data-change-dark-bg-filter-backup'
+
+/** RFC 031 P1-5：background-image 替换前备份。 */
+export const BG_IMAGE_STYLE_BACKUP_ATTR = 'data-change-dark-bg-image-backup'
+
+/** 替换 background 时创建的 blob URL，restore 时 revoke。 */
+export const BG_IMAGE_BLOB_URL_ATTR = 'data-change-dark-bg-blob-url'
+
+/** `<img>` 压暗前备份 filter。 */
+export const IMG_DARKEN_FILTER_BACKUP_ATTR = 'data-change-dark-img-filter-backup'
 
 /** 注入的样式节点 id，避免重复插入。 */
 export const STYLE_ELEMENT_ID = 'change-dark-style'

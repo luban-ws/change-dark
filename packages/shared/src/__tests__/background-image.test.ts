@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import {
   analyzeImagePixelBuffer,
@@ -15,6 +15,8 @@ import {
   recolorBackgroundImageDeclaration,
   DEFAULT_DARK_PROFILE,
   parseCssColorToken,
+  applyBackgroundImageDarken,
+  BG_IMAGE_STYLE_BACKUP_ATTR,
 } from '../index'
 
 describe('analysisCanvasSize', () => {
@@ -108,5 +110,41 @@ describe('recolorBackgroundImageDeclaration', () => {
 
   it('非 background 属性返回 null', () => {
     expect(recolorBackgroundImageDeclaration('color', '#fff')).toBeNull()
+  })
+})
+
+describe('P1-5 压暗（非反相）', () => {
+  it('背景图：替换 background-image 为 blob URL，不用整元素 filter', () => {
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL: vi.fn(() => 'blob:mock-darken'),
+      revokeObjectURL: vi.fn(),
+    })
+    const div = document.createElement('div')
+    div.style.backgroundImage = 'url("https://example.com/a.png")'
+    const loaded = {
+      analysis: {
+        isDark: false,
+        isLight: true,
+        isTransparent: false,
+        opaquePixelCount: 16,
+        totalPixelCount: 16,
+      },
+      dataUrl: 'data:image/png;base64,abc',
+      width: 10,
+      height: 10,
+    }
+    expect(applyBackgroundImageDarken(div, loaded)).toBe(true)
+    expect(div.getAttribute(BG_IMAGE_STYLE_BACKUP_ATTR)).toContain('url')
+    expect(div.style.backgroundImage).toMatch(/^url\("blob:/)
+    expect(div.style.filter).toBe('')
+    vi.unstubAllGlobals()
+  })
+
+  it('Dynamic 不改动 inline img（无 filter 注入）', () => {
+    const img = document.createElement('img')
+    img.src = 'https://example.com/photo.jpg'
+    expect(img.style.filter).toBe('')
+    expect(img.getAttribute(BG_IMAGE_STYLE_BACKUP_ATTR)).toBeNull()
   })
 })

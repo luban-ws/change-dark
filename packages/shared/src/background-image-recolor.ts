@@ -1,5 +1,6 @@
 /**
- * RFC 031 P1-5：DOM 位图背景图亮度分析 + `filter: brightness()` 注入。
+ * RFC 031 P1-5：位图压暗 — 仅 CSS `background-image` 换 brightness-only SVG blob URL。
+ * `<img>` / `<picture>` 等 inline 媒体不改（Dynamic 对齐 DR「照片不动」）。
  */
 
 import {
@@ -12,7 +13,13 @@ import {
   extractCssBackgroundImageUrls,
   hasBitmapBackgroundImage,
 } from './background-image-css'
-import { BG_IMAGE_FILTER_BACKUP_ATTR } from './constants'
+import {
+  BG_IMAGE_BLOB_URL_ATTR,
+  BG_IMAGE_FILTER_BACKUP_ATTR,
+  BG_IMAGE_STYLE_BACKUP_ATTR,
+  IMG_DARKEN_FILTER_BACKUP_ATTR,
+} from './constants'
+import { createBrightnessDarkenBlobUrl } from './image-darken'
 import {
   computeDeadlineMs,
   isPastDeadline,
@@ -24,20 +31,14 @@ export interface BackgroundImageRecolorResult {
   elementsScanned: number
 }
 
-export type ImageAnalysisLoader = (url: string) => Promise<BackgroundImageAnalysis | null>
-
-/** 默认 loader：canvas 下采样 + 像素分析（需浏览器环境）。 */
-export async function analyzeBackgroundImageUrl(
-  url: string,
-): Promise<BackgroundImageAnalysis | null> {
-  if (typeof document === 'undefined') return null
-  try {
-    const image = await loadImage(url)
-    return analyzeLoadedImage(image)
-  } catch {
-    return null
-  }
+export interface LoadedImageAnalysis {
+  analysis: BackgroundImageAnalysis
+  dataUrl: string
+  width: number
+  height: number
 }
+
+export type ImageAnalysisLoader = (url: string) => Promise<LoadedImageAnalysis | null>
 
 function loadImage(url: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -51,10 +52,24 @@ function loadImage(url: string): Promise<HTMLImageElement> {
   })
 }
 
-/** 将已加载图片绘制到离屏 canvas 并分析。 */
-export function analyzeLoadedImage(
+/** 加载图片并下采样分析（需 CORS 可读像素）。 */
+export async function loadAndAnalyzeImageUrl(
+  url: string,
+): Promise<LoadedImageAnalysis | null> {
+  if (typeof document === 'undefined') return null
+  try {
+    const image = await loadImage(url)
+    return analyzeLoadedImageElement(image, url)
+  } catch {
+    return null
+  }
+}
+
+/** 将已加载图片绘制到离屏 canvas，返回分析与 data URL。 */
+export function analyzeLoadedImageElement(
   image: HTMLImageElement | ImageBitmap,
-): BackgroundImageAnalysis | null {
+  srcForLog = '',
+): LoadedImageAnalysis | null {
   if (typeof document === 'undefined') return null
   const sw =
     image instanceof HTMLImageElement ? image.naturalWidth : image.width
@@ -73,7 +88,17 @@ export function analyzeLoadedImage(
   ctx.clearRect(0, 0, width, height)
   ctx.drawImage(image, 0, 0, sw, sh, 0, 0, width, height)
   const imageData = ctx.getImageData(0, 0, width, height)
-  return analyzeImagePixelBuffer(imageData.data, width, height)
+  const analysis = analyzeImagePixelBuffer(imageData.data, width, height)
+  if (!brightnessFilterForAnalysis(analysis)) return null
+
+  let dataUrl: string
+  try {
+    dataUrl = canvas.toDataURL('image/png')
+  } catch {
+    void srcForLog
+    return null
+  }
+  return { analysis, dataUrl, width: sw, height: sh }
 }
 
 function firstBackgroundImageUrl(el: HTMLElement): string | null {
@@ -86,36 +111,43 @@ function firstBackgroundImageUrl(el: HTMLElement): string | null {
   return extractCssBackgroundImageUrls(computed)[0] ?? null
 }
 
-/** 备份并写入 `filter`（仅当分析结果为亮图）。 */
-export async function recolorElementBackgroundImage(
+/** 背景图：替换为 brightness-only SVG blob URL（不碰整元素 filter）。 */
+export function applyBackgroundImageDarken(
   el: HTMLElement,
-  loader: ImageAnalysisLoader = analyzeBackgroundImageUrl,
-): Promise<boolean> {
-  const url = firstBackgroundImageUrl(el)
-  if (!url) return false
-  const analysis = await loader(url)
-  if (!analysis) return false
-  const filter = brightnessFilterForAnalysis(analysis)
-  if (!filter) return false
-  return applyElementBackgroundImageFilter(el, filter)
-}
-
-export function applyElementBackgroundImageFilter(
-  el: HTMLElement,
-  filter: string,
+  loaded: LoadedImageAnalysis,
 ): boolean {
-  if (el.getAttribute(BG_IMAGE_FILTER_BACKUP_ATTR) === null) {
-    el.setAttribute(BG_IMAGE_FILTER_BACKUP_ATTR, el.style.filter || '')
-  }
-  el.style.setProperty('filter', filter, 'important')
+  if (el.getAttribute(BG_IMAGE_STYLE_BACKUP_ATTR) !== null) return false
+  const currentBg =
+    el.style.backgroundImage ||
+    getComputedStyle(el).backgroundImage
+  if (!currentBg || currentBg === 'none') return false
+
+  const blobUrl = createBrightnessDarkenBlobUrl(
+    loaded.dataUrl,
+    loaded.width,
+    loaded.height,
+  )
+  el.setAttribute(BG_IMAGE_STYLE_BACKUP_ATTR, currentBg)
+  el.setAttribute(BG_IMAGE_BLOB_URL_ATTR, blobUrl)
+  el.style.setProperty('background-image', `url("${blobUrl}")`, 'important')
   return true
 }
 
-/** 扫描子树中带位图背景的元素并按预算改色。 */
+export async function recolorElementBackgroundImage(
+  el: HTMLElement,
+  loader: ImageAnalysisLoader = loadAndAnalyzeImageUrl,
+): Promise<boolean> {
+  const url = firstBackgroundImageUrl(el)
+  if (!url) return false
+  const loaded = await loader(url)
+  if (!loaded) return false
+  return applyBackgroundImageDarken(el, loaded)
+}
+
 export async function recolorBackgroundImagesInSubtree(
   root: ParentNode,
   budget: SamplingBudget,
-  loader: ImageAnalysisLoader = analyzeBackgroundImageUrl,
+  loader: ImageAnalysisLoader = loadAndAnalyzeImageUrl,
   now: () => number = Date.now,
 ): Promise<BackgroundImageRecolorResult> {
   const candidates = collectBackgroundImageCandidates(root)
@@ -127,15 +159,13 @@ export async function recolorBackgroundImagesInSubtree(
     if (processed >= budget.maxNodes) break
     if (isPastDeadline(now(), deadline)) break
     processed += 1
-    if (await recolorElementBackgroundImage(el, loader)) {
-      elementsFiltered += 1
-    }
+    const ok = await recolorElementBackgroundImage(el, loader)
+    if (ok) elementsFiltered += 1
   }
 
   return { elementsFiltered, elementsScanned: candidates.length }
 }
 
-/** 整文档位图背景扫描。 */
 export async function recolorBackgroundImagesInDocument(
   doc: Document = document,
   budget: SamplingBudget,
@@ -168,6 +198,19 @@ function elementMayHaveBitmapBackground(el: HTMLElement): boolean {
   return bg !== 'none' && hasBitmapBackgroundImage(bg)
 }
 
+function revokeBlobUrlIfAny(el: HTMLElement): void {
+  const blob = el.getAttribute(BG_IMAGE_BLOB_URL_ATTR)
+  if (blob) {
+    try {
+      URL.revokeObjectURL(blob)
+    } catch {
+      /* ignore */
+    }
+    el.removeAttribute(BG_IMAGE_BLOB_URL_ATTR)
+  }
+}
+
+/** 还原 legacy 整元素 filter 备份。 */
 export function restoreElementBackgroundImageFilter(el: HTMLElement): boolean {
   const backup = el.getAttribute(BG_IMAGE_FILTER_BACKUP_ATTR)
   if (backup === null) return false
@@ -180,11 +223,53 @@ export function restoreElementBackgroundImageFilter(el: HTMLElement): boolean {
   return true
 }
 
+export function restoreElementBackgroundImageStyle(el: HTMLElement): boolean {
+  let restored = false
+  const bgBackup = el.getAttribute(BG_IMAGE_STYLE_BACKUP_ATTR)
+  if (bgBackup !== null) {
+    if (bgBackup) {
+      el.style.backgroundImage = bgBackup
+    } else {
+      el.style.removeProperty('background-image')
+    }
+    el.removeAttribute(BG_IMAGE_STYLE_BACKUP_ATTR)
+    revokeBlobUrlIfAny(el)
+    restored = true
+  }
+  return restored
+}
+
+export function restoreElementInlineImageFilter(el: HTMLElement): boolean {
+  const backup = el.getAttribute(IMG_DARKEN_FILTER_BACKUP_ATTR)
+  if (backup === null) return false
+  if (backup) {
+    el.style.filter = backup
+  } else {
+    el.style.removeProperty('filter')
+  }
+  el.removeAttribute(IMG_DARKEN_FILTER_BACKUP_ATTR)
+  return true
+}
+
+export function restoreElementImageDarkening(el: HTMLElement): boolean {
+  return (
+    restoreElementBackgroundImageFilter(el) ||
+    restoreElementBackgroundImageStyle(el) ||
+    restoreElementInlineImageFilter(el)
+  )
+}
+
 export function restoreBackgroundImageFiltersInSubtree(root: ParentNode): number {
-  const nodes = root.querySelectorAll(`[${BG_IMAGE_FILTER_BACKUP_ATTR}]`)
+  const selector = [
+    BG_IMAGE_FILTER_BACKUP_ATTR,
+    BG_IMAGE_STYLE_BACKUP_ATTR,
+    IMG_DARKEN_FILTER_BACKUP_ATTR,
+  ]
+    .map((a) => `[${a}]`)
+    .join(', ')
   let restored = 0
-  for (const node of Array.from(nodes)) {
-    if (node instanceof HTMLElement && restoreElementBackgroundImageFilter(node)) {
+  for (const node of Array.from(root.querySelectorAll(selector))) {
+    if (node instanceof HTMLElement && restoreElementImageDarkening(node)) {
       restored += 1
     }
   }
@@ -195,4 +280,18 @@ export function restoreBackgroundImageFiltersInDocument(
   doc: Document = document,
 ): number {
   return restoreBackgroundImageFiltersInSubtree(doc.documentElement)
+}
+
+/** @deprecated 使用 `loadAndAnalyzeImageUrl` */
+export const analyzeBackgroundImageUrl = loadAndAnalyzeImageUrl
+
+/** @deprecated 使用 `analyzeLoadedImageElement` */
+export const analyzeLoadedImage = analyzeLoadedImageElement
+
+/** @deprecated 不再对容器整元素 filter */
+export function applyElementBackgroundImageFilter(
+  _el: HTMLElement,
+  _filter: string,
+): boolean {
+  return false
 }

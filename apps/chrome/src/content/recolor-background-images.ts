@@ -5,6 +5,7 @@
 import {
   computeDeadlineMs,
   isPastDeadline,
+  hasBitmapBackgroundImage,
   recolorBackgroundImagesInDocument,
   recolorElementBackgroundImage,
   type SamplingBudget,
@@ -35,8 +36,16 @@ export function scheduleBackgroundImageRecolorForElements(
       for (const el of elements) {
         if (processed >= budget.maxNodes) break
         if (isPastDeadline(Date.now(), deadline)) break
-        await recolorElementBackgroundImage(el)
-        processed += 1
+        const inline = el.getAttribute('style') ?? ''
+        const bg =
+          getComputedStyle(el).backgroundImage
+        const hasBg =
+          hasBitmapBackgroundImage(inline) ||
+          (bg !== 'none' && hasBitmapBackgroundImage(bg))
+        if (hasBg) {
+          await recolorElementBackgroundImage(el)
+          processed += 1
+        }
       }
     })()
   })

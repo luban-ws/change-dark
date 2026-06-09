@@ -34,22 +34,25 @@ describe('buildDarkCss', () => {
 })
 
 describe('buildFilterInvertMediaSelectorList（RFC 013）', () => {
-  it('picture 与 svg 限定子句位于 video 之前；含 audio 与 [role=img]', () => {
-    const htmlRoot = `html[${ROOT_ATTR}]`
+  it('含 img/svg/video 与 [role=img]；不含 picture 容器', () => {
+    const htmlRoot = `html[${ROOT_ATTR}] body`
     const list = buildFilterInvertMediaSelectorList(htmlRoot, 'svg:not(#cd-host)')
+    expect(list).toContain(`${htmlRoot} img`)
     expect(list).toContain(`${htmlRoot} audio`)
     expect(list).toContain(`${htmlRoot} svg:not(#cd-host)`)
     expect(list).toContain(`${htmlRoot} [role="img"]`)
-    expect(list.indexOf('picture')).toBeLessThan(list.indexOf('svg:not'))
+    expect(list).not.toContain(' picture')
+    expect(list.indexOf('img')).toBeLessThan(list.indexOf('svg:not'))
     expect(list.indexOf('svg:not')).toBeLessThan(list.indexOf('video'))
   })
 })
 
 describe('buildFilterInvertCss（RFC 013）', () => {
-  it('根节点含反相链；媒体选择器含再反相', () => {
+  it('根节点反相在 body；媒体选择器含再反相', () => {
     const sheet = buildFilterInvertCss()
     expect(sheet).toContain(`filter: ${FILTER_CSS_INVERT_CHAIN} !important`)
-    expect(sheet).toContain('html[data-change-dark-root] img')
+    expect(sheet).toContain('html[data-change-dark-root] body {')
+    expect(sheet).toContain('html[data-change-dark-root] body img')
     expect(sheet).toContain('video')
     expect(sheet).toContain('audio')
     expect(sheet).toContain('canvas')
@@ -57,6 +60,7 @@ describe('buildFilterInvertCss（RFC 013）', () => {
     expect(sheet).toContain('embed')
     expect(sheet).toContain('iframe')
     expect(sheet).toContain('[role="img"]')
+    expect(sheet).not.toContain(' body picture')
   })
 
   it('非中性 RFC 011 链接在反相链之后', () => {
@@ -109,11 +113,25 @@ describe('buildRecolorShellCss / buildRecolorDynamicCss (RFC 031 S3)', () => {
     expect(shell).toContain(`html[${ROOT_ATTR}]`)
     expect(shell).toContain('color-scheme: dark')
     expect(shell).not.toContain(CSS_VAR_PAGE_BG)
+    expect(shell).not.toMatch(/html\[[^\]]+\]\s*\{[^}]*filter:/)
   })
 
-  it('buildRecolorDynamicCss 拼接覆盖规则', () => {
+  it('非中性主题滤镜挂在 body 而非 html', () => {
+    const shell = buildRecolorShellCss({
+      brightness: 90,
+      contrast: 100,
+      sepia: 0,
+      saturate: 100,
+    })
+    expect(shell).toContain(`html[${ROOT_ATTR}] body`)
+    expect(shell).toContain('brightness(90%)')
+  })
+
+  it('buildRecolorDynamicCss 含媒体保护与覆盖规则', () => {
     const out = buildRecolorDynamicCss('body { color: #eee !important; }')
     expect(out).toContain('color-scheme: dark')
+    expect(out).toContain('img')
+    expect(out).toContain('filter: none !important')
     expect(out).toContain('body { color: #eee !important; }')
   })
 })
