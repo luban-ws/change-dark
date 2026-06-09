@@ -11,12 +11,15 @@
         "preview": "vite preview",
         "test": "vitest run",
         "test:e2e": "playwright test",
+        "test:e2e:install": "playwright install chromium",
         "test:e2e:report": "playwright show-report",
         "lint": "tsc -p tsconfig.json --noEmit"
     },
     "dependencies": {
         "@luban-ws/dark-engine": "workspace:*",
-        "@luban-ws/dark-shared": "workspace:*",
+        "@luban-ws/dynamic-recolor": "workspace:*",
+        "@luban-ws/extension-settings": "workspace:*",
+        "@luban-ws/injected-styles": "workspace:*",
         "@radix-ui/themes": "^3.3.0",
         "i18next": "^26.0.3",
         "lucide-react": "^1.7.0",

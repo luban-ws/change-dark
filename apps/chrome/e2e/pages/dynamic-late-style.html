@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>dynamic-late-style</title>
+  </head>
+  <body style="margin: 0; min-height: 100vh; background: #ffffff; color: #111">
+    <main><h1>Late stylesheet</h1></main>
+    <script>
+      window.setTimeout(() => {
+        const style = document.createElement('style')
+        style.textContent =
+          'body { background-color: #ffffff !important; color: #000000 !important; }'
+        document.head.appendChild(style)
+      }, 150)
+    </script>
+  </body>
+</html>

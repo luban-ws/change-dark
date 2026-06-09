@@ -1,15 +1,13 @@
 import {
   COMMAND_TOGGLE_CURRENT_SITE,
   COMMAND_TOGGLE_GLOBAL,
-} from "@luban-ws/dark-shared"
-import { normalizeHttpOriginFromUrl } from "@luban-ws/dark-shared"
-import { ensureStorageMigrated } from "@luban-ws/dark-shared"
-import { policyAfterGlobalHotkeyToggle } from "@luban-ws/dark-shared"
-import {
+  normalizeHttpOriginFromUrl,
+  ensureStorageMigrated,
+  policyAfterGlobalHotkeyToggle,
   persistGlobalPolicy,
   readGlobalPolicy,
   toggleCurrentOriginInDenylist,
-} from "@luban-ws/dark-shared"
+} from '@luban-ws/extension-settings'
 
 /** 安装、更新与浏览器启动时规范化存储（RFC 004）。 */
 chrome.runtime.onInstalled.addListener(() => {

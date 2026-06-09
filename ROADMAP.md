@@ -1,9 +1,15 @@
 # Roadmap — 嫦娥 / Selena
 
-**下一个可用 RFC 编号：032**（026 E2E、027–030 模式精炼、031 Dynamic 改色引擎已占用）。  
-已完成的 RFC 归档于 `docs/rfc/completed/`。  
+**下一个可用 RFC 编号：033**（Phase 2 / CSS 变量等后续）。  
+RFC 文档根目录：**`.spec/rfc/`**（completed 在 `.spec/rfc/completed/`）。  
 WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)  
 任务追踪：[TASK_TRACKING.md](./TASK_TRACKING.md)
+
+---
+
+## 产品方向（2026-06-09）
+
+**只聚焦 Dynamic。** Static、Filter、Filter+ **Rejected**（见 [RFC 032](./.spec/rfc/completed/032-theme-mode-product-consolidation.md)）。
 
 ---
 
@@ -60,21 +66,22 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 |-----|------|------|------|
 | [023](./docs/rfc/completed/023-dynamic-color-engine-pipeline.md) | T-035 | Dynamic 配色管线：采样、聚合语义讨论 | ✅ |
 | [025](./docs/rfc/completed/025-policy-mode-behavior-matrix.md) | T-037 | 策略×模式行为矩阵：Auto/On/Off × Filter/Filter+/Dynamic/Static | ✅ |
-| [031](./docs/rfc/completed/031-dynamic-recolor-engine.md) | T-044 | Dynamic 逐规则改色（Rust/WASM）；Phase 1 ✅ | ✅ |
+| [031](./.spec/rfc/completed/031-dynamic-recolor-engine.md) | T-044 | Dynamic 逐规则改色（Rust/WASM）；Phase 1 ✅ | ✅ |
+| [026](./.spec/rfc/completed/026-e2e-testing-strategy.md) | T-039 | E2E：**仅 Dynamic** | ✅ |
+| [029](./.spec/rfc/completed/029-theme-mode-dynamic-refinement.md) | T-042 | Dynamic **唯一产品** | ✅ |
+| [032](./.spec/rfc/completed/032-theme-mode-product-consolidation.md) | T-045 | Dynamic-only：删模式/迁移/铺底 | ✅ |
 
 ---
 
 ## 当前进行中 / Backlog
 
-### 模式精炼（Draft）
+### Rejected（产品范围外）
 
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
-| [026](./docs/rfc/026-e2e-testing-strategy.md) | T-039 | E2E 自动化测试方案 | Draft |
-| [027](./docs/rfc/027-theme-mode-filter-css-refinement.md) | T-040 | Filter（CSS）语义澄清与精炼路线图 | Draft |
-| [028](./docs/rfc/028-theme-mode-filter-plus-refinement.md) | T-041 | Filter+（SVG）语义澄清与精炼路线图 | Draft |
-| [029](./docs/rfc/029-theme-mode-dynamic-refinement.md) | T-042 | Dynamic 回退层精炼（§4.1 分层诊断 ✅；二次采样/连贯性待办） | Draft |
-| [030](./docs/rfc/030-theme-mode-static-refinement.md) | T-043 | Static 覆盖边界与精炼路线图 | Draft |
+| [027](./.spec/rfc/rejected/027-theme-mode-filter-css-refinement.md) | T-040 | Filter CSS | **Rejected** |
+| [028](./.spec/rfc/rejected/028-theme-mode-filter-plus-refinement.md) | T-041 | Filter+ SVG | **Rejected** |
+| [030](./.spec/rfc/rejected/030-theme-mode-static-refinement.md) | T-043 | Static 用户模式 | **Rejected** |
 
 ### 其他 Backlog
 

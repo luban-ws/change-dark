@@ -1,0 +1,30 @@
+{
+  "name": "@luban-ws/injected-styles",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@luban-ws/extension-settings": "workspace:*"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.2",
+    "vite-plugin-dts": "^4.2.1",
+    "vitest": "^2.1.2"
+  }
+}

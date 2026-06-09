@@ -4,15 +4,65 @@ import { render, screen, fireEvent, within } from '@testing-library/react'
 import { Theme } from '@radix-ui/themes'
 
 /** 避免加载真实 `i18n.ts`：其模块顶层会访问 `chrome.i18n` / `storage.local`。 */
+const popupEn = vi.hoisted(() => ({
+  extName: 'Selena',
+  extSubtitle: 'Force dark · Adjust global rules and site themes here',
+  tabSettings: 'Settings',
+  tabSupport: 'Support',
+  lblLangZh: '中文',
+  lblLangEn: 'English',
+  lblCurrentSite: 'Current Site',
+  lblNoOrigin: 'Open a web page to enable site rules.',
+  lblSiteForced: 'This site is forced dark by site list rules.',
+  lblSiteNotForced: 'This site follows global dark mode rules.',
+  lblNoHostname: '—',
+  globalSwitch: 'Global Switch',
+  lblAuto: 'Auto',
+  lblOn: 'On',
+  lblOff: 'Off',
+  lblThreshold: 'Auto-Dark Threshold',
+  lblStrict: 'Strict',
+  lblRelaxed: 'Relaxed',
+  lblScopeGlobal: 'Global',
+  lblScopeSite: 'This Site',
+  lblClearSiteOverride: 'Clear site override',
+  pagePalette: 'Page Palette',
+  lblPaletteDark: 'Dark',
+  lblPaletteSolarized: 'Solarized',
+  filters: 'Theme Filters',
+  lblBrightness: 'Brightness',
+  lblContrast: 'Contrast',
+  lblSepia: 'Sepia',
+  lblSaturate: 'Saturate',
+  typography: 'Typography & Stroke',
+  lblEnableFont: 'Override Font',
+  lblSelectFont: 'Select font…',
+  lblFontSystem: 'System UI',
+  lblFontSans: 'Sans Serif',
+  lblFontSerif: 'Serif',
+  lblFontMono: 'Monospace',
+  lblFontCustom: 'Custom…',
+  lblFontFamilyPlaceholder: 'Font family…',
+  lblEnableStroke: 'Text Stroke (0.01px to 1px)',
+  customCss: 'Per-Site Custom CSS',
+  siteList: 'Site List Settings',
+  lblSiteListBlacklist: 'Blacklist',
+  lblSiteListWhitelist: 'Whitelist',
+  lblSiteListPlaceholder: 'example.com\ngithub.com',
+  supportTitle: 'Support the Author',
+  supportHelp: 'If this extension helps you, consider buying me a coffee.',
+  altQrCode: 'Support QR code',
+} as const))
+
 vi.mock('../i18n', () => ({
   default: {},
   STORAGE_KEY_LANG: 'ui_language',
+  POPUP_LOCALES: { en: { translation: popupEn } },
 }))
 
-/** 供 `vi.mock('@luban-ws/dark-shared')` 工厂闭包引用（必须 hoisted）。 */
+/** 供 `vi.mock('@luban-ws/extension-settings')` 工厂闭包引用（必须 hoisted）。 */
 const popupMocks = vi.hoisted(() => ({
   mockPersistGlobalPolicy: vi.fn(async (_p: string) => {}),
-  mockPersistThemeMode: vi.fn(async (_m: string) => {}),
   mockPersistPagePalette: vi.fn(async (_p: string) => {}),
   mockPersistThemeFiltersState: vi.fn(async (_f: unknown) => {}),
   mockPersistTypographyState: vi.fn(async (_t: unknown) => {}),
@@ -24,9 +74,10 @@ const popupMocks = vi.hoisted(() => ({
 
 import App from '../App'
 
+const EN = popupEn
+
 const {
   mockPersistGlobalPolicy,
-  mockPersistThemeMode,
   mockPersistPagePalette,
   mockPersistThemeFiltersState,
   mockPersistTypographyState,
@@ -36,23 +87,19 @@ const {
   mockPersistSiteListState,
 } = popupMocks
 
-vi.mock('react-i18next', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('react-i18next')>()
-  return {
-    ...actual,
-    useTranslation: () => ({
-      t: (_key: string, fb: string) => fb || _key,
-      i18n: { language: 'en', changeLanguage: vi.fn() },
-    }),
-  }
-})
+vi.mock('../usePopupT', () => ({
+  usePopupT: () => ({
+    t: (key: keyof typeof popupEn) => popupEn[key] ?? key,
+    i18n: { language: 'en', changeLanguage: vi.fn() },
+    lng: 'en' as const,
+  }),
+}))
 
-vi.mock("@luban-ws/dark-shared", async (importOriginal) => {
+vi.mock('@luban-ws/extension-settings', async (importOriginal) => {
   const actual = await importOriginal<any>()
   return {
     ...actual,
     readGlobalPolicy: vi.fn(() => Promise.resolve('on')),
-    readThemeMode: vi.fn(() => Promise.resolve('filter-css')),
     readThemeFiltersState: vi.fn(() => Promise.resolve({ brightness: 100, contrast: 100, sepia: 0, saturate: 100 })),
     readPagePalette: vi.fn(() => Promise.resolve('dark')),
     readTypographyState: vi.fn(() => Promise.resolve({ v: 1, fontEnabled: false, fontPreset: '', customFontFamily: '', textStrokeEnabled: false, textStrokeWidthPx: 0 })),
@@ -61,7 +108,6 @@ vi.mock("@luban-ws/dark-shared", async (importOriginal) => {
     readSiteCustomCssForPage: vi.fn(() => Promise.resolve('')),
     hasSiteScopedDataForOrigin: vi.fn(() => Promise.resolve(false)),
     persistGlobalPolicy: (p: unknown) => popupMocks.mockPersistGlobalPolicy(p as string),
-    persistThemeMode: (m: unknown) => popupMocks.mockPersistThemeMode(m as string),
     persistPagePalette: (p: unknown) => popupMocks.mockPersistPagePalette(p as string),
     persistThemeFiltersState: (f: unknown) => popupMocks.mockPersistThemeFiltersState(f),
     persistTypographyState: (t: unknown) => popupMocks.mockPersistTypographyState(t),
@@ -70,7 +116,6 @@ vi.mock("@luban-ws/dark-shared", async (importOriginal) => {
     persistSiteListState: (s: unknown) => popupMocks.mockPersistSiteListState(s),
     toggleCurrentOriginInDenylist: (o: unknown) => popupMocks.mockToggleCurrentOrigin(o as string),
     clearSiteOverrideForOrigin: (o: unknown) => popupMocks.mockClearSiteOverride(o as string),
-    upsertSiteThemeModeOverride: vi.fn(),
     upsertSitePagePaletteOverride: vi.fn(),
     upsertSiteThemeFiltersOverride: vi.fn(),
     upsertSiteTypographyOverride: vi.fn(),
@@ -130,7 +175,7 @@ describe('App & usePopupState Integration Coverage', () => {
   it('mounts and exposes Support tab trigger', async () => {
     const { container } = renderApp()
     const app = appSurface(container)
-    expect(await within(app).findByText('Force dark rules')).toBeDefined()
+    expect(await within(app).findByText(EN.extSubtitle)).toBeDefined()
     const tablist = within(app).getByRole('tablist')
     const supportTrigger = tablist.querySelector('[id$="-trigger-support"]')
     expect(supportTrigger).toBeTruthy()
@@ -140,44 +185,23 @@ describe('App & usePopupState Integration Coverage', () => {
   it('dispatches global policy storage changes', async () => {
     const { container } = renderApp()
     const app = appSurface(container)
-    await within(app).findByText('Force dark rules')
-    fireEvent.click(within(app).getAllByText('Off')[0]!)
+    await within(app).findByText(EN.extSubtitle)
+    fireEvent.click(within(app).getAllByText(EN.lblOff)[0]!)
     expect(mockPersistGlobalPolicy).toHaveBeenCalledWith('off')
-  })
-
-  it('dispatches theme mode storage changes', async () => {
-    const { container } = renderApp()
-    const app = appSurface(container)
-    fireEvent.click(within(app).getByRole('radio', { name: /dynamic/i }))
-    expect(mockPersistThemeMode).toHaveBeenCalledWith('dynamic')
-  })
-
-  it('shows theme mode hint and Filter radio title (RFC 027)', async () => {
-    const { container } = renderApp()
-    const app = appSurface(container)
-    expect(
-      await within(app).findByText(/Filter modes invert the whole page/i),
-    ).toBeDefined()
-    const filterRadio = app.querySelector(
-      'input[type="radio"][value="filter-css"]',
-    ) as HTMLInputElement | null
-    expect(filterRadio).not.toBeNull()
-    const filterLabel = filterRadio?.closest('label')
-    expect(filterLabel?.getAttribute('title')).toBe('themeModeFilter')
   })
 
   it('dispatches page palette storage changes', async () => {
     const { container } = renderApp()
     const app = appSurface(container)
-    fireEvent.click(within(app).getAllByText('Solarized')[0]!)
+    fireEvent.click(within(app).getAllByText(EN.lblPaletteSolarized)[0]!)
     expect(mockPersistPagePalette).toHaveBeenCalledWith('solarized-dark')
   })
   
   it('dispatches typography changes', async () => {
     const { container } = renderApp()
     const app = appSurface(container)
-    await within(app).findByText('Typography & Stroke')
-    const typoCard = within(app).getByText('Typography & Stroke').closest('.rt-Card') as HTMLElement
+    await within(app).findByText(EN.typography)
+    const typoCard = within(app).getByText(EN.typography).closest('.rt-Card') as HTMLElement
     const fontSwitch = within(typoCard).getAllByRole('switch')[0]!
     fireEvent.click(fontSwitch)
     expect(mockPersistTypographyState).toHaveBeenCalled()
@@ -195,8 +219,8 @@ describe('App & usePopupState Integration Coverage', () => {
   it('dispatches site list mode changes', async () => {
     const { container } = renderApp()
     const app = appSurface(container)
-    fireEvent.click(within(app).getAllByText('Only Current Site')[0]!)
-    fireEvent.click(within(app).getAllByText('Whitelist')[0]!)
+    fireEvent.click(within(app).getAllByText(EN.lblScopeSite)[0]!)
+    fireEvent.click(within(app).getAllByText(EN.lblSiteListWhitelist)[0]!)
     expect(mockPersistSiteListState).toHaveBeenCalledWith(expect.objectContaining({
       mode: 'invert-listed-only'
     }))

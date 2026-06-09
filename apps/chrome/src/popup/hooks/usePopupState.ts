@@ -1,30 +1,26 @@
 import { useState, useEffect } from 'react'
 import {
   readGlobalPolicy, persistGlobalPolicy,
-  readThemeMode, persistThemeMode,
   readThemeFiltersState, persistThemeFiltersState,
   readPagePalette, persistPagePalette,
   readTypographyState, persistTypographyState,
   readSiteOverridesState, hasSiteScopedDataForOrigin,
-  clearSiteOverrideForOrigin, upsertSiteThemeModeOverride,
+  clearSiteOverrideForOrigin,
   upsertSiteThemeFiltersOverride, upsertSitePagePaletteOverride,
   upsertSiteTypographyOverride, readSiteCustomCssForPage,
   persistSiteCustomCssForOrigin, readSiteListState, persistSiteListState,
-  toggleCurrentOriginInDenylist, readAutoDarkThreshold, persistAutoDarkThreshold
-} from "@luban-ws/dark-shared"
-import { resolveEffectiveTheme, resolveEffectivePagePalette, resolveEffectiveTypography } from "@luban-ws/dark-shared"
-import { hostnameLabelFromHttpOrigin, normalizeHttpOriginFromUrl, shouldApplyForcedDarkFromSiteList } from "@luban-ws/dark-shared"
-import { clampThemeFilters, type ThemeFiltersStateV1 } from "@luban-ws/dark-shared"
-import type { PagePalette } from "@luban-ws/dark-shared"
-import { 
-  POLICY_ON, THEME_MODE_FILTER_CSS,
-  STORAGE_KEY_POLICY, STORAGE_KEY_SITE_LIST, STORAGE_KEY_THEME_FILTERS, 
-  STORAGE_KEY_THEME_MODE, STORAGE_KEY_PAGE_PALETTE, STORAGE_KEY_SITE_OVERRIDES, 
+  toggleCurrentOriginInDenylist, readAutoDarkThreshold, persistAutoDarkThreshold,
+  resolveEffectivePagePalette, resolveEffectiveTheme, resolveEffectiveTypography,
+  hostnameLabelFromHttpOrigin, normalizeHttpOriginFromUrl, shouldApplyForcedDarkFromSiteList,
+  clampThemeFilters, type ThemeFiltersStateV1, type PagePalette,
+  POLICY_ON,
+  STORAGE_KEY_POLICY, STORAGE_KEY_SITE_LIST, STORAGE_KEY_THEME_FILTERS,
+  STORAGE_KEY_PAGE_PALETTE, STORAGE_KEY_SITE_OVERRIDES,
   STORAGE_KEY_TYPOGRAPHY, STORAGE_KEY_SITE_CUSTOM_CSS,
   STORAGE_KEY_AUTO_DARK_THRESHOLD, DEFAULT_AUTO_DARK_THRESHOLD,
-  type ThemeMode, type GlobalPolicy
-} from "@luban-ws/dark-shared"
-import { typographyStateToSettings, clampTypographySettings, type TypographySettingsV1 } from "@luban-ws/dark-shared"
+  type GlobalPolicy,
+  typographyStateToSettings, clampTypographySettings, type TypographySettingsV1,
+} from '@luban-ws/extension-settings'
 
 export function usePopupState() {
   const [origin, setOrigin] = useState<string | null>(null)
@@ -33,7 +29,6 @@ export function usePopupState() {
   const [isSiteForcedDark, setIsSiteForcedDark] = useState(false)
 
   const [policy, setPolicy] = useState<GlobalPolicy>(POLICY_ON)
-  const [themeMode, setThemeMode] = useState<ThemeMode>(THEME_MODE_FILTER_CSS)
   const [filters, setFilters] = useState<ThemeFiltersStateV1>({ brightness: 100, contrast: 100, sepia: 0, saturate: 100 })
   const [palette, setPalette] = useState<PagePalette>('dark')
   const [typography, setTypography] = useState<TypographySettingsV1>({ fontEnabled: false, fontPreset: 'system', customFontFamily: '', textStrokeEnabled: false, textStrokeWidthPx: 0.06 })
@@ -55,21 +50,18 @@ export function usePopupState() {
       const gPolicy = await readGlobalPolicy()
       setPolicy(gPolicy)
 
-      const gMode = await readThemeMode()
       const gFilters = await readThemeFiltersState()
       const gPalette = await readPagePalette()
       const gTy = await readTypographyState()
       
       if (activeScope === 'global' || !currentOrigin) {
-        setThemeMode(gMode)
         setFilters(gFilters)
         setPalette(gPalette)
         setTypography(typographyStateToSettings(gTy))
         setHasSiteOverride(false)
       } else {
         const ov = await readSiteOverridesState()
-        const eff = resolveEffectiveTheme(currentOrigin, gMode, gFilters, ov)
-        setThemeMode(eff.themeMode)
+        const eff = resolveEffectiveTheme(currentOrigin, 'dynamic', gFilters, ov)
         setFilters(eff.themeFilters)
         setPalette(resolveEffectivePagePalette(currentOrigin, gPalette, ov))
         setTypography(resolveEffectiveTypography(currentOrigin, gTy, ov))
@@ -103,7 +95,7 @@ export function usePopupState() {
       if (area !== 'local') return
       
       const mustRefreshUi = [
-        STORAGE_KEY_THEME_FILTERS, STORAGE_KEY_THEME_MODE, STORAGE_KEY_PAGE_PALETTE,
+        STORAGE_KEY_THEME_FILTERS, STORAGE_KEY_PAGE_PALETTE,
         STORAGE_KEY_SITE_OVERRIDES, STORAGE_KEY_TYPOGRAPHY, STORAGE_KEY_SITE_CUSTOM_CSS,
         STORAGE_KEY_AUTO_DARK_THRESHOLD
       ].some(k => changes[k])
@@ -127,7 +119,6 @@ export function usePopupState() {
       await toggleCurrentOriginInDenylist(origin)
     },
     setPolicy: (p: GlobalPolicy) => persistGlobalPolicy(p),
-    setThemeMode: (m: ThemeMode) => editScope === 'global' ? persistThemeMode(m) : upsertSiteThemeModeOverride(origin!, m),
     setPagePalette: (p: PagePalette) => editScope === 'global' ? persistPagePalette(p) : upsertSitePagePaletteOverride(origin!, p),
     setFilters: (f: ThemeFiltersStateV1) => editScope === 'global' ? persistThemeFiltersState(f) : upsertSiteThemeFiltersOverride(origin!, f),
     setTypography: (t: TypographySettingsV1) => editScope === 'global' ? persistTypographyState({ v: 1, ...t }) : upsertSiteTypographyOverride(origin!, t),
@@ -141,7 +132,7 @@ export function usePopupState() {
   return { 
     origin, hostnameTitle: origin ? hostnameLabelFromHttpOrigin(origin) : '', 
     editScope, hasSiteOverride, isSiteForcedDark, 
-    policy, themeMode, filters, palette, typography, siteCss, siteList, autoDarkThreshold,
+    policy, filters, palette, typography, siteCss, siteList, autoDarkThreshold,
     actions 
   }
 }

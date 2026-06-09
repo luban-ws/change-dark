@@ -4,18 +4,15 @@ import {
   INLINE_STYLE_BACKUP_ATTR,
   ROOT_ATTR,
   STYLE_ELEMENT_ID,
+  CSS_VAR_PAGE_BG,
+} from '@luban-ws/extension-settings'
+import {
   buildRecolorOverrideStylesheet,
   collectReadableStylesheetCssTexts,
   modifyColor,
   parseCssColorToken,
-} from '@luban-ws/dark-shared'
-import { paintRecolorPath, wasmRecolorAvailable } from '../recolor-path'
-
-describe('wasmRecolorAvailable', () => {
-  it('WASM modifyColor 可用', () => {
-    expect(wasmRecolorAvailable()).toBe(true)
-  })
-})
+} from '@luban-ws/dynamic-recolor'
+import { paintRecolorPath } from '../recolor-path'
 
 describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
   beforeEach(() => {
@@ -65,7 +62,11 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     )
   })
 
-  it('RFC 031 P1-3 — 仅内联 style 也可走 recolor 路径', () => {
+  it('RFC 031 P1-3 — 内联 style 在同源 stylesheet 存在时一并改色', () => {
+    const style = document.createElement('style')
+    style.textContent = 'body { background-color: #fff; }'
+    document.head.appendChild(style)
+
     const p = document.createElement('p')
     p.setAttribute('style', 'color:#000')
     document.body.appendChild(p)
@@ -80,5 +81,37 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     expect(parseCssColorToken(p.style.getPropertyValue('color'))).toEqual(
       modifyColor({ r: 0, g: 0, b: 0 }, 'fg'),
     )
+  })
+
+  it('RFC 032 — baseCss 与 recolor 层合并注入，不覆盖铺底变量', () => {
+    const style = document.createElement('style')
+    style.textContent = 'body { color: #000; background-color: #fff; }'
+    document.head.appendChild(style)
+
+    const baseCss = `:root { ${CSS_VAR_PAGE_BG}: rgb(24, 26, 27); }`
+    const ok = paintRecolorPath(
+      { brightness: 100, contrast: 100, sepia: 0, saturate: 100 },
+      'dark',
+      document,
+      baseCss,
+    )
+    expect(ok).toBe(true)
+    const el = document.getElementById(STYLE_ELEMENT_ID)
+    expect(el?.textContent).toContain(CSS_VAR_PAGE_BG)
+    expect(el?.textContent).toContain('color-scheme: dark')
+  })
+
+  it('无可读 stylesheet 时返回 false，且不提前改写内联 style', () => {
+    const p = document.createElement('p')
+    p.setAttribute('style', 'color:#000')
+    document.body.appendChild(p)
+
+    const ok = paintRecolorPath(
+      { brightness: 100, contrast: 100, sepia: 0, saturate: 100 },
+      'dark',
+    )
+    expect(ok).toBe(false)
+    expect(p.getAttribute(INLINE_STYLE_BACKUP_ATTR)).toBeNull()
+    expect(p.style.getPropertyValue('color')).toBe('rgb(0, 0, 0)')
   })
 })

@@ -1,13 +1,10 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
-import i18nConfig, { STORAGE_KEY_LANG } from './i18n'
-
+import { usePopupT } from './usePopupT'
+import { STORAGE_KEY_LANG, type PopupLanguage } from './i18n'
 import { usePopupState } from './hooks/usePopupState'
 import {
   POLICY_AUTO, POLICY_OFF, POLICY_ON, type GlobalPolicy,
-  THEME_MODE_DYNAMIC, THEME_MODE_STATIC, THEME_MODE_FILTER_CSS, THEME_MODE_FILTER_PLUS,
-} from "@luban-ws/dark-shared"
-import { shouldExposeFilterPlusMode } from "@luban-ws/dark-shared"
+} from '@luban-ws/extension-settings'
 import { ThemeFiltersPanel } from './components/ThemeFiltersPanel'
 import { TypographyPanel } from './components/TypographyPanel'
 import { SiteToolsPanel } from './components/SiteToolsPanel'
@@ -17,44 +14,16 @@ import { Flex, Box, Text, Heading, Tabs, Card, Switch, ScrollArea, SegmentedCont
 import { Settings, Heart, Moon } from 'lucide-react'
 
 export default function App() {
-  const { t, i18n } = useTranslation()
+  const { t, i18n, lng } = usePopupT()
   
   const { 
     origin, hostnameTitle, editScope, hasSiteOverride, isSiteForcedDark, 
-    policy, themeMode, filters, palette, typography, siteCss, siteList, autoDarkThreshold, actions 
+    policy, filters, palette, typography, siteCss, siteList, autoDarkThreshold, actions 
   } = usePopupState()
-
-  const isFirefoxUiGateActive = !shouldExposeFilterPlusMode()
-
-  const themeModeOptions = [
-    {
-      value: THEME_MODE_FILTER_CSS,
-      labelKey: 'themeModeFilter',
-      titleKey: 'themeModeFilterTitle',
-      disabled: false,
-    },
-    {
-      value: THEME_MODE_FILTER_PLUS,
-      labelKey: 'themeModeFilterPlus',
-      titleKey: 'themeModeFilterPlusTitle',
-      disabled: isFirefoxUiGateActive,
-    },
-    {
-      value: THEME_MODE_DYNAMIC,
-      labelKey: 'themeModeDynamic',
-      titleKey: 'themeModeDynamicTitle',
-      disabled: false,
-    },
-    {
-      value: THEME_MODE_STATIC,
-      labelKey: 'themeModeStatic',
-      titleKey: 'themeModeStaticTitle',
-      disabled: false,
-    },
-  ] as const
 
   return (
       <Flex
+          key={`popup-root-${lng}`}
           className={`theme-mode-${palette}`}
           direction="column"
           style={{
@@ -63,7 +32,6 @@ export default function App() {
               backgroundColor: "var(--color-page-background)",
           }}
       >
-          {/* Header - Fixed */}
           <Box
               p="3"
               style={{
@@ -75,34 +43,36 @@ export default function App() {
                   <Flex gap="2" align="center">
                       <Moon size={20} color="var(--accent-a10)" />
                       <Box>
-                          <Heading size="3">{t("extName", "Selena")}</Heading>
+                          <Heading size="3">{t('extName')}</Heading>
                           <Text size="1" color="gray">
-                              {t("extSubtitle", "Force dark rules")}
+                              {t('extSubtitle')}
                           </Text>
                       </Box>
                   </Flex>
                   <Box>
                       <Select.Root
-                          value={i18n.language === "zh_CN" ? "zh_CN" : "en"}
+                          value={lng}
                           onValueChange={(val) => {
-                              void i18n.changeLanguage(val);
+                              const lng = val as PopupLanguage
+                              void i18n.changeLanguage(lng)
                               void chrome.storage.local.set({
-                                  [STORAGE_KEY_LANG]: val,
-                              });
+                                  [STORAGE_KEY_LANG]: lng,
+                              })
                           }}
                           size="1"
                       >
-                          <Select.Trigger variant="ghost" />
+                          <Select.Trigger variant="ghost">
+                              {lng === 'zh_CN' ? t('lblLangZh') : t('lblLangEn')}
+                          </Select.Trigger>
                           <Select.Content>
-                              <Select.Item value="zh_CN">中文</Select.Item>
-                              <Select.Item value="en">EN</Select.Item>
+                              <Select.Item value="zh_CN">{t('lblLangZh')}</Select.Item>
+                              <Select.Item value="en">{t('lblLangEn')}</Select.Item>
                           </Select.Content>
                       </Select.Root>
                   </Box>
               </Flex>
           </Box>
 
-          {/* Tabs Layout */}
           <Tabs.Root
               defaultValue="main"
               style={{
@@ -116,13 +86,13 @@ export default function App() {
                   <Tabs.Trigger value="main">
                       <Flex gap="2" align="center">
                           <Settings size={14} />
-                          {t("tabSettings", "Settings")}
+                          {t('tabSettings')}
                       </Flex>
                   </Tabs.Trigger>
                   <Tabs.Trigger value="support">
                       <Flex gap="2" align="center">
                           <Heart size={14} />
-                          {t("tabSupport", "Support")}
+                          {t('tabSupport')}
                       </Flex>
                   </Tabs.Trigger>
               </Tabs.List>
@@ -138,11 +108,10 @@ export default function App() {
                           style={{ height: "100%" }}
                       >
                           <Flex direction="column" gap="4" p="3">
-                              {/* Current Site Card */}
                               <Card size="1">
                                   <Flex justify="between" align="center" mb="2">
                                       <Text size="2" weight="bold">
-                                          {t("lblCurrentSite", "Current Site")}
+                                          {t('lblCurrentSite')}
                                       </Text>
                                       <Text
                                           size="1"
@@ -151,7 +120,7 @@ export default function App() {
                                           style={{ maxWidth: "140px" }}
                                           title={origin || ""}
                                       >
-                                          {hostnameTitle || "—"}
+                                          {hostnameTitle || t('lblNoHostname')}
                                       </Text>
                                   </Flex>
                                   <Flex justify="between" align="start" gap="3">
@@ -168,32 +137,22 @@ export default function App() {
                                           style={{ flex: 1 }}
                                       >
                                           {!origin
-                                              ? t(
-                                                    "lblNoOrigin",
-                                                    "Open a valid web page to enable rules.",
-                                                )
+                                              ? t('lblNoOrigin')
                                               : isSiteForcedDark
-                                                ? t(
-                                                      "lblSiteForced",
-                                                      "This site is forced dark by site list rules.",
-                                                  )
-                                                : t(
-                                                      "lblSiteNotForced",
-                                                      "This site follows global dark mode rules.",
-                                                  )}
+                                                ? t('lblSiteForced')
+                                                : t('lblSiteNotForced')}
                                       </Text>
                                   </Flex>
                               </Card>
 
-                              {/* Global Switch Card */}
                               <Card size="1">
                                   <Flex justify="between" align="center" mb="2">
                                       <Text size="2" weight="bold">
-                                          {t("globalSwitch", "Global Switch")}
+                                          {t('globalSwitch')}
                                       </Text>
                                       {policy === POLICY_AUTO && (
                                           <Text size="1" color="gray">
-                                              {t("lblThreshold", "Threshold")}:{" "}
+                                              {t('lblThreshold')}:{" "}
                                               {autoDarkThreshold}
                                           </Text>
                                       )}
@@ -209,13 +168,13 @@ export default function App() {
                                       <SegmentedControl.Item
                                           value={POLICY_AUTO}
                                       >
-                                          {t("lblAuto", "Auto")}
+                                          {t('lblAuto')}
                                       </SegmentedControl.Item>
                                       <SegmentedControl.Item value={POLICY_ON}>
-                                          {t("lblOn", "On")}
+                                          {t('lblOn')}
                                       </SegmentedControl.Item>
                                       <SegmentedControl.Item value={POLICY_OFF}>
-                                          {t("lblOff", "Off")}
+                                          {t('lblOff')}
                                       </SegmentedControl.Item>
                                   </SegmentedControl.Root>
 
@@ -235,17 +194,16 @@ export default function App() {
                                           />
                                           <Flex justify="between">
                                               <Text size="1" color="gray">
-                                                  {t("lblStrict", "Strict")}
+                                                  {t('lblStrict')}
                                               </Text>
                                               <Text size="1" color="gray">
-                                                  {t("lblRelaxed", "Relaxed")}
+                                                  {t('lblRelaxed')}
                                               </Text>
                                           </Flex>
                                       </Flex>
                                   )}
                               </Card>
 
-                              {/* Scope Mode */}
                               <Flex align="center" justify="between">
                                   <SegmentedControl.Root
                                       value={editScope}
@@ -255,7 +213,7 @@ export default function App() {
                                       size="1"
                                   >
                                       <SegmentedControl.Item value="global">
-                                          {t("lblScopeGlobal", "Global Edit")}
+                                          {t('lblScopeGlobal')}
                                       </SegmentedControl.Item>
                                       <SegmentedControl.Item
                                           value="site"
@@ -266,10 +224,7 @@ export default function App() {
                                                   : "auto",
                                           }}
                                       >
-                                          {t(
-                                              "lblScopeSite",
-                                              "Only Current Site",
-                                          )}
+                                          {t('lblScopeSite')}
                                       </SegmentedControl.Item>
                                   </SegmentedControl.Root>
                                   {hasSiteOverride && (
@@ -277,6 +232,7 @@ export default function App() {
                                           size="1"
                                           color="red"
                                           variant="soft"
+                                          aria-label={t('lblClearSiteOverride')}
                                           onClick={() =>
                                               actions.clearSiteOverride()
                                           }
@@ -292,88 +248,9 @@ export default function App() {
                                   )}
                               </Flex>
 
-                              {/* Theme Mode Card */}
                               <Card size="1">
                                   <Text as="div" size="2" weight="bold" mb="2">
-                                      {t("themeMode", "Theme Mode")}
-                                  </Text>
-                                  <Text as="p" size="1" color="gray" mb="2" style={{ lineHeight: 1.45 }}>
-                                      {t(
-                                          'themeModeHint',
-                                          'Filter modes invert the whole page. Auto skips on native dark; On skips Filter on native dark.',
-                                      )}
-                                  </Text>
-                                  <Flex direction="column" gap="2">
-                                      {themeModeOptions.map((opt) => (
-                                          <Box
-                                              key={opt.value}
-                                              style={{
-                                                  opacity: opt.disabled
-                                                      ? 0.5
-                                                      : 1,
-                                              }}
-                                          >
-                                              <label
-                                                  title={t(
-                                                      opt.titleKey,
-                                                      opt.labelKey,
-                                                  )}
-                                                  style={{
-                                                      display: "flex",
-                                                      alignItems: "center",
-                                                      gap: "8px",
-                                                      cursor: opt.disabled
-                                                          ? "not-allowed"
-                                                          : "pointer",
-                                                  }}
-                                              >
-                                                  <input
-                                                      type="radio"
-                                                      name="themeMode"
-                                                      value={opt.value}
-                                                      disabled={opt.disabled}
-                                                      checked={
-                                                          themeMode ===
-                                                          opt.value
-                                                      }
-                                                      onChange={() =>
-                                                          actions.setThemeMode(
-                                                              opt.value,
-                                                          )
-                                                      }
-                                                      style={{ margin: 0 }}
-                                                  />
-                                                  <Text size="2">
-                                                      {t(
-                                                          opt.labelKey,
-                                                          opt.value,
-                                                      )}
-                                                  </Text>
-                                                  {opt.disabled && (
-                                                      <Text
-                                                          size="1"
-                                                          color="red"
-                                                          style={{
-                                                              marginLeft:
-                                                                  "auto",
-                                                          }}
-                                                      >
-                                                          {t(
-                                                              "lblFxGate",
-                                                              "Disabled on Firefox",
-                                                          )}
-                                                      </Text>
-                                                  )}
-                                              </label>
-                                          </Box>
-                                      ))}
-                                  </Flex>
-                              </Card>
-
-                              {/* Page Palette Card */}
-                              <Card size="1">
-                                  <Text as="div" size="2" weight="bold" mb="2">
-                                      {t("pagePalette", "Page Palette")}
+                                      {t('pagePalette')}
                                   </Text>
                                   <SegmentedControl.Root
                                       value={palette}
@@ -383,10 +260,10 @@ export default function App() {
                                       size="2"
                                   >
                                       <SegmentedControl.Item value="dark">
-                                          Dark
+                                          {t('lblPaletteDark')}
                                       </SegmentedControl.Item>
                                       <SegmentedControl.Item value="solarized-dark">
-                                          Solarized
+                                          {t('lblPaletteSolarized')}
                                       </SegmentedControl.Item>
                                   </SegmentedControl.Root>
                               </Card>
@@ -433,7 +310,7 @@ export default function App() {
                               mt="4"
                           >
                               <Text size="3" weight="bold">
-                                  {t("supportTitle", "Support the author")}
+                                  {t('supportTitle')}
                               </Text>
                               <Text
                                   size="2"
@@ -441,10 +318,7 @@ export default function App() {
                                   align="center"
                                   style={{ maxWidth: "280px" }}
                               >
-                                  {t(
-                                      "supportHelp",
-                                      "If this extension helps you...",
-                                  )}
+                                  {t('supportHelp')}
                               </Text>
                               <a
                                   href="https://buymeacoffee.com/ppvb0uo"
@@ -454,7 +328,7 @@ export default function App() {
                               >
                                   <img
                                       src={qrCodeImgUrl}
-                                      alt="QR Code"
+                                      alt={t('altQrCode')}
                                       style={{
                                           maxWidth: "150px",
                                           background: "white",

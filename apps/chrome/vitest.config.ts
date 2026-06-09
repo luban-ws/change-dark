@@ -11,9 +11,17 @@ export default defineConfig({
         __dirname,
         '../../packages/dark-engine/src/index.ts',
       ),
-      '@luban-ws/dark-shared': path.resolve(
+      '@luban-ws/extension-settings': path.resolve(
         __dirname,
-        '../../packages/shared/src/index.ts',
+        '../../packages/extension-settings/src/index.ts',
+      ),
+      '@luban-ws/injected-styles': path.resolve(
+        __dirname,
+        '../../packages/injected-styles/src/index.ts',
+      ),
+      '@luban-ws/dynamic-recolor': path.resolve(
+        __dirname,
+        '../../packages/dynamic-recolor/src/index.ts',
       ),
     },
   },

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "Bundler",
+    "declaration": true,
+    "strict": true,
+    "types": ["chrome", "vitest/globals"],
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}

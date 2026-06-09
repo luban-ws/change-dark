@@ -7,9 +7,8 @@ import {
   applyRecolorMutationFlush,
   colorProfileForPagePalette,
   RECOLOR_MUTATION_OBSERVER_INIT,
-  type PagePalette,
-} from '@luban-ws/dark-shared'
-import type { SamplingBudget, ThemeFiltersStateV1 } from '@luban-ws/dark-shared'
+} from '@luban-ws/dynamic-recolor'
+import type { PagePalette, SamplingBudget, ThemeFiltersStateV1 } from '@luban-ws/extension-settings'
 
 import { scheduleIdleTask } from './sampling'
 import { scheduleBackgroundImageRecolorForElements } from './recolor-background-images'
@@ -24,6 +23,8 @@ let activeConfig: {
   themeFilters: ThemeFiltersStateV1
   budget: SamplingBudget
   pagePalette: PagePalette
+  /** Dynamic 采样铺底；MO 重建 stylesheet 覆盖层时须合并，避免 body 留白。 */
+  baseCss: string
 } | null = null
 let idleSchedule: IdleSchedule = scheduleIdleTask
 
@@ -55,6 +56,7 @@ function flushPendingRecords(): void {
         activeConfig.themeFilters,
         activeConfig.budget,
         colorProfileForPagePalette(activeConfig.pagePalette),
+        activeConfig.baseCss,
       )
       void result
       scheduleBackgroundImageRecolorForElements(
@@ -82,10 +84,11 @@ export function startRecolorDynamicObserver(
   themeFilters: ThemeFiltersStateV1,
   budget: SamplingBudget,
   pagePalette: PagePalette,
+  baseCss: string,
   doc: Document = document,
 ): void {
   stopRecolorDynamicObserver()
-  activeConfig = { doc, themeFilters, budget, pagePalette }
+  activeConfig = { doc, themeFilters, budget, pagePalette, baseCss }
   observer = new MutationObserver((records) => queueMutationRecords(records))
   observer.observe(doc.documentElement, RECOLOR_MUTATION_OBSERVER_INIT)
 }

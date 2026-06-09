@@ -6,8 +6,7 @@ import {
   kMeansRgbCentroids,
 } from '@luban-ws/dark-engine'
 
-import { STATIC_FALLBACK_RGB } from '@luban-ws/dark-shared'
-import type { SamplingBudget } from '@luban-ws/dark-shared'
+import { STATIC_FALLBACK_RGB, type SamplingBudget } from '@luban-ws/extension-settings'
 
 import { collectPageBackgroundRgbBuffer } from './sampling'
 

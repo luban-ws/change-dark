@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { STATIC_FALLBACK_RGB } from '@luban-ws/dark-shared'
+import { STATIC_FALLBACK_RGB } from '@luban-ws/extension-settings'
 
 import { resolveDynamicBaseRgbWithBranch } from '../dynamic-fallback'
 
