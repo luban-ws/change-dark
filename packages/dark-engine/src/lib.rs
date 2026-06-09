@@ -82,3 +82,90 @@ pub fn k_means_darker_centroid(rgb: &[u8], max_iter: u32) -> Result<Vec<u8>, JsV
         .filter(|v| v.len() == 3)
         .ok_or_else(|| JsValue::from_str("kMeansDarkerCentroid failed"))
 }
+
+/// RFC 031 §2：单像素改色。`use_tag`: 0=bg, 1=fg, 2=border；`profile_tag`: 0=dark, 1=solarized-dark。
+#[wasm_bindgen(js_name = modifyColor)]
+pub fn modify_color_wasm(
+    r: u8,
+    g: u8,
+    b: u8,
+    use_tag: u8,
+    profile_tag: u8,
+) -> Result<Vec<u8>, JsValue> {
+    let use_tag = dark_color_utils::modify_colors::ColorUse::from_u8(use_tag)
+        .ok_or_else(|| JsValue::from_str("use_tag must be 0=bg, 1=fg, 2=border"))?;
+    let profile = dark_color_utils::modify_colors::profile_for_tag(profile_tag);
+    let out = dark_color_utils::modify_colors::modify_color(
+        dark_color_utils::modify_colors::Rgb { r, g, b },
+        use_tag,
+        &profile,
+    );
+    Ok(vec![out.r, out.g, out.b])
+}
+
+/// RFC 031 §5.1：解析 CSS 颜色 token → `[r,g,b]`；无法解析返回空 vec。
+#[wasm_bindgen(js_name = parseCssColorTokenWasm)]
+pub fn parse_css_color_token_wasm(input: &str) -> Vec<u8> {
+    match dark_color_utils::parse_css_color::parse_css_color_token(input.trim()) {
+        Some(c) => vec![c.r, c.g, c.b],
+        None => Vec::new(),
+    }
+}
+
+/// RFC 031 P1-5：分析 RGBA 背景图像素。返回 `[is_dark, is_light, is_transparent, opaque, total]`（0/1 + 计数）。
+#[wasm_bindgen(js_name = analyzeBackgroundImageRgbaWasm)]
+pub fn analyze_background_image_rgba_wasm(
+    data: &[u8],
+    width: u32,
+    height: u32,
+) -> Result<Vec<u32>, JsValue> {
+    let a = dark_color_utils::analyze_background_image::analyze_background_image_rgba(
+        data, width, height,
+    );
+    Ok(vec![
+        u32::from(a.is_dark),
+        u32::from(a.is_light),
+        u32::from(a.is_transparent),
+        a.opaque_pixel_count,
+        a.total_pixel_count,
+    ])
+}
+
+/// RFC 031 P1-5：亮图压暗滤镜字符串；非亮图返回空字符串。
+#[wasm_bindgen(js_name = brightnessFilterForBackgroundImageWasm)]
+pub fn brightness_filter_for_background_image_wasm(
+    is_dark: bool,
+    is_light: bool,
+    is_transparent: bool,
+) -> String {
+    let a = dark_color_utils::analyze_background_image::BackgroundImageAnalysis {
+        is_dark,
+        is_light,
+        is_transparent,
+        opaque_pixel_count: 0,
+        total_pixel_count: 0,
+    };
+    dark_color_utils::analyze_background_image::brightness_filter_for_analysis(
+        &a,
+        dark_color_utils::analyze_background_image::DEFAULT_LIGHT_BG_BRIGHTNESS,
+    )
+    .unwrap_or_default()
+}
+
+/// RFC 031 §5：批量改色。`profile_tag`: 0=dark, 1=solarized-dark。
+#[wasm_bindgen(js_name = batchModifyColor)]
+pub fn batch_modify_color_wasm(
+    rgb: &[u8],
+    uses: &[u8],
+    profile_tag: u8,
+) -> Result<Vec<u8>, JsValue> {
+    check_batch_rgb(rgb)?;
+    if uses.len() != rgb.len() / 3 {
+        return Err(JsValue::from_str(
+            "uses length must equal rgb.len() / 3",
+        ));
+    }
+    let profile = dark_color_utils::modify_colors::profile_for_tag(profile_tag);
+    dark_color_utils::modify_colors::batch_modify_color(rgb, uses, &profile)
+        .ok_or_else(|| JsValue::from_str("batchModifyColor failed"))
+}

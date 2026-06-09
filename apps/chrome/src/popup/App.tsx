@@ -26,6 +26,33 @@ export default function App() {
 
   const isFirefoxUiGateActive = !shouldExposeFilterPlusMode()
 
+  const themeModeOptions = [
+    {
+      value: THEME_MODE_FILTER_CSS,
+      labelKey: 'themeModeFilter',
+      titleKey: 'themeModeFilterTitle',
+      disabled: false,
+    },
+    {
+      value: THEME_MODE_FILTER_PLUS,
+      labelKey: 'themeModeFilterPlus',
+      titleKey: 'themeModeFilterPlusTitle',
+      disabled: isFirefoxUiGateActive,
+    },
+    {
+      value: THEME_MODE_DYNAMIC,
+      labelKey: 'themeModeDynamic',
+      titleKey: 'themeModeDynamicTitle',
+      disabled: false,
+    },
+    {
+      value: THEME_MODE_STATIC,
+      labelKey: 'themeModeStatic',
+      titleKey: 'themeModeStaticTitle',
+      disabled: false,
+    },
+  ] as const
+
   return (
       <Flex
           className={`theme-mode-${palette}`}
@@ -270,26 +297,14 @@ export default function App() {
                                   <Text as="div" size="2" weight="bold" mb="2">
                                       {t("themeMode", "Theme Mode")}
                                   </Text>
+                                  <Text as="p" size="1" color="gray" mb="2" style={{ lineHeight: 1.45 }}>
+                                      {t(
+                                          'themeModeHint',
+                                          'Filter modes invert the whole page. Auto skips on native dark; On skips Filter on native dark.',
+                                      )}
+                                  </Text>
                                   <Flex direction="column" gap="2">
-                                      {[
-                                          {
-                                              value: THEME_MODE_FILTER_CSS,
-                                              label: "Filter",
-                                          },
-                                          {
-                                              value: THEME_MODE_FILTER_PLUS,
-                                              label: "Filter+",
-                                              disabled: isFirefoxUiGateActive,
-                                          },
-                                          {
-                                              value: THEME_MODE_DYNAMIC,
-                                              label: "Dynamic (Expr)",
-                                          },
-                                          {
-                                              value: THEME_MODE_STATIC,
-                                              label: "Static",
-                                          },
-                                      ].map((opt) => (
+                                      {themeModeOptions.map((opt) => (
                                           <Box
                                               key={opt.value}
                                               style={{
@@ -299,6 +314,10 @@ export default function App() {
                                               }}
                                           >
                                               <label
+                                                  title={t(
+                                                      opt.titleKey,
+                                                      opt.labelKey,
+                                                  )}
                                                   style={{
                                                       display: "flex",
                                                       alignItems: "center",
@@ -311,6 +330,7 @@ export default function App() {
                                                   <input
                                                       type="radio"
                                                       name="themeMode"
+                                                      value={opt.value}
                                                       disabled={opt.disabled}
                                                       checked={
                                                           themeMode ===
@@ -324,7 +344,10 @@ export default function App() {
                                                       style={{ margin: 0 }}
                                                   />
                                                   <Text size="2">
-                                                      {opt.label}
+                                                      {t(
+                                                          opt.labelKey,
+                                                          opt.value,
+                                                      )}
                                                   </Text>
                                                   {opt.disabled && (
                                                       <Text

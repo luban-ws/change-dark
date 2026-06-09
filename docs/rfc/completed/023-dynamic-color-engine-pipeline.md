@@ -76,6 +76,7 @@
 
 - **Static**（[RFC 015](./015-theme-mode-static.md)）**不经过** 本管线聚合。
 - **Page palette**（如 Solarized）在聚合 **之后** 覆盖基色；讨论见 [RFC 022](./022-solarized-dark-popup-ui.md) 等。
+- **Filter / Filter+**（[RFC 013](./013-theme-mode-filter-css-invert.md) / [RFC 014](./014-theme-mode-filter-plus-svg.md)）**不经** WASM 采样，但内容脚本仍须 **`readEffectivePagePaletteForPage()` → `buildFilterInvertCss` / `buildFilterPlusCss`**，与 Static/Dynamic 的 `colorsForPalette` **同源**（`dark` vs `solarized-dark`）；见 [RFC 027](../027-theme-mode-filter-css-refinement.md) §2.1–§2.2。
 
 ## Risks
 

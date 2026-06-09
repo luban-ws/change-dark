@@ -112,7 +112,7 @@ describe('readShouldApplyForcedDarkForPage', () => {
   })
 
   it('returns false when origin is not in invert-listed-only mode list', async () => {
-    const siteList = JSON.stringify({ mode: 'invert-listed-only', entries: [] })
+    const siteList = { v: 2 as const, mode: 'invert-listed-only' as const, entries: [] as string[] }
     vi.stubGlobal('chrome', makeChrome({
       [STORAGE_KEY_POLICY]: 'on',
       [STORAGE_KEY_SITE_LIST]: siteList,

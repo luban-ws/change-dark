@@ -1,6 +1,6 @@
 # Task tracking — 嫦娥 / Selena
 
-**一事一 RFC**：每个任务对应一篇 RFC（已完成的 RFC 在 `docs/rfc/completed/`）。  
+**一事一 RFC**：每个任务对应一篇 RFC（已完成的 RFC 在 `docs/rfc/completed/`；Draft 见 `docs/rfc/*.md`）。  
 完整路线图与 Backlog：[ROADMAP.md](./ROADMAP.md) | 设计文档：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 
 ## RFC 001（基线）
@@ -63,11 +63,21 @@
 | T-037 | [025](./docs/rfc/completed/025-policy-mode-behavior-matrix.md) | Auto/On/Off × Filter/Filter+/Dynamic/Static 行为矩阵；Dynamic Auto 检测修复 | ✅ Done |
 
 
-## Backlog（无 RFC 编号，下一个从 **026** 起）
+## RFC 026–030（进行中 / Draft）
+
+| ID | 专属 RFC | 内容 | 状态 |
+|----|----------|------|------|
+| T-039 | [026](./docs/rfc/026-e2e-testing-strategy.md) | Playwright 扩展 E2E | Draft |
+| T-040 | [027](./docs/rfc/027-theme-mode-filter-css-refinement.md) | Filter CSS：准确性定义、与 Filter+ 对照、精炼 backlog | Draft |
+| T-041 | [028](./docs/rfc/028-theme-mode-filter-plus-refinement.md) | Filter+ SVG：边界、降级观测、E2E 计划 | Draft |
+| T-042 | [029](./docs/rfc/029-theme-mode-dynamic-refinement.md) | Dynamic 回退层精炼（§4.1 分层诊断 ✅；二次采样/连贯性待办） | Draft |
+| T-043 | [030](./docs/rfc/030-theme-mode-static-refinement.md) | Static：选择器根因、RFC 019 分流策略 | Draft |
+| T-044 | [031](./docs/rfc/completed/031-dynamic-recolor-engine.md) | Dynamic 逐规则改色 Phase 1 ✅（含 §5.1.1 ColorProfile） | Done |
+
+## Backlog（无独立 RFC，下一个建议 **032**）
 
 | 方向 | 说明 |
 |------|------|
-| E2E 测试 | 扩展加载、内容注入自动化断言 |
 | Chrome Web Store | 上架材料与隐私政策 |
 
 ## 设计文档

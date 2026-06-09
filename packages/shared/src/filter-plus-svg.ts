@@ -8,7 +8,16 @@ import {
   FILTER_PLUS_SVG_HOST_ID,
   ROOT_ATTR,
 } from './constants'
-import { buildFilterScrollbarCss } from './css'
+import {
+  buildFilterInvertMediaSelectorList,
+  buildFilterScrollbarCss,
+  resolveFilterCssInjectionScope,
+} from './css'
+import {
+  SOLARIZED_PAGE_BG_CSS,
+  SOLARIZED_PAGE_FG_CSS,
+  type PagePalette,
+} from './page-palette'
 import {
   type ThemeFiltersStateV1,
   buildThemeFilterValue,
@@ -82,26 +91,51 @@ export function removeFilterPlusSvg(doc: Document): void {
 
 /**
  * 根节点：`url(#id)` + 可选 RFC 011；媒体仅 `url(#id)` 以抵消整页基链（与 RFC 013 同理）。
+ * Solarized 时与 `buildFilterInvertCss` 一致：`html` 壳色、`body` 上基链，媒体前缀对齐。
  */
-export function buildFilterPlusCss(themeFilters?: ThemeFiltersStateV1): string {
+export function buildFilterPlusCss(
+  themeFilters?: ThemeFiltersStateV1,
+  pagePalette?: PagePalette,
+): string {
   const tf = themeFilters ? clampThemeFilters(themeFilters) : undefined
   const themeTail =
     tf && !isIdentityThemeFilters(tf) ? ` ${buildThemeFilterValue(tf)}` : ''
   const rootFilter = `url(#${FILTER_PLUS_SVG_FILTER_ID})${themeTail}`
+  const { htmlRoot, mediaScope, filterCascadeTarget, useSolarizedHtmlShell } =
+    resolveFilterCssInjectionScope(pagePalette)
+  const svgSel = `svg:not(#${FILTER_PLUS_SVG_HOST_ID})`
+  const mediaSelectors = buildFilterInvertMediaSelectorList(mediaScope, svgSel)
+
+  if (useSolarizedHtmlShell) {
+    return `
+    :root {
+      color-scheme: dark !important;
+    }
+    ${htmlRoot} {
+      background-color: ${SOLARIZED_PAGE_BG_CSS} !important;
+      color: ${SOLARIZED_PAGE_FG_CSS} !important;
+      min-height: 100%;
+    }
+    ${filterCascadeTarget} {
+      filter: ${rootFilter} !important;
+      min-height: 100%;
+    }
+    ${buildFilterScrollbarCss()}
+    ${mediaSelectors} {
+      filter: url(#${FILTER_PLUS_SVG_FILTER_ID}) !important;
+    }
+  `
+  }
 
   return `
     :root {
       color-scheme: dark !important;
     }
-    html[${ROOT_ATTR}] {
+    ${filterCascadeTarget} {
       filter: ${rootFilter} !important;
     }
     ${buildFilterScrollbarCss()}
-    html[${ROOT_ATTR}] img,
-    html[${ROOT_ATTR}] picture,
-    html[${ROOT_ATTR}] svg:not(#${FILTER_PLUS_SVG_HOST_ID}),
-    html[${ROOT_ATTR}] video,
-    html[${ROOT_ATTR}] canvas {
+    ${mediaSelectors} {
       filter: url(#${FILTER_PLUS_SVG_FILTER_ID}) !important;
     }
   `

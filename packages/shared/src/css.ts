@@ -9,11 +9,62 @@ import {
 } from './constants'
 import { sanitizeSiteCustomCss } from './site-custom-css'
 import {
+  PAGE_PALETTE_SOLARIZED_DARK,
+  SOLARIZED_PAGE_BG_CSS,
+  SOLARIZED_PAGE_FG_CSS,
+  type PagePalette,
+} from './page-palette'
+import {
   type ThemeFiltersStateV1,
   buildThemeFilterValue,
   clampThemeFilters,
   isIdentityThemeFilters,
 } from './theme-filters'
+
+/**
+ * RFC 013/014：整页反相后，对「像素型」替换内容再套一层同语义反相，抵消父级 filter。
+ * 含 audio/video、object/embed（插件/PDF）、iframe（父文档视图中整框合成）、[role="img"]（无 img 的图像语义）。
+ */
+export function buildFilterInvertMediaSelectorList(
+  /** 媒体补偿规则的前缀：整页 filter 在 `html[root]` 时用其本身；filter 仅在 `body` 上时用 `html[root] body`。 */
+  scopePrefix: string,
+  /** 完整 `svg…` 片段，如 `svg` 或 `svg:not(#change-dark-filter-plus-svg)`。 */
+  svgSelector: string,
+): string {
+  return [
+    `${scopePrefix} img`,
+    `${scopePrefix} picture`,
+    `${scopePrefix} ${svgSelector}`,
+    `${scopePrefix} video`,
+    `${scopePrefix} audio`,
+    `${scopePrefix} canvas`,
+    `${scopePrefix} object`,
+    `${scopePrefix} embed`,
+    `${scopePrefix} iframe`,
+    `${scopePrefix} [role="img"]`,
+  ].join(',\n    ')
+}
+
+/**
+ * Solarized Dark 时整页反相不能挂在 `html`：会与 `html` 上的 base03/base1 壳色一起被反相，观感脱离 Solarized。
+ * 壳色留在 `html`，反相链挂在 `body`；媒体补偿选择器需与反相作用域一致。
+ */
+export function resolveFilterCssInjectionScope(pagePalette?: PagePalette): {
+  htmlRoot: string
+  mediaScope: string
+  filterCascadeTarget: string
+  useSolarizedHtmlShell: boolean
+} {
+  const htmlRoot = `html[${ROOT_ATTR}]`
+  const useSolarizedHtmlShell = pagePalette === PAGE_PALETTE_SOLARIZED_DARK
+  const bodyScoped = `${htmlRoot} body`
+  return {
+    htmlRoot,
+    mediaScope: useSolarizedHtmlShell ? bodyScoped : htmlRoot,
+    filterCascadeTarget: useSolarizedHtmlShell ? bodyScoped : htmlRoot,
+    useSolarizedHtmlShell,
+  }
+}
 
 /** 根据 WASM 计算出的颜色生成最小侵入的全局样式；可选 RFC 011 `filter` 链。 */
 export function buildDarkCss(
@@ -90,28 +141,52 @@ export function buildFilterScrollbarCss(): string {
 
 /**
  * RFC 013：整页反相 + 可选 RFC 011 滤镜链（顺序：反相链 → brightness → contrast → sepia → saturate）。
- * `img`/`video`/`canvas`/`svg`/`picture` 使用与根相同的反相链抵消整页反相对媒体的染色。
+ * 媒体补偿见 `buildFilterInvertMediaSelectorList`（img/picture/svg/video/audio/canvas/object/embed/iframe/`[role="img"]`）。
+ * `pagePalette === solarized-dark` 时：`html` 仅铺 Solarized 壳色，反相挂在 `body`，媒体前缀与 `resolveFilterCssInjectionScope` 一致。
  * 跨域 iframe 内文档无法由本脚本注入样式，见 RFC 013 文档说明。
  */
-export function buildFilterInvertCss(themeFilters?: ThemeFiltersStateV1): string {
+export function buildFilterInvertCss(
+  themeFilters?: ThemeFiltersStateV1,
+  pagePalette?: PagePalette,
+): string {
   const tf = themeFilters ? clampThemeFilters(themeFilters) : undefined
   const themeTail =
     tf && !isIdentityThemeFilters(tf) ? ` ${buildThemeFilterValue(tf)}` : ''
   const rootFilter = `${FILTER_CSS_INVERT_CHAIN}${themeTail}`
+  const { htmlRoot, mediaScope, filterCascadeTarget, useSolarizedHtmlShell } =
+    resolveFilterCssInjectionScope(pagePalette)
+  const mediaSelectors = buildFilterInvertMediaSelectorList(mediaScope, 'svg')
+
+  if (useSolarizedHtmlShell) {
+    return `
+    :root {
+      color-scheme: dark !important;
+    }
+    ${htmlRoot} {
+      background-color: ${SOLARIZED_PAGE_BG_CSS} !important;
+      color: ${SOLARIZED_PAGE_FG_CSS} !important;
+      min-height: 100%;
+    }
+    ${filterCascadeTarget} {
+      filter: ${rootFilter} !important;
+      min-height: 100%;
+    }
+    ${buildFilterScrollbarCss()}
+    ${mediaSelectors} {
+      filter: ${FILTER_CSS_INVERT_CHAIN} !important;
+    }
+  `
+  }
 
   return `
     :root {
       color-scheme: dark !important;
     }
-    html[${ROOT_ATTR}] {
+    ${filterCascadeTarget} {
       filter: ${rootFilter} !important;
     }
     ${buildFilterScrollbarCss()}
-    html[${ROOT_ATTR}] img,
-    html[${ROOT_ATTR}] picture,
-    html[${ROOT_ATTR}] svg,
-    html[${ROOT_ATTR}] video,
-    html[${ROOT_ATTR}] canvas {
+    ${mediaSelectors} {
       filter: ${FILTER_CSS_INVERT_CHAIN} !important;
     }
   `
@@ -150,6 +225,34 @@ export function buildStaticDarkCss(
       background-color: var(${CSS_VAR_PAGE_BG}) !important;
     }
   `
+}
+
+/**
+ * RFC 031 Dynamic 主路径：逐规则改色覆盖层 + 可选 RFC 011 根滤镜（无全局 pageBg/pageFg 铺色）。
+ */
+export function buildRecolorShellCss(themeFilters?: ThemeFiltersStateV1): string {
+  const tf = themeFilters ? clampThemeFilters(themeFilters) : undefined
+  const filterBlock =
+    tf && !isIdentityThemeFilters(tf)
+      ? `filter: ${buildThemeFilterValue(tf)} !important;`
+      : ''
+
+  return `
+    html[${ROOT_ATTR}] {
+      color-scheme: dark !important;
+      ${filterBlock}
+    }
+  `.trim()
+}
+
+/** 壳层 + RFC 031 改色覆盖 CSS（`buildRecolorOverrideStylesheet` 输出）。 */
+export function buildRecolorDynamicCss(
+  overrideCss: string,
+  themeFilters?: ThemeFiltersStateV1,
+): string {
+  const shell = buildRecolorShellCss(themeFilters)
+  const body = overrideCss.trim()
+  return body ? `${shell}\n\n${body}` : shell
 }
 
 /** 将样式写入页面，若已存在则更新文本内容。 */

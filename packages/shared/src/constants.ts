@@ -114,6 +114,12 @@ export const COMMAND_TOGGLE_CURRENT_SITE = 'toggle-current-site' as const
 /** 标记在根元素上，便于样式与调试识别扩展已注入。 */
 export const ROOT_ATTR = 'data-change-dark-root'
 
+/** RFC 031 P1-3：内联 style 改色前备份原始 `style` 属性，便于重绘/关闭时还原。 */
+export const INLINE_STYLE_BACKUP_ATTR = 'data-change-dark-inline-backup'
+
+/** RFC 031 P1-5：位图背景亮度滤镜注入前备份原始 `filter`。 */
+export const BG_IMAGE_FILTER_BACKUP_ATTR = 'data-change-dark-bg-filter-backup'
+
 /** 注入的样式节点 id，避免重复插入。 */
 export const STYLE_ELEMENT_ID = 'change-dark-style'
 

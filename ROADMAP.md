@@ -1,6 +1,6 @@
 # Roadmap — 嫦娥 / Selena
 
-**下一个可用 RFC 编号：026**。  
+**下一个可用 RFC 编号：032**（026 E2E、027–030 模式精炼、031 Dynamic 改色引擎已占用）。  
 已完成的 RFC 归档于 `docs/rfc/completed/`。  
 WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)  
 任务追踪：[TASK_TRACKING.md](./TASK_TRACKING.md)
@@ -60,16 +60,26 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 |-----|------|------|------|
 | [023](./docs/rfc/completed/023-dynamic-color-engine-pipeline.md) | T-035 | Dynamic 配色管线：采样、聚合语义讨论 | ✅ |
 | [025](./docs/rfc/completed/025-policy-mode-behavior-matrix.md) | T-037 | 策略×模式行为矩阵：Auto/On/Off × Filter/Filter+/Dynamic/Static | ✅ |
+| [031](./docs/rfc/completed/031-dynamic-recolor-engine.md) | T-044 | Dynamic 逐规则改色（Rust/WASM）；Phase 1 ✅ | ✅ |
 
 ---
 
 ## 当前进行中 / Backlog
 
-> 以下项尚无独立 RFC，下一个从 **026** 起编号。
+### 模式精炼（Draft）
+
+| RFC | 任务 | 标题 | 状态 |
+|-----|------|------|------|
+| [026](./docs/rfc/026-e2e-testing-strategy.md) | T-039 | E2E 自动化测试方案 | Draft |
+| [027](./docs/rfc/027-theme-mode-filter-css-refinement.md) | T-040 | Filter（CSS）语义澄清与精炼路线图 | Draft |
+| [028](./docs/rfc/028-theme-mode-filter-plus-refinement.md) | T-041 | Filter+（SVG）语义澄清与精炼路线图 | Draft |
+| [029](./docs/rfc/029-theme-mode-dynamic-refinement.md) | T-042 | Dynamic 回退层精炼（§4.1 分层诊断 ✅；二次采样/连贯性待办） | Draft |
+| [030](./docs/rfc/030-theme-mode-static-refinement.md) | T-043 | Static 覆盖边界与精炼路线图 | Draft |
+
+### 其他 Backlog
 
 | 方向 | 说明 | 优先级 |
 |------|------|--------|
-| **E2E 测试** | 加载未打包扩展 → 打开页面 → 断言注入/存储行为 | 高 |
 | **Chrome Web Store 上架** | 打包、隐私政策、审核素材与说明 | 中 |
 
 ---

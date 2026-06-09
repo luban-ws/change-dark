@@ -6,9 +6,12 @@ export default defineConfig({
     lib: {
       entry: 'src/index.ts',
       name: 'LubanShared',
-      fileName: 'index'
+      fileName: 'index',
     },
     emptyOutDir: true,
+    rollupOptions: {
+      external: ['@luban-ws/dark-engine'],
+    },
   },
-  plugins: [dts({ rollupTypes: true })]
+  plugins: [dts({ rollupTypes: true })],
 })

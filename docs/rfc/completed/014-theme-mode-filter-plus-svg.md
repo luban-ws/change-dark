@@ -38,11 +38,14 @@
 |----|------|
 | 存储 | `change-dark:theme-mode` = `filter-plus`（与 RFC 012/013 互斥） |
 | SVG | `body` 末挂隐藏 `<svg><defs><filter id="cd-filter-plus-base">`：`feColorMatrix` 反相 + `feHueRotate` 180° |
-| CSS | `buildFilterPlusCss`：`filter: url(#cd-filter-plus-base) [RFC011 链]`；`img`/`picture`/`video`/`canvas` 与 **页面内联 `svg`（排除宿主 `#change-dark-filter-plus-svg`）** 再套 `url(#id)` |
-| 降级 | `navigator` 含 Firefox → 不暴露 Popup 单选，内容脚本走 RFC 013；`ensureFilterPlusSvg` 失败或异常 → 013 |
+| CSS | `buildFilterPlusCss(themeFilters?, pagePalette?)`：`resolveFilterCssInjectionScope` 与 RFC 013 一致；`filter: url(#cd-filter-plus-base) [RFC011 链]`；与 RFC 013 同集的 **媒体补偿**（`buildFilterInvertMediaSelectorList`，含 `audio`/`video`/`object`/`embed`/`iframe`/`[role="img"]` 等；`svg` 为 `svg:not(#change-dark-filter-plus-svg)`）再套 `url(#id)`；**Solarized** 时壳色在 `html`、`url(#…)` 在 `body` |
+| 降级 | `navigator` 含 Firefox → 不暴露 Popup 单选，内容脚本走 RFC 013（**同一 `pagePalette`**）；`ensureFilterPlusSvg` 失败或异常 → 013 |
+| 原生已暗 | 与 RFC 013：`auto` 全跳过；`on` 时不注入 Filter+（含降级 013） |
 | Popup | 「Filter+（SVG）」；非 Chromium 系 UA 禁用并 `title` 说明 |
 
 ## Decision log
 
 - 2026-03-29：独立 RFC。
 - 2026-03-29：实现 Approved。
+- 2026-04-19：媒体补偿与 RFC 013 对齐（共用 `buildFilterInvertMediaSelectorList`）；见 [RFC 028](../028-theme-mode-filter-plus-refinement.md)。
+- 2026-04-19：`buildFilterPlusCss` 接收 `pagePalette` 并与 RFC 013 共用 Solarized / 默认分支划分；降级到 CSS Filter 时同样传入 `pagePalette`。

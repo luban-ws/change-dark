@@ -1,17 +1,22 @@
 import {
   batch_mix_toward_black,
-  kMeansDarkerCentroid,
-  kMeansRgbCentroids,
   mix_toward_black,
   suggested_foreground_for_dark_bg,
 } from '@luban-ws/dark-engine'
 
 import {
-  collectPageBackgroundRgbBuffer,
   scheduleIdleTask,
   whenDocumentComplete,
   whenDomReady,
 } from './sampling'
+import { paintRecolorPath, wasmRecolorAvailable } from './recolor-path'
+import { resolveDynamicBaseRgbWithBranch } from './dynamic-fallback'
+import {
+  startRecolorDynamicObserver,
+  stopRecolorDynamicObserver,
+} from './recolor-observer'
+import { scheduleBackgroundImageRecolor } from './recolor-background-images'
+import type { SamplingBudget } from '@luban-ws/dark-shared'
 import {
   buildFilterInvertCss,
   buildStaticDarkCss,
@@ -23,6 +28,8 @@ import {
   buildFilterPlusCss,
   ensureFilterPlusSvg,
   removeFilterPlusSvg,
+  restoreInlineStylesInDocument,
+  restoreBackgroundImageFiltersInDocument,
   shouldExposeFilterPlusMode,
 } from "@luban-ws/dark-shared"
 import {
@@ -36,6 +43,7 @@ import {
   THEME_MODE_FILTER_PLUS,
   THEME_MODE_STATIC,
   POLICY_AUTO,
+  POLICY_ON,
 } from "@luban-ws/dark-shared"
 import {
   PAGE_PALETTE_SOLARIZED_DARK,
@@ -45,6 +53,7 @@ import {
 } from "@luban-ws/dark-shared"
 import { buildTypographyCss } from "@luban-ws/dark-shared"
 import {
+  isNativelyDarkFromHtmlBodyBackgrounds,
   readEffectivePagePaletteForPage,
   readEffectiveThemeForPage,
   readEffectiveTypographyForPage,
@@ -55,6 +64,13 @@ import {
   readAutoDarkThreshold,
 } from "@luban-ws/dark-shared"
 import type { ThemeFiltersStateV1 } from "@luban-ws/dark-shared"
+
+/**
+ * 内容脚本注入约定（实现须与 RFC 025 / 027 / 023 一致，避免「导入脚本」后漂移）：
+ *
+ * - **原生暗页**：**`auto`** → 不注入任何强制暗色（Dynamic / Static / Filter / Filter+ 均跳过）。**`on`** → Dynamic / Static 仍注入；**Filter / Filter+（反相族）不注入**，避免暗页被反相变亮。
+ * - **页面调色板**：`readEffectivePagePaletteForPage()` 的 `dark` / `solarized-dark` 须传入所有依赖底字色的绘制路径（Static、Dynamic 的 `colorsForPalette`，Filter/Filter+ 的 `buildFilterInvertCss` / `buildFilterPlusCss`）；`dark` 走混合系色，`solarized-dark` 走 base03/base1，禁止在内容脚本侧写死忽略 palette。
+ */
 
 /**
  * 将 RGB 分量格式化为 CSS rgb()，避免魔法字符串散落。
@@ -107,11 +123,28 @@ function paintStaticPath(themeFilters: ThemeFiltersStateV1, pagePalette: PagePal
   ensureStyleElement(css)
 }
 
+/** RFC 023：Dynamic 采样单色回退（§3.1 `paintSampledFallbackPath`）。 */
+function paintSampledFallbackPath(
+  themeFilters: ThemeFiltersStateV1,
+  pagePalette: PagePalette,
+  budget: SamplingBudget,
+): void {
+  const { rgb: baseRgb } = resolveDynamicBaseRgbWithBranch(budget)
+  const { pageBg, pageFg } = colorsForPalette(pagePalette, baseRgb)
+  const css = buildStaticDarkCss(pageBg, pageFg, themeFilters)
+  document.documentElement.setAttribute(ROOT_ATTR, '')
+  ensureStyleElement(css)
+}
+
 /**
  * RFC 013：无 WASM / 无采样；整页 CSS 反相 + 媒体再反相，可与 RFC 011 链式组合。
+ * `pagePalette` 必须与 Static/Dynamic 同源（如 Solarized 时壳色与反相作用域见 `buildFilterInvertCss`）。
  */
-function paintFilterCssPath(themeFilters: ThemeFiltersStateV1): void {
-  const css = buildFilterInvertCss(themeFilters)
+function paintFilterCssPath(
+  themeFilters: ThemeFiltersStateV1,
+  pagePalette: PagePalette,
+): void {
+  const css = buildFilterInvertCss(themeFilters, pagePalette)
   document.documentElement.setAttribute(ROOT_ATTR, '')
   ensureStyleElement(css)
 }
@@ -119,22 +152,47 @@ function paintFilterCssPath(themeFilters: ThemeFiltersStateV1): void {
 /**
  * RFC 014：SVG `filter` + 失败或非 Chromium 时降级为 RFC 013。
  */
-function paintFilterPlusPath(themeFilters: ThemeFiltersStateV1): void {
+function paintFilterPlusPath(
+  themeFilters: ThemeFiltersStateV1,
+  pagePalette: PagePalette,
+): void {
   if (!shouldExposeFilterPlusMode()) {
-    paintFilterCssPath(themeFilters)
+    paintFilterCssPath(themeFilters, pagePalette)
     return
   }
   try {
     if (!ensureFilterPlusSvg(document)) {
-      paintFilterCssPath(themeFilters)
+      paintFilterCssPath(themeFilters, pagePalette)
       return
     }
-    const css = buildFilterPlusCss(themeFilters)
+    const css = buildFilterPlusCss(themeFilters, pagePalette)
     document.documentElement.setAttribute(ROOT_ATTR, '')
     ensureStyleElement(css)
   } catch {
-    paintFilterCssPath(themeFilters)
+    paintFilterCssPath(themeFilters, pagePalette)
   }
+}
+
+/** 去掉强制暗色主样式与 Filter+ SVG，保留由 `finally` 注入的排版/自定义 CSS。 */
+function clearForcedDarkSurface(): void {
+  stopRecolorDynamicObserver()
+  restoreBackgroundImageFiltersInDocument(document)
+  restoreInlineStylesInDocument(document)
+  document.documentElement.removeAttribute(ROOT_ATTR)
+  document.getElementById(STYLE_ELEMENT_ID)?.remove()
+  removeFilterPlusSvg(document)
+}
+
+/**
+ * 在暂时去掉 `ROOT_ATTR` 的前提下读取 html/body 背景，避免被本扩展 `!important` 误判为已暗。
+ */
+function measureNativelyDarkSnapshot(autoDarkThreshold: number): boolean {
+  const hadAttr = document.documentElement.hasAttribute(ROOT_ATTR)
+  if (hadAttr) document.documentElement.removeAttribute(ROOT_ATTR)
+  const htmlBg = getComputedStyle(document.documentElement).backgroundColor
+  const bodyBg = document.body ? getComputedStyle(document.body).backgroundColor : ''
+  if (hadAttr) document.documentElement.setAttribute(ROOT_ATTR, '')
+  return isNativelyDarkFromHtmlBodyBackgrounds(htmlBg, bodyBg, autoDarkThreshold)
 }
 
 /**
@@ -166,48 +224,41 @@ async function applyForcedDark(): Promise<void> {
 
   const runPaint = (): void => {
     try {
-      // AUTO mode: if the page is natively dark, skip ALL injection regardless of theme mode.
-      // Read html/body computed background BEFORE mode-specific branches.
+      stopRecolorDynamicObserver()
+      restoreBackgroundImageFiltersInDocument(document)
+      // 重绘前先还原上一轮 Dynamic 内联改色，避免二次 modifyColor 漂移。
+      restoreInlineStylesInDocument(document)
+
+      // Read html/body computed background BEFORE mode-specific branches (RFC 025).
       // We cannot use k-means baseRgb for this check (many dark SPAs return transparent
       // backgrounds and trigger STATIC_FALLBACK_RGB = [248,250,252]).
-      if (policy === POLICY_AUTO) {
-        const parseLuma = (css: string): number | null => {
-          const m = css.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/)
-          if (!m) return null
-          const alphaM = css.match(/rgba\([^)]+,\s*([\d.]+)\)/)
-          if (alphaM && parseFloat(alphaM[1]) < 0.05) return null
-          return 0.2126 * +m[1] + 0.7152 * +m[2] + 0.0722 * +m[3]
-        }
-        // Temporarily strip our ROOT_ATTR so !important overrides don't mask native colors.
-        const hadAttr = document.documentElement.hasAttribute(ROOT_ATTR)
-        if (hadAttr) document.documentElement.removeAttribute(ROOT_ATTR)
-        const htmlBg = getComputedStyle(document.documentElement).backgroundColor
-        const bodyBg = document.body ? getComputedStyle(document.body).backgroundColor : ''
-        if (hadAttr) document.documentElement.setAttribute(ROOT_ATTR, '')
+      const nativelyDark = measureNativelyDarkSnapshot(autoDarkThreshold)
 
-        const htmlLuma = parseLuma(htmlBg)
-        const bodyLuma = parseLuma(bodyBg)
-        const nativelyDark =
-          (htmlLuma !== null && htmlLuma < autoDarkThreshold) ||
-          (bodyLuma !== null && bodyLuma < autoDarkThreshold)
-
-        if (nativelyDark) {
-          document.documentElement.removeAttribute(ROOT_ATTR)
-          document.getElementById(STYLE_ELEMENT_ID)?.remove()
-          removeFilterPlusSvg(document)
-          return
-        }
+      if (policy === POLICY_AUTO && nativelyDark) {
+        clearForcedDarkSurface()
+        return
       }
+
+      /** `on` + 原生暗：禁止反相（Filter / Filter+），Dynamic/Static 仍走下方分支。 */
+      const skipInvertOnNativeDark = nativelyDark && policy === POLICY_ON
 
       if (themeMode !== THEME_MODE_FILTER_PLUS) {
         removeFilterPlusSvg(document)
       }
       if (themeMode === THEME_MODE_FILTER_PLUS) {
-        paintFilterPlusPath(themeFilters)
+        if (skipInvertOnNativeDark) {
+          clearForcedDarkSurface()
+          return
+        }
+        paintFilterPlusPath(themeFilters, pagePalette)
         return
       }
       if (themeMode === THEME_MODE_FILTER_CSS) {
-        paintFilterCssPath(themeFilters)
+        if (skipInvertOnNativeDark) {
+          clearForcedDarkSurface()
+          return
+        }
+        paintFilterCssPath(themeFilters, pagePalette)
         return
       }
       if (themeMode === THEME_MODE_STATIC) {
@@ -215,31 +266,21 @@ async function applyForcedDark(): Promise<void> {
         return
       }
 
-      let baseRgb: Uint8Array
+      /** RFC 031 §3.1：Dynamic 主路径 = 逐规则改色；失败退采样单色。 */
+      if (!wasmRecolorAvailable()) {
+        paintSampledFallbackPath(themeFilters, pagePalette, budget)
+        return
+      }
       try {
-        const buffer = collectPageBackgroundRgbBuffer(budget, () => Date.now())
-        // 至少 2 个像素（6 字节）才做双簇；过少则与 Static 一致回退（RFC 006 / 012）。
-        if (buffer.length < 6) {
-          baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
+        if (paintRecolorPath(themeFilters, pagePalette)) {
+          startRecolorDynamicObserver(themeFilters, budget, pagePalette)
+          scheduleBackgroundImageRecolor(budget)
         } else {
-          try {
-            baseRgb = new Uint8Array(kMeansDarkerCentroid(buffer, 40))
-          } catch {
-            try {
-              baseRgb = kMeansRgbCentroids(buffer, 1, 40).subarray(0, 3)
-            } catch {
-              baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
-            }
-          }
+          paintSampledFallbackPath(themeFilters, pagePalette, budget)
         }
       } catch {
-        baseRgb = new Uint8Array(STATIC_FALLBACK_RGB)
+        paintSampledFallbackPath(themeFilters, pagePalette, budget)
       }
-
-      const { pageBg, pageFg } = colorsForPalette(pagePalette, baseRgb)
-      const css = buildStaticDarkCss(pageBg, pageFg, themeFilters)
-      document.documentElement.setAttribute(ROOT_ATTR, '')
-      ensureStyleElement(css)
     } finally {
       ensureTypographyStyleElement(buildTypographyCss(typoSettings))
       ensureCustomCssStyleElement(siteCustomCss)

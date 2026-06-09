@@ -1,6 +1,10 @@
 //! 可复用的纯颜色运算，供 `dark_engine` 与其它 Rust crate 引用。
 //! 设计为 `no_std` 友好且无副作用，便于在 WASM 内做批量调用。
 
+pub mod analyze_background_image;
+pub mod modify_colors;
+pub mod parse_css_color;
+
 /// sRGB 通道线性化（约 gamma 解码），入参为 0..=1。
 #[inline]
 pub fn channel_to_linear_u8(c: u8) -> f64 {

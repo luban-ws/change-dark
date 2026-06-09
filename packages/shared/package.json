@@ -16,12 +16,17 @@
     "build": "vite build",
     "test": "vitest run"
   },
+  "dependencies": {
+    "@luban-ws/dark-engine": "workspace:*"
+  },
   "devDependencies": {
     "@types/chrome": "^0.0.270",
     "@vitest/coverage-v8": "2.1.9",
     "typescript": "^5.6.2",
     "vite": "^5.4.2",
     "vite-plugin-dts": "^4.2.1",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.6.0",
     "vitest": "^2.1.2"
   }
 }

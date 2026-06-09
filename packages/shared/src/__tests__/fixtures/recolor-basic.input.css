@@ -1,0 +1,25 @@
+/* RFC 031 S2 golden fixture */
+body {
+  color: #000;
+  background-color: #fff;
+  margin: 0;
+}
+
+.header {
+  border-color: #ccc;
+}
+
+@media (min-width: 600px) {
+  .item {
+    color: #333;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #fff;
+  }
+  100% {
+    background-color: #000;
+  }
+}

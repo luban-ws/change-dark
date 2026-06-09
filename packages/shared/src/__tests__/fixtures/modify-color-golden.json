@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "profile": "default_dark_profile",
+  "source": "packages/dark-color-utils golden_vectors_rfc_027 (Rust 真源，对齐 DR modify-colors 移植)",
+  "note": "live darkreader@4.9.125 不导出 modifyColor；向量由 Rust 引擎校准锁定。",
+  "vectors": [
+    { "input": "#ffffff", "rgb": [255, 255, 255], "use": "bg", "expected": "#181a1b" },
+    { "input": "#000000", "rgb": [0, 0, 0], "use": "bg", "expected": "#000000" },
+    { "input": "#808080", "rgb": [128, 128, 128], "use": "bg", "expected": "#60686c" },
+    { "input": "#f0f0f0", "rgb": [240, 240, 240], "use": "bg", "expected": "#202325" },
+    { "input": "#000000", "rgb": [0, 0, 0], "use": "fg", "expected": "#e8e6e3" },
+    { "input": "#ffffff", "rgb": [255, 255, 255], "use": "fg", "expected": "#e8e6e3" },
+    { "input": "#333333", "rgb": [51, 51, 51], "use": "fg", "expected": "#c8c3bc" },
+    { "input": "#1a73e8", "rgb": [26, 115, 232], "use": "fg", "expected": "#3092ea" },
+    { "input": "#cccccc", "rgb": [204, 204, 204], "use": "border", "expected": "#3e4446" },
+    { "input": "#ffeb3b", "rgb": [255, 235, 59], "use": "bg", "expected": "#a99700" }
+  ]
+}

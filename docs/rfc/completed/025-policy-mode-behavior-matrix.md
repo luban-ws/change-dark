@@ -15,8 +15,9 @@
 本 RFC 是**行为约定参考**，明确以下三件事：
 
 1. **全局策略**（Auto / On / Off）与**主题模式**（Filter / Filter+ / Dynamic / Static）的完整排列组合下，扩展对每个页面做什么。
-2. **Auto 模式下原生深色检测**的判定方式与各主题模式的适用范围。
+2. **原生深色检测**（`native-dark-surface` + 阈值 `readAutoDarkThreshold`）与 **全局策略** 的组合：**`auto`+原生暗** 不注入任何模式；**`on`+原生暗** 仅注入 Dynamic/Static，**禁止** Filter/Filter+（反相会把暗页变亮）。
 3. **何时需要刷新页面**（硬刷新 Tab）才能看到最新效果。
+4. **页面调色板**（`dark` / `solarized-dark`）与主题模式正交：凡注入依赖底/字色的路径须使用 `readEffectivePagePaletteForPage()`，见 [RFC 023](./023-dynamic-color-engine-pipeline.md) 与 [RFC 027](../027-theme-mode-filter-css-refinement.md) §2.1。
 
 ---
 
@@ -24,41 +25,42 @@
 
 | 策略 | 含义 |
 |------|------|
-| **Auto** | 扩展智能决策：对原生深色页面不重复注入；对浅色页面正常注入 |
-| **On** | 始终注入，完全忽略原生深色检测 |
+| **Auto** | **浅色页**：按所选主题模式注入。**原生暗页**：**不注入**任何强制暗色（尊重当前页）。 |
+| **On** | **浅色页**：始终按所选主题模式注入。**原生暗页**：**强制注入** Dynamic / Static（非反相路径）；**不注入** Filter / Filter+（反相族禁止）。 |
 | **Off** | 从不注入，无论页面颜色 |
 
 ---
 
 ## 2. 行为矩阵
 
-> ✅ = 正常注入样式  ⏭ = 跳过（自动检测判定为原生深色）  ❌ = 不注入（Off 策略）
+> ✅ = 正常注入强制暗色样式  ⏭ = 跳过（原生暗页或策略 Off）  ❌ = 不注入（Off）
 
-| 主题模式 | Auto（页面浅色） | Auto（页面原生深色） | On | Off |
-|---------|-----------------|---------------------|----|-----|
-| **Filter（CSS 反相）** | ✅ 整页反相 | ⏭ 检测 html/body 背景，跳过 | ✅ | ❌ |
-| **Filter+（SVG filter）** | ✅ SVG 反相 | ⏭ 检测 html/body 背景，跳过 | ✅ | ❌ |
-| **Dynamic（WASM 采色）** | ✅ WASM 采样注入 | ⏭ 检测 html/body 背景，跳过 | ✅ | ❌ |
-| **Static（固定样式）** | ✅ 固定暗色 | ⏭ 检测 html/body 背景，跳过 | ✅ | ❌ |
+| 主题模式 | Auto（浅色页） | Auto（原生暗页） | On（浅色页） | On（原生暗页） | Off |
+|---------|---------------|-----------------|-------------|---------------|-----|
+| **Filter（CSS 反相）** | ✅ | ⏭ | ✅ | ⏭ | ❌ |
+| **Filter+（SVG filter）** | ✅ | ⏭ | ✅ | ⏭ | ❌ |
+| **Dynamic（WASM 采色）** | ✅ | ⏭ | ✅ | ✅ | ❌ |
+| **Static（固定样式）** | ✅ | ⏭ | ✅ | ✅ | ❌ |
 
-**Auto 检测在所有模式下均生效**，在所有模式分支之前统一执行。
+**原生暗判定**：`measureNativelyDarkSnapshot`（内容脚本）→ `isNativelyDarkFromHtmlBodyBackgrounds`（`packages/shared/src/native-dark-surface.ts`），阈值来自存储而非硬编码 80。
+
+**页面调色板**：与上表正交；`dark` 与 `solarized-dark` 在 **凡写入底/字色或 Filter 壳层** 的路径上必须一致（`readEffectivePagePaletteForPage()` → `buildFilterInvertCss` / `buildFilterPlusCss` / `colorsForPalette` 等）。
 
 ---
 
-## 3. Auto 检测实现（所有模式共用）
+## 3. 原生暗检测与 `runPaint` 顺序（实现）
 
 ```
 applyForcedDark()
   └─ readShouldApplyForcedDarkForPage()  ← Off → 返回 false，清理并退出
   └─ readGlobalPolicy()                  ← 'auto' | 'on' | 'off'
+  └─ readEffectivePagePaletteForPage()   ← dark | solarized-dark（凡上色路径须传入）
   └─ runPaint()
-       └─ [所有模式入口前，Auto 检测] ← On/Off 跳过此块
-            remove ROOT_ATTR temporarily  ← 消除我们自己上次注入的 !important 影响
-            getComputedStyle(html).backgroundColor
-            getComputedStyle(body).backgroundColor
-            luma = 0.2126*R + 0.7152*G + 0.0722*B
-            if (htmlLuma < 80 OR bodyLuma < 80) → 跳过所有模式的注入
-       └─ [模式分支] Filter / Filter+ / Static / Dynamic
+       └─ measureNativelyDarkSnapshot(threshold)
+       └─ if policy === auto AND nativelyDark → clearForcedDarkSurface(); return
+       └─ skipInvertOnNativeDark = nativelyDark AND policy === on
+       └─ Filter+ / Filter CSS：若 skipInvertOnNativeDark → clear;return
+       └─ Static / Dynamic：照常（on+原生暗仍注入）
 ```
 
 **为什么不用 k-means baseRgb 做检测**：许多原生深色 SPA（如 GitHub）的元素 `background-color` 为 `transparent`，k-means 采样不足时回退到 `STATIC_FALLBACK_RGB = [248, 250, 252]`（亮白），导致误判为浅色页面。直接读 `html`/`body` 的 computed background-color 更可靠。
@@ -92,3 +94,5 @@ Chrome 扩展的 **content script** 只在页面**加载时**注入一次。
 
 - 2026-04-06：新建 RFC 025（T-037），记录行为矩阵与检测实现细节。Auto 检测从 Dynamic 专用升级为所有模式共用。检测方式从 k-means 切换为直接读 `html`/`body` computed background-color。
 - 2026-04-06：完成 Auto 模式深色检测阈值配置化（T-038），在 Popup 增加智能暗色阈值滑块（0-255），默认 80。
+- 2026-04-19：行为矩阵扩展 **On（原生暗）** 列：Filter / Filter+ 为 ⏭；亮度判定提取为 `native-dark-surface.ts`。
+- 2026-04-19：**On** 语义：浅色页全模式注入；**原生暗页**仅 Dynamic/Static 注入，Filter/Filter+ 不注入（反相禁止）。**Auto** 在原生暗页全 ⏭。

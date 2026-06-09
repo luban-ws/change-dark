@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Change Dark — Filter iframe parent fixture (RFC 027)</title>
+    <style>
+      body {
+        margin: 1rem;
+        font-family: system-ui, sans-serif;
+        background: #f5f5f5;
+        color: #111;
+      }
+      iframe {
+        width: 320px;
+        height: 120px;
+        border: 2px solid #333;
+        margin-top: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Parent document (light)</h1>
+    <p>
+      Manual check: enable Filter or Filter+ with policy On. The iframe box should receive
+      media compensation (second invert on the iframe element in the parent sheet). Cross-origin
+      iframe documents are not styled by this page’s content script.
+    </p>
+    <iframe
+      title="Same-origin child"
+      srcdoc="<!DOCTYPE html><html><body style='margin:0;background:#fff;color:#000;padding:8px'><p>Child (light)</p><img src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%2240%22%3E%3Crect fill=%22%23e11%22 width=%22120%22 height=%2240%22/%3E%3C/svg%3E' alt=''/></body></html>"
+    ></iframe>
+  </body>
+</html>
