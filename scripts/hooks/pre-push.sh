@@ -2,6 +2,8 @@
 # pre-push：与 .github/workflows/ci.yml 同序 — build → test → lint。
 set -eu
 
+. "$(dirname "$0")/enforce-no-bypass.sh"
+
 cd "$(git rev-parse --show-toplevel)"
 
 export TURBO_TELEMETRY_DISABLED=1

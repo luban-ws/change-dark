@@ -12,7 +12,7 @@
     "check:pre-commit": "pnpm run lint",
     "check:pre-push": "pnpm run build && pnpm run test && pnpm run lint",
     "release:chrome": "node scripts/release-chrome.mjs",
-    "prepare": "husky"
+    "prepare": "husky && node scripts/hooks/configure-git-hooks.mjs"
   },
   "devDependencies": {
     "husky": "^9.1.7",
