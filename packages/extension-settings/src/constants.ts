@@ -120,6 +120,9 @@ export const CSS_VAR_PAGE_BG = '--cd-page-bg'
 /** 注入到页面的自定义属性：由 WASM 计算的建议前景色。 */
 export const CSS_VAR_PAGE_FG = '--cd-page-fg'
 
+/** 中性分隔线 / 边框（比 page-bg 更深，便于卡片与页面区分）。 */
+export const CSS_VAR_PAGE_BORDER = '--cd-page-border'
+
 /** 内容脚本与迁移逻辑共同关心的 local 键（顺序无关）。 */
 export const STORAGE_KEYS_AFFECTING_INJECTION: readonly string[] = [
   STORAGE_KEY_SCHEMA_VERSION,

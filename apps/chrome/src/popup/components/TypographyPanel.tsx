@@ -4,7 +4,7 @@ import {
   FONT_PRESET_LABEL_KEYS,
   type FontPresetValue,
 } from '../popup-translation-keys'
-import type { TypographySettingsV1 } from '@luban-ws/extension-settings'
+import type { TypographySettingsV1 } from '@change-dark/extension-settings'
 import { Card, Text, Flex, Switch, Select, TextField, Slider } from '@radix-ui/themes'
 
 export interface TypographyPanelProps {

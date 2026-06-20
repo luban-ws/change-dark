@@ -21,7 +21,7 @@ import {
   computeDeadlineMs,
   isPastDeadline,
   type SamplingBudget,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 import { createBrightnessDarkenBlobUrl } from './image-darken'
 
 export interface BackgroundImageRecolorResult {

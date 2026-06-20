@@ -5,7 +5,7 @@
 import {
   analyzeBackgroundImageRgba as wasmAnalyzeBackgroundImageRgba,
   brightnessFilterForBackgroundImage as wasmBrightnessFilter,
-} from '@luban-ws/dark-engine'
+} from '@change-dark/dark-engine'
 
 /** 下采样分析上限（DR 同档 32×32，与 `dark-color-utils` 一致）。 */
 export const BG_IMAGE_MAX_ANALYSIS_PIXELS = 32 * 32

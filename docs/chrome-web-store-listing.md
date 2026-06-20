@@ -26,9 +26,9 @@
 | `icons` | 含多尺寸；ZIP 内路径有效 | `icons/icon-16.png` … `icon-128.png` |
 | `description` | **≤ 132 字符**（超出会导致无法解析等问题） | 见 `manifest.config.ts` 英文摘要 |
 | 注释 | 上传的 JSON **不得含注释** | 由构建生成，无注释 |
-| ZIP 根目录 | `manifest.json` 在 **ZIP 根**，不在子文件夹 | `pnpm --filter @luban-ws/chrome run pack` |
+| ZIP 根目录 | `manifest.json` 在 **ZIP 根**，不在子文件夹 | `pnpm --filter @change-dark/chrome run pack` |
 
-**图标 128×128（商店与清单）**：[官方建议](https://developer.chrome.com/docs/webstore/images#icon-size)方形主图形约 **96×96**，四周透明边距至 **128×128**。本项目由 `pnpm --filter @luban-ws/chrome run icons` 对 `icon-128.png` 自动生成该比例。
+**图标 128×128（商店与清单）**：[官方建议](https://developer.chrome.com/docs/webstore/images#icon-size)方形主图形约 **96×96**，四周透明边距至 **128×128**。本项目由 `pnpm --filter @change-dark/chrome run icons` 对 `icon-128.png` 自动生成该比例。
 
 ---
 
@@ -122,7 +122,7 @@
 
 ```bash
 pnpm install
-pnpm --filter @luban-ws/chrome run pack
+pnpm --filter @change-dark/chrome run pack
 ```
 
 生成 **`apps/chrome/change-dark-extension.zip`**（已 gitignore）。须含根级 `manifest.json`、`icons/`、`assets/` 等。勿将 `src/` 或 monorepo 根打入 ZIP。

@@ -4,9 +4,10 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
     "declaration": true,
     "strict": true,
-    "types": ["chrome", "vitest/globals"],
+    "types": ["vitest/globals"],
     "skipLibCheck": true
   },
   "include": ["src"]

@@ -24,7 +24,7 @@ describe('batchModifyColors', () => {
 
 describe('buildRecolorOverrideStylesheet batch path', () => {
   it('多规则整表一次批处理（spy batchModifyColorRgb）', async () => {
-    const engine = await import('@luban-ws/dark-engine')
+    const engine = await import('@change-dark/dark-engine')
     const spy = vi.spyOn(engine, 'batchModifyColorRgb')
     const { buildRecolorOverrideStylesheet } = await import('../css-stylesheet')
     const css = `

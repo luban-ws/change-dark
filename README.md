@@ -33,7 +33,7 @@
 | `packages/dark-color-utils/` | Rust crate `dark_color_utils`（单元测试）；供 `dark-engine` 与宿主引用 |
 | `docs/rfc/` | 规格正文（`NNN-*.md`）；**RFC 索引与路线图**见 [ROADMAP.md](ROADMAP.md) |
 | `.github/workflows/ci.yml` | 全仓 `pnpm` install、`build`、`test`、`lint`（含 `wasm32-unknown-unknown`） |
-| `.github/workflows/deploy-github-pages.yml` | 仅构建 `@luban-ws/site` 并部署 **GitHub Pages** |
+| `.github/workflows/deploy-github-pages.yml` | 仅构建 `@change-dark/site` 并部署 **GitHub Pages** |
 
 编排：**pnpm workspaces** + **Turborepo**（`pnpm run build` 等）。
 
@@ -51,7 +51,7 @@ pnpm run build    # Turbo：各包 build（dark-engine 先 wasm-pack）
 pnpm run test
 pnpm run lint
 pnpm run dev      # Turbo：各包 dev（扩展需先有 WASM 产物）
-pnpm --filter @luban-ws/site dev   # 仅预览落地页
+pnpm --filter @change-dark/site dev   # 仅预览落地页
 ```
 
 ## GitHub Pages
@@ -61,7 +61,7 @@ pnpm --filter @luban-ws/site dev   # 仅预览落地页
 若仓库托管在其它 owner 下，URL 形如 `https://<owner>.github.io/<repo>/`。
 
 1. 仓库 **Settings → Pages**：**Source** 选 **GitHub Actions**（勿与旧式 `gh-pages` 分支混用）。
-2. 向 **`main`** 推送后，工作流 [`deploy-github-pages`](.github/workflows/deploy-github-pages.yml) 执行 `pnpm --filter @luban-ws/site build` 并发布 `apps/site/dist`。
+2. 向 **`main`** 推送后，工作流 [`deploy-github-pages`](.github/workflows/deploy-github-pages.yml) 执行 `pnpm --filter @change-dark/site build` 并发布 `apps/site/dist`。
 3. **`base` 路径**：CI 根据 `GITHUB_REPOSITORY` 设置；普通仓库为 `/{repo}/`；仓库名以 `.github.io` 结尾时为 `/`。可用 **`VITE_BASE_PATH`** 覆盖（须以 `/` 开头）。落地页内「查看仓库」等链接依赖 **`VITE_GITHUB_REPO`**（或 CI 注入的仓库名）。
 
 ## 本地加载扩展
@@ -86,12 +86,12 @@ pnpm --filter @luban-ws/site dev   # 仅预览落地页
 
 各 workspace 包的 JS 面经 **Vite** 产出：
 
-- **`@luban-ws/dark-engine`**：`wasm-pack` 仅写入 gitignored 的 `pkg/`，再经 Vite 打成唯一发布目录 **`dist/`**（`index.mjs` 内联 WASM；`index.d.ts` 与 `index.cjs` 由 `scripts/finish-dist.mjs` 收尾）。
-- **`@luban-ws/dark-color-utils`**：Rust + Vite library → `dist/`（双端 `mjs`/`cjs` 以包内配置为准）。
-- **`@luban-ws/chrome`**：CRXJS + Vite → `apps/chrome/dist`。
-- **`@luban-ws/site`**：React 静态站 → `apps/site/dist`。
+- **`@change-dark/dark-engine`**：`wasm-pack` 仅写入 gitignored 的 `pkg/`，再经 Vite 打成唯一发布目录 **`dist/`**（`index.mjs` 内联 WASM；`index.d.ts` 与 `index.cjs` 由 `scripts/finish-dist.mjs` 收尾）。
+- **`@change-dark/dark-color-utils`**：Rust + Vite library → `dist/`（双端 `mjs`/`cjs` 以包内配置为准）。
+- **`@change-dark/chrome`**：CRXJS + Vite → `apps/chrome/dist`。
+- **`@change-dark/site`**：React 静态站 → `apps/site/dist`。
 
-Scope：**`@luban-ws/*`**。
+Scope：**`@change-dark/*`**。
 
 ## License
 

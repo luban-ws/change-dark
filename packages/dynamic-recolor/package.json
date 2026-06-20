@@ -1,5 +1,5 @@
 {
-  "name": "@luban-ws/dynamic-recolor",
+  "name": "@change-dark/dynamic-recolor",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -18,9 +18,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@luban-ws/dark-engine": "workspace:*",
-    "@luban-ws/extension-settings": "workspace:*",
-    "@luban-ws/injected-styles": "workspace:*"
+    "@change-dark/dark-engine": "workspace:*",
+    "@change-dark/extension-settings": "workspace:*",
+    "@change-dark/injected-styles": "workspace:*"
   },
   "devDependencies": {
     "jsdom": "^25.0.1",

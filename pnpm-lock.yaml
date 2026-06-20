@@ -17,18 +17,21 @@ importers:
 
   apps/chrome:
     dependencies:
-      '@luban-ws/dark-engine':
+      '@change-dark/dark-engine':
         specifier: workspace:*
         version: link:../../packages/dark-engine
-      '@luban-ws/dynamic-recolor':
+      '@change-dark/dynamic-recolor':
         specifier: workspace:*
         version: link:../../packages/dynamic-recolor
-      '@luban-ws/extension-settings':
+      '@change-dark/extension-settings':
         specifier: workspace:*
         version: link:../../packages/extension-settings
-      '@luban-ws/injected-styles':
+      '@change-dark/injected-styles':
         specifier: workspace:*
         version: link:../../packages/injected-styles
+      '@change-dark/site-catalog':
+        specifier: workspace:*
+        version: link:../../packages/site-catalog
       '@radix-ui/themes':
         specifier: ^3.3.0
         version: 3.3.0(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -181,13 +184,13 @@ importers:
 
   packages/dynamic-recolor:
     dependencies:
-      '@luban-ws/dark-engine':
+      '@change-dark/dark-engine':
         specifier: workspace:*
         version: link:../dark-engine
-      '@luban-ws/extension-settings':
+      '@change-dark/extension-settings':
         specifier: workspace:*
         version: link:../extension-settings
-      '@luban-ws/injected-styles':
+      '@change-dark/injected-styles':
         specifier: workspace:*
         version: link:../injected-styles
     devDependencies:
@@ -236,13 +239,32 @@ importers:
 
   packages/injected-styles:
     dependencies:
-      '@luban-ws/extension-settings':
+      '@change-dark/extension-settings':
         specifier: workspace:*
         version: link:../extension-settings
     devDependencies:
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
+      typescript:
+        specifier: ^5.6.2
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.2
+        version: 5.4.21(@types/node@22.19.15)
+      vite-plugin-dts:
+        specifier: ^4.2.1
+        version: 4.5.4(@types/node@22.19.15)(rollup@4.60.0)(typescript@5.9.3)(vite@5.4.21(@types/node@22.19.15))
+      vitest:
+        specifier: ^2.1.2
+        version: 2.1.9(@types/node@22.19.15)(jsdom@25.0.1)
+
+  packages/site-catalog:
+    dependencies:
+      '@change-dark/extension-settings':
+        specifier: workspace:*
+        version: link:../extension-settings
+    devDependencies:
       typescript:
         specifier: ^5.6.2
         version: 5.9.3

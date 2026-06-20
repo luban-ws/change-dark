@@ -4,8 +4,8 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 
 import { parseCssColorToken } from '../color-parse'
-import { STYLE_ELEMENT_ID } from '@luban-ws/extension-settings'
-import { buildStaticDarkCss } from '@luban-ws/injected-styles'
+import { STYLE_ELEMENT_ID, CSS_VAR_PAGE_FG } from '@change-dark/extension-settings'
+import { buildStaticDarkCss } from '@change-dark/injected-styles'
 import { modifyColor } from '../modify-colors'
 import { buildRecolorOverrideStylesheet } from '../css-stylesheet'
 import {
@@ -114,8 +114,8 @@ describe('RFC 031 P1-4 — applyRecolorMutationFlush', () => {
     const plan = analyzeRecolorMutations([mockChildListMutation([p])])
     const result = applyRecolorMutationFlush(document, plan, themeFilters, budget)
     expect(result.inlineElementsRecolored).toBe(1)
-    expect(parseCssColorToken(p.style.getPropertyValue('color'))).toEqual(
-      modifyColor({ r: 0, g: 0, b: 0 }, 'fg'),
+    expect(p.style.getPropertyValue('color').trim()).toBe(
+      `var(${CSS_VAR_PAGE_FG})`,
     )
   })
 })

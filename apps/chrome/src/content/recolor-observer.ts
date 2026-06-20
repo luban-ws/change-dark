@@ -5,13 +5,16 @@
 import {
   analyzeRecolorMutations,
   applyRecolorMutationFlush,
-  colorProfileForPagePalette,
   RECOLOR_MUTATION_OBSERVER_INIT,
-} from '@luban-ws/dynamic-recolor'
-import type { PagePalette, SamplingBudget, ThemeFiltersStateV1 } from '@luban-ws/extension-settings'
+  type ResolvedThemePalette,
+} from '@change-dark/dynamic-recolor'
+import type { SamplingBudget, ThemeFiltersStateV1 } from '@change-dark/extension-settings'
 
 import { scheduleIdleTask } from './sampling'
 import { scheduleBackgroundImageRecolorForElements } from './recolor-background-images'
+import { sweepDocumentLightSurfaces } from './document-light-surface-sweep'
+import { applyPageSurfaceFloor } from './page-surface-floor'
+import { sweepVisibleLightSurfaces } from './visible-light-surface-sweep'
 
 type IdleSchedule = (task: () => void) => void
 
@@ -22,7 +25,7 @@ let activeConfig: {
   doc: Document
   themeFilters: ThemeFiltersStateV1
   budget: SamplingBudget
-  pagePalette: PagePalette
+  theme: ResolvedThemePalette
   /** Dynamic 采样铺底；MO 重建 stylesheet 覆盖层时须合并，避免 body 留白。 */
   baseCss: string
 } | null = null
@@ -55,7 +58,7 @@ function flushPendingRecords(): void {
         plan,
         activeConfig.themeFilters,
         activeConfig.budget,
-        colorProfileForPagePalette(activeConfig.pagePalette),
+        activeConfig.theme.profile,
         activeConfig.baseCss,
       )
       void result
@@ -63,6 +66,9 @@ function flushPendingRecords(): void {
         plan.backgroundImageElements,
         activeConfig.budget,
       )
+      applyPageSurfaceFloor(activeConfig.doc)
+      sweepVisibleLightSurfaces(activeConfig.doc, activeConfig.budget)
+      sweepDocumentLightSurfaces(activeConfig.doc, activeConfig.budget)
     })
   } finally {
     if (observer && activeConfig) {
@@ -83,12 +89,12 @@ function queueMutationRecords(records: MutationRecord[]): void {
 export function startRecolorDynamicObserver(
   themeFilters: ThemeFiltersStateV1,
   budget: SamplingBudget,
-  pagePalette: PagePalette,
+  theme: ResolvedThemePalette,
   baseCss: string,
   doc: Document = document,
 ): void {
   stopRecolorDynamicObserver()
-  activeConfig = { doc, themeFilters, budget, pagePalette, baseCss }
+  activeConfig = { doc, themeFilters, budget, theme, baseCss }
   observer = new MutationObserver((records) => queueMutationRecords(records))
   observer.observe(doc.documentElement, RECOLOR_MUTATION_OBSERVER_INIT)
 }
@@ -112,4 +118,14 @@ export function flushRecolorDynamicObserverRafForTests(): void {
     rafId = null
   }
   flushPendingRecords()
+}
+
+/** 延迟重绘后刷新采样铺底，供 MO 重建时合并。 */
+export function updateRecolorObserverPaintState(baseCss: string): void {
+  if (activeConfig) activeConfig.baseCss = baseCss
+}
+
+/** @deprecated 使用 `updateRecolorObserverPaintState` */
+export function updateRecolorObserverBaseCss(baseCss: string): void {
+  updateRecolorObserverPaintState(baseCss)
 }

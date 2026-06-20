@@ -1,0 +1,24 @@
+{
+  "v": 1,
+  "id": "google-marketing-platform",
+  "priority": 10,
+  "match": {
+    "hostSuffix": ["marketingplatform.google.com"]
+  },
+  "surfaceRepair": {
+    "neverPaint": [
+      ".h-c-page",
+      ".h-c-grid",
+      ".secondary-hero__background",
+      ".secondary-hero__frame",
+      ".gmp-banner"
+    ],
+    "gutterProbe": {
+      "mainSelector": "main.gmp-page",
+      "insetPx": 24
+    }
+  },
+  "recolor": {
+    "forceShorthandProperties": ["border-left", "border-right"]
+  }
+}

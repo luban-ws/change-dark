@@ -4,7 +4,7 @@ import pkg from './package.json'
 import {
   COMMAND_TOGGLE_CURRENT_SITE,
   COMMAND_TOGGLE_GLOBAL,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 import { CWS_HOMEPAGE_URL, CWS_SHORT_DESCRIPTION } from './src/store-listing-meta'
 
 /** MV3 清单：全站内容脚本 + storage，用于嫦娥暗色模式开关。 */

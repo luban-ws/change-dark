@@ -1,5 +1,5 @@
-import { computeDeadlineMs, isPastDeadline, type SamplingBudget } from '@luban-ws/extension-settings'
-import { parseCssRgbToTriplet } from '@luban-ws/dynamic-recolor'
+import { computeDeadlineMs, isPastDeadline, type SamplingBudget } from '@change-dark/extension-settings'
+import { parseCssRgbToTriplet } from '@change-dark/dynamic-recolor'
 
 /** 视口横纵比例（0..1），与 `VIEWPORT_FRAC_Y` 组合成 `elementsFromPoint` 命中点。 */
 const VIEWPORT_FRAC_X = {

@@ -11,9 +11,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       external: [
-        '@luban-ws/dark-engine',
-        '@luban-ws/extension-settings',
-        '@luban-ws/injected-styles',
+        '@change-dark/dark-engine',
+        '@change-dark/extension-settings',
+        '@change-dark/injected-styles',
       ],
     },
   },

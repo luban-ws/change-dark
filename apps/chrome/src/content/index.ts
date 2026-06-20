@@ -2,29 +2,39 @@ import {
   batch_mix_toward_black,
   mix_toward_black,
   suggested_foreground_for_dark_bg,
-} from '@luban-ws/dark-engine'
+} from '@change-dark/dark-engine'
 
 import {
   scheduleIdleTask,
   whenDocumentComplete,
 } from './sampling'
-import { paintRecolorPath } from './recolor-path'
+import { paintRecolorInlinePath, paintRecolorPath, paintRecolorStylesheetPath } from './recolor-path'
 import { resolveDynamicBaseRgbWithBranch } from './dynamic-fallback'
 import {
   startRecolorDynamicObserver,
   stopRecolorDynamicObserver,
+  updateRecolorObserverPaintState,
 } from './recolor-observer'
 import { scheduleBackgroundImageRecolor } from './recolor-background-images'
-import type { SamplingBudget, PagePalette, ThemeFiltersStateV1 } from '@luban-ws/extension-settings'
+import {
+  attachLightSurfaceResweepListeners,
+  scheduleDocumentLightSurfaceResweep,
+  sweepDocumentLightSurfaces,
+} from './document-light-surface-sweep'
+import { sweepFixedChromeSurfaces } from './fixed-chrome-sweep'
+import { applyPageSurfaceFloor, clearPageSurfaceFloor } from './page-surface-floor'
+import { refreshActiveSitePolicy, getActiveSitePolicy } from './site-policy'
+import {
+  sweepVisibleHeuristicSurfaces,
+  sweepVisibleLandmarkSurfaces,
+} from './visible-light-surface-sweep'
+import type { SamplingBudget, PagePalette, ThemeFiltersStateV1 } from '@change-dark/extension-settings'
 import {
   MIX_TOWARD_BLACK_AMOUNT,
   ROOT_ATTR,
   STORAGE_KEYS_AFFECTING_INJECTION,
   STYLE_ELEMENT_ID,
   POLICY_AUTO,
-  PAGE_PALETTE_SOLARIZED_DARK,
-  SOLARIZED_PAGE_BG_CSS,
-  SOLARIZED_PAGE_FG_CSS,
   buildTypographyCss,
   isNativelyDarkFromHtmlBodyBackgrounds,
   readEffectivePagePaletteForPage,
@@ -35,18 +45,23 @@ import {
   readSiteCustomCssForPage,
   readGlobalPolicy,
   readAutoDarkThreshold,
-} from '@luban-ws/extension-settings'
+  sanitizeSiteCustomCss,
+  resolvePageColorsForPalette,
+} from '@change-dark/extension-settings'
 import {
   buildStaticDarkCss,
   ensureCustomCssStyleElement,
   ensureStyleElement,
   ensureTypographyStyleElement,
-} from '@luban-ws/injected-styles'
+} from '@change-dark/injected-styles'
 import {
-  hasReadableStylesheetCss,
+  collectReadableStylesheetCssTexts,
+  mergeRecolorStyleText,
+  resolveThemePalette,
   restoreBackgroundImageFiltersInDocument,
   restoreInlineStylesInDocument,
-} from '@luban-ws/dynamic-recolor'
+  type ResolvedThemePalette,
+} from '@change-dark/dynamic-recolor'
 
 /**
  * 内容脚本注入约定（RFC 031 Dynamic-only）：
@@ -75,31 +90,83 @@ function mixBackgroundAndForegroundFromBase(baseRgb: Uint8Array): { pageBg: stri
   return { pageBg: rgb(bgParts), pageFg: rgb(fgParts) }
 }
 
-function colorsForPalette(
-  palette: PagePalette,
-  baseRgb: Uint8Array,
-): { pageBg: string; pageFg: string } {
-  if (palette === PAGE_PALETTE_SOLARIZED_DARK) {
-    return { pageBg: SOLARIZED_PAGE_BG_CSS, pageFg: SOLARIZED_PAGE_FG_CSS }
-  }
-  return mixBackgroundAndForegroundFromBase(baseRgb)
-}
-
-/** Dynamic 采样铺底 CSS（RFC 032：首屏暗底，非独立「Static 模式」）。 */
-function buildSampledBaseCss(
+/** Dynamic 采样铺底 CSS + 解析后的主题 preset（RFC 031 §5.1.1）。 */
+function buildSampledPalette(
   themeFilters: ThemeFiltersStateV1,
   pagePalette: PagePalette,
   budget: SamplingBudget,
-): string {
+): { baseCss: string; theme: ResolvedThemePalette } {
   const { rgb: baseRgb } = resolveDynamicBaseRgbWithBranch(budget)
-  const { pageBg, pageFg } = colorsForPalette(pagePalette, baseRgb)
-  return buildStaticDarkCss(pageBg, pageFg, themeFilters)
+  const { pageBg, pageFg } = resolvePageColorsForPalette(
+    pagePalette,
+    mixBackgroundAndForegroundFromBase(baseRgb),
+  )
+  return {
+    baseCss: buildStaticDarkCss(pageBg, pageFg, themeFilters),
+    theme: resolveThemePalette(pagePalette, pageBg, pageFg),
+  }
+}
+
+/** 合并 RFC 034 catalog 与用户 RFC 019 自定义 CSS。 */
+function mergeEffectiveCustomCss(userCss: string): string {
+  const catalogCss = getActiveSitePolicy().customCss.trim()
+  return sanitizeSiteCustomCss([catalogCss, userCss.trim()].filter(Boolean).join('\n'))
+}
+
+/** 首屏同步：暗底 + 顶栏/地标铺底 + stylesheet 改色（含 Solarized preset）。 */
+function applyFastDynamicPaintShell(
+  themeFilters: ThemeFiltersStateV1,
+  theme: ResolvedThemePalette,
+  baseCss: string,
+  budget: SamplingBudget,
+): void {
+  document.documentElement.setAttribute(ROOT_ATTR, '')
+  ensureStyleElement(mergeRecolorStyleText(baseCss, ''))
+  applyPageSurfaceFloor(document)
+  paintRecolorStylesheetPath(themeFilters, theme, document, baseCss)
+  sweepFixedChromeSurfaces(document, budget)
+  sweepDocumentLightSurfaces(document, budget)
+  scheduleDocumentLightSurfaceResweep(document, budget, 0)
+}
+
+/** idle 分片：WASM 改色 + 视口 sweep（重活不阻塞首帧）。 */
+function applyHeavyDynamicPaintWork(
+  themeFilters: ThemeFiltersStateV1,
+  theme: ResolvedThemePalette,
+  budget: SamplingBudget,
+  baseCss: string,
+): void {
+  try {
+    paintRecolorInlinePath(theme, document)
+    lastReadableStylesheetCount = collectReadableStylesheetCssTexts(document).readableSheetCount
+    startRecolorDynamicObserver(themeFilters, budget, theme, baseCss)
+    scheduleBackgroundImageRecolor(budget)
+    scheduleDynamicRecolorRetries(themeFilters, theme, budget, baseCss)
+    sweepVisibleLandmarkSurfaces(document, budget)
+    sweepDocumentLightSurfaces(document, budget)
+    attachLightSurfaceResweepListeners(document, budget)
+    scheduleDocumentLightSurfaceResweep(document, budget, 0)
+    window.setTimeout(() => {
+      if (!document.documentElement.hasAttribute(ROOT_ATTR)) return
+      scheduleDocumentLightSurfaceResweep(document, budget, 0)
+    }, 280)
+    scheduleIdleTask(() => {
+      sweepVisibleHeuristicSurfaces(document, budget)
+    })
+  } catch {
+    startRecolorDynamicObserver(themeFilters, budget, theme, baseCss)
+    scheduleBackgroundImageRecolor(budget)
+    sweepVisibleLandmarkSurfaces(document, budget)
+    sweepDocumentLightSurfaces(document, budget)
+    attachLightSurfaceResweepListeners(document, budget)
+  }
 }
 
 function clearForcedDarkSurface(): void {
   stopRecolorDynamicObserver()
   restoreBackgroundImageFiltersInDocument(document)
   restoreInlineStylesInDocument(document)
+  clearPageSurfaceFloor(document)
   document.documentElement.removeAttribute(ROOT_ATTR)
   document.getElementById(STYLE_ELEMENT_ID)?.remove()
 }
@@ -113,30 +180,59 @@ function measureNativelyDarkSnapshot(autoDarkThreshold: number): boolean {
   return isNativelyDarkFromHtmlBodyBackgrounds(htmlBg, bodyBg, autoDarkThreshold)
 }
 
-const DYNAMIC_RECOLOR_UPGRADE_DELAY_MS = 400
+const DYNAMIC_RECOLOR_RETRY_DELAYS_MS = [600, 2000] as const
 
-function scheduleDynamicRecolorUpgrade(
+let lastReadableStylesheetCount = 0
+
+function scheduleDynamicRecolorRetries(
   themeFilters: ThemeFiltersStateV1,
-  pagePalette: PagePalette,
+  theme: ResolvedThemePalette,
   budget: SamplingBudget,
+  baseCss: string,
 ): void {
-  scheduleIdleTask(() => {
-    window.setTimeout(() => {
-      if (!hasReadableStylesheetCss(document)) return
-      try {
-        const baseCss = buildSampledBaseCss(themeFilters, pagePalette, budget)
-        if (paintRecolorPath(themeFilters, pagePalette, document, baseCss)) {
+  for (const delayMs of DYNAMIC_RECOLOR_RETRY_DELAYS_MS) {
+    scheduleIdleTask(() => {
+      window.setTimeout(() => {
+        if (!document.documentElement.hasAttribute(ROOT_ATTR)) return
+        const { readableSheetCount } = collectReadableStylesheetCssTexts(document)
+        if (readableSheetCount <= lastReadableStylesheetCount) return
+        lastReadableStylesheetCount = readableSheetCount
+
+        try {
+          if (paintRecolorPath(themeFilters, theme, document, baseCss)) {
+            updateRecolorObserverPaintState(baseCss)
+          }
           scheduleBackgroundImageRecolor(budget)
+          scheduleDocumentLightSurfaceResweep(document, budget, 120)
+        } catch {
+          /* 保持已有铺底与覆盖层 */
         }
-      } catch {
-        /* 保持铺底层；MO 仍会处理后续 mutation */
-      }
-    }, DYNAMIC_RECOLOR_UPGRADE_DELAY_MS)
-  })
+      }, delayMs)
+    })
+  }
 }
 
 async function applyForcedDark(): Promise<void> {
-  const applyDark = await readShouldApplyForcedDarkForPage()
+  const [
+    applyDark,
+    policy,
+    budget,
+    { themeFilters },
+    pagePalette,
+    typoSettings,
+    siteCustomCss,
+    autoDarkThreshold,
+  ] = await Promise.all([
+    readShouldApplyForcedDarkForPage(),
+    readGlobalPolicy(),
+    readSamplingBudget(),
+    readEffectiveThemeForPage(),
+    readEffectivePagePaletteForPage(),
+    readEffectiveTypographyForPage(),
+    readSiteCustomCssForPage(),
+    readAutoDarkThreshold(),
+  ])
+
   if (!applyDark) {
     document.documentElement.removeAttribute(ROOT_ATTR)
     document.getElementById(STYLE_ELEMENT_ID)?.remove()
@@ -145,19 +241,12 @@ async function applyForcedDark(): Promise<void> {
     return
   }
 
-  const policy = await readGlobalPolicy()
-  const budget = await readSamplingBudget()
-  const { themeFilters } = await readEffectiveThemeForPage()
-  const pagePalette = await readEffectivePagePaletteForPage()
-  const typoSettings = await readEffectiveTypographyForPage()
-  const siteCustomCss = await readSiteCustomCssForPage()
-  const autoDarkThreshold = await readAutoDarkThreshold()
-
   const runPaint = (): void => {
     try {
       stopRecolorDynamicObserver()
       restoreBackgroundImageFiltersInDocument(document)
       restoreInlineStylesInDocument(document)
+      lastReadableStylesheetCount = 0
 
       const nativelyDark = measureNativelyDarkSnapshot(autoDarkThreshold)
 
@@ -166,23 +255,16 @@ async function applyForcedDark(): Promise<void> {
         return
       }
 
-      const baseCss = buildSampledBaseCss(themeFilters, pagePalette, budget)
-      document.documentElement.setAttribute(ROOT_ATTR, '')
-      ensureStyleElement(baseCss)
+      const { baseCss, theme } = buildSampledPalette(themeFilters, pagePalette, budget)
+      refreshActiveSitePolicy(document)
+      applyFastDynamicPaintShell(themeFilters, theme, baseCss, budget)
 
-      try {
-        paintRecolorPath(themeFilters, pagePalette, document, baseCss)
-        startRecolorDynamicObserver(themeFilters, budget, pagePalette, baseCss)
-        scheduleBackgroundImageRecolor(budget)
-        scheduleDynamicRecolorUpgrade(themeFilters, pagePalette, budget)
-      } catch {
-        ensureStyleElement(baseCss)
-        startRecolorDynamicObserver(themeFilters, budget, pagePalette, baseCss)
-        scheduleBackgroundImageRecolor(budget)
-      }
+      scheduleIdleTask(() => {
+        applyHeavyDynamicPaintWork(themeFilters, theme, budget, baseCss)
+      })
     } finally {
       ensureTypographyStyleElement(buildTypographyCss(typoSettings))
-      ensureCustomCssStyleElement(siteCustomCss)
+      ensureCustomCssStyleElement(mergeEffectiveCustomCss(siteCustomCss))
     }
   }
 

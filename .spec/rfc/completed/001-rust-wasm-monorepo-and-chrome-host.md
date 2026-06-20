@@ -36,18 +36,18 @@ Superseded-By: —
 |------|------|
 | `packages/dark-color-utils` | 纯 Rust 颜色与对比度相关函数；`cargo test`。 |
 | `packages/dark-engine` | `cdylib` + `rlib`；`wasm-pack` → `pkg/`（中间体）→ **Vite** → **`dist/`**（唯一发布面）。 |
-| `apps/chrome` | MV3 manifest、background、content script；依赖 `workspace:*` 的 `@luban-ws/dark-engine`。 |
+| `apps/chrome` | MV3 manifest、background、content script；依赖 `workspace:*` 的 `@change-dark/dark-engine`。 |
 | `apps/site` | React 落地页（GitHub Pages）；规范见 [RFC 020](./020-github-pages-site.md)。 |
 
 ### 构建与工具链
 
-- **Turbo**：`@luban-ws/chrome` 的 `build` 依赖上游 `@luban-ws/dark-engine` 的 `build`（`^build`）；各包 JS 产出由 **Vite** 打包。
+- **Turbo**：`@change-dark/chrome` 的 `build` 依赖上游 `@change-dark/dark-engine` 的 `build`（`^build`）；各包 JS 产出由 **Vite** 打包。
 - **WASM 与引擎包**：`dark-engine` 先 `wasm-pack` → **gitignored 的 `pkg/`**（仅中间体），再以 **Vite library** 打成唯一发布目录 **`dist/`**（WASM 内联进 `index.mjs`；`index.d.ts` 与 `index.cjs` 由构建后脚本写入 `dist/`）；若 PATH 中 Homebrew `rustc` 优先于 rustup，构建脚本需将 `$HOME/.cargo/bin` 置于 PATH 前。
 - **Vite**：扩展与各 `packages/*` 的 JS 均经 Vite；`wasm-bindgen` 使用 `vite-plugin-wasm` 与 `vite-plugin-top-level-await`（扩展与 `dark-engine` 打包）。
 
 ### 运行时边界
 
-- 内容脚本只依赖 `@luban-ws/dark-engine` 的 **`dist/`**（`package.json` 的 `exports` 不暴露 `pkg/`）；当前 `wasm-bindgen` bundler 链在模块加载路径完成初始化，**不依赖**旧的 `default` `init()` 导出（若升级 bindgen 后变化，应更新本文与内容脚本）。
+- 内容脚本只依赖 `@change-dark/dark-engine` 的 **`dist/`**（`package.json` 的 `exports` 不暴露 `pkg/`）；当前 `wasm-bindgen` bundler 链在模块加载路径完成初始化，**不依赖**旧的 `default` `init()` 导出（若升级 bindgen 后变化，应更新本文与内容脚本）。
 - 启用/关闭扩展行为使用 `chrome.storage.local`（键名以 shared `constants` 为单一来源）。
 
 ### 数据流（高层）

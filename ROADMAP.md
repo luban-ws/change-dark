@@ -1,6 +1,6 @@
 # Roadmap — 嫦娥 / Selena
 
-**下一个可用 RFC 编号：033**（Phase 2 / CSS 变量等后续）。  
+**下一个可用 RFC 编号：035**（Phase 2 / CSS 变量等后续）。  
 RFC 文档根目录：**`.spec/rfc/`**（completed 在 `.spec/rfc/completed/`）。  
 WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)  
 任务追踪：[TASK_TRACKING.md](./TASK_TRACKING.md)
@@ -70,10 +70,19 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 | [026](./.spec/rfc/completed/026-e2e-testing-strategy.md) | T-039 | E2E：**仅 Dynamic** | ✅ |
 | [029](./.spec/rfc/completed/029-theme-mode-dynamic-refinement.md) | T-042 | Dynamic **唯一产品** | ✅ |
 | [032](./.spec/rfc/completed/032-theme-mode-product-consolidation.md) | T-045 | Dynamic-only：删模式/迁移/铺底 | ✅ |
+| [033](./.spec/rfc/033-cross-site-surface-repair-layer.md) | T-046 | 跨站点表面修复层（三层 sweep + border recolor） | 🔄 Under Review |
+| [034](./.spec/rfc/034-site-profile-catalog.md) | T-047 | Site Profile Catalog（数据驱动，超越 DR） | 🔄 Phase 1 |
 
 ---
 
 ## 当前进行中 / Backlog
+
+### 进行中
+
+| RFC | 任务 | 标题 | 状态 |
+|-----|------|------|------|
+| [033](./.spec/rfc/033-cross-site-surface-repair-layer.md) | T-046 | Surface Repair Layer | 🔄 |
+| [034](./.spec/rfc/034-site-profile-catalog.md) | T-047 | Site Profile Catalog + `@change-dark/site-catalog` | 🔄 |
 
 ### Rejected（产品范围外）
 

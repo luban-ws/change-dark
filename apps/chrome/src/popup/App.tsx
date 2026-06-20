@@ -4,7 +4,7 @@ import { STORAGE_KEY_LANG, type PopupLanguage } from './i18n'
 import { usePopupState } from './hooks/usePopupState'
 import {
   POLICY_AUTO, POLICY_OFF, POLICY_ON, type GlobalPolicy,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 import { ThemeFiltersPanel } from './components/ThemeFiltersPanel'
 import { TypographyPanel } from './components/TypographyPanel'
 import { SiteToolsPanel } from './components/SiteToolsPanel'

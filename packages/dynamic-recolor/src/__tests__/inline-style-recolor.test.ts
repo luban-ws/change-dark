@@ -3,14 +3,13 @@
  */
 import { describe, expect, it, beforeEach } from 'vitest'
 
-import { INLINE_STYLE_BACKUP_ATTR } from '@luban-ws/extension-settings'
-import { parseCssColorToken } from '../color-parse'
+import { INLINE_STYLE_BACKUP_ATTR } from '@change-dark/extension-settings'
+import { CSS_VAR_PAGE_BG, CSS_VAR_PAGE_FG } from '@change-dark/extension-settings'
 import {
   recolorElementInlineStyle,
   recolorInlineStylesInDocument,
   restoreInlineStylesInDocument,
 } from '../inline-style-recolor'
-import { modifyColor } from '../modify-colors'
 
 describe('RFC 031 P1-3 — 内联 element.style 改色', () => {
   beforeEach(() => {
@@ -26,8 +25,8 @@ describe('RFC 031 P1-3 — 内联 element.style 改色', () => {
     expect(recolorElementInlineStyle(p)).toBe(true)
     expect(p.getAttribute(INLINE_STYLE_BACKUP_ATTR)).toBe('color:#000')
 
-    const applied = parseCssColorToken(p.style.getPropertyValue('color'))
-    expect(applied).toEqual(modifyColor({ r: 0, g: 0, b: 0 }, 'fg'))
+    const applied = p.style.getPropertyValue('color').trim()
+    expect(applied).toBe(`var(${CSS_VAR_PAGE_FG})`)
   })
 
   it('recolorInlineStylesInDocument 扫描子树', () => {

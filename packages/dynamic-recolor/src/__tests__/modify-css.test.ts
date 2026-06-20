@@ -1,3 +1,4 @@
+import { CSS_VAR_PAGE_FG } from '@change-dark/extension-settings'
 import { describe, expect, it } from 'vitest'
 
 import { parseCssColorToken, parseCssHexColor } from '../color-parse'
@@ -24,29 +25,21 @@ describe('readInlineStyleProperty', () => {
 })
 
 describe('RFC 031 S1 — 单元素单条 color', () => {
-  it('<p style="color:#000"> → fg 暗色可读', () => {
-    const out = recolorInlineStyleAttribute('color:#000')
-    const rgb = parseCssColorToken(out.match(/color:\s*(#[0-9a-f]+)/i)?.[1] ?? '')
-    expect(rgb).not.toBeNull()
-
-    const expected = modifyColor({ r: 0, g: 0, b: 0 }, 'fg')
-    expect(rgb).toEqual(expected)
-    expect(rgbToHsl(rgb!).l).toBeGreaterThanOrEqual(
-      DEFAULT_DARK_PROFILE.minFgLightness - 0.02,
+  it('<p style="color:#000"> → 中性深字绑 palette fg', () => {
+    expect(recolorInlineStyleAttribute('color:#000')).toBe(
+      `color: var(${CSS_VAR_PAGE_FG})`,
     )
   })
 
-  it('recolorInlineDeclaration("color", "#000") 与 modifyColor 一致', () => {
-    const out = recolorInlineDeclaration('color', '#000')
-    expect(out).toBeTruthy()
-    expect(parseCssColorToken(out!)).toEqual(
-      modifyColor({ r: 0, g: 0, b: 0 }, 'fg'),
+  it('recolorInlineDeclaration("color", "#000") 绑 palette fg', () => {
+    expect(recolorInlineDeclaration('color', '#000')).toBe(
+      `var(${CSS_VAR_PAGE_FG})`,
     )
   })
 
   it('非改色属性原样保留', () => {
     expect(recolorInlineStyleAttribute('margin: 8px; color:#000')).toBe(
-      'margin: 8px; color: #e8e6e3',
+      `margin: 8px; color: var(${CSS_VAR_PAGE_FG})`,
     )
   })
 

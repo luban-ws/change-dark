@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   PAGE_PALETTE_DARK,
   PAGE_PALETTE_SOLARIZED_DARK,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 import {
   colorProfileForPagePalette,
   recolorProfileTagForPagePalette,

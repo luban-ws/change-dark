@@ -1,5 +1,5 @@
 {
-  "name": "@luban-ws/dark-color-utils",
+  "name": "@change-dark/dark-color-utils",
   "private": true,
   "type": "module",
   "main": "./dist/index.cjs",

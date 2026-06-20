@@ -5,14 +5,28 @@ import {
   ROOT_ATTR,
   STYLE_ELEMENT_ID,
   CSS_VAR_PAGE_BG,
-} from '@luban-ws/extension-settings'
+  CSS_VAR_PAGE_FG,
+} from '@change-dark/extension-settings'
 import {
   buildRecolorOverrideStylesheet,
   collectReadableStylesheetCssTexts,
-  modifyColor,
-  parseCssColorToken,
-} from '@luban-ws/dynamic-recolor'
-import { paintRecolorPath } from '../recolor-path'
+  resolveThemePalette,
+} from '@change-dark/dynamic-recolor'
+import { paintRecolorPath, paintRecolorStylesheetPath } from '../recolor-path'
+
+const themeFilters = {
+  brightness: 100,
+  contrast: 100,
+  sepia: 0,
+  saturate: 100,
+} as const
+
+const darkTheme = resolveThemePalette('dark', 'rgb(24, 26, 27)', 'rgb(232, 230, 227)')
+const solarizedTheme = resolveThemePalette(
+  'solarized-dark',
+  'rgb(0, 43, 54)',
+  'rgb(147, 161, 161)',
+)
 
 describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
   beforeEach(() => {
@@ -40,10 +54,7 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     `
     document.head.appendChild(style)
 
-    const ok = paintRecolorPath(
-      { brightness: 100, contrast: 100, sepia: 0, saturate: 100 },
-      'dark',
-    )
+    const ok = paintRecolorPath(themeFilters, darkTheme)
     expect(ok).toBe(true)
     expect(document.documentElement.getAttribute(ROOT_ATTR)).toBe('')
 
@@ -57,9 +68,7 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
   })
 
   it('无可读 stylesheet 且无内联颜色时 paintRecolorPath 返回 false', () => {
-    expect(paintRecolorPath({ brightness: 100, contrast: 100, sepia: 0, saturate: 100 }, 'dark')).toBe(
-      false,
-    )
+    expect(paintRecolorPath(themeFilters, darkTheme)).toBe(false)
   })
 
   it('RFC 031 P1-3 — 内联 style 在同源 stylesheet 存在时一并改色', () => {
@@ -71,16 +80,30 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     p.setAttribute('style', 'color:#000')
     document.body.appendChild(p)
 
-    const ok = paintRecolorPath(
-      { brightness: 100, contrast: 100, sepia: 0, saturate: 100 },
-      'dark',
-    )
+    const ok = paintRecolorPath(themeFilters, darkTheme)
     expect(ok).toBe(true)
     expect(document.documentElement.getAttribute(ROOT_ATTR)).toBe('')
     expect(p.getAttribute(INLINE_STYLE_BACKUP_ATTR)).toBe('color:#000')
-    expect(parseCssColorToken(p.style.getPropertyValue('color'))).toEqual(
-      modifyColor({ r: 0, g: 0, b: 0 }, 'fg'),
+    expect(p.style.getPropertyValue('color').trim()).toBe(
+      `var(${CSS_VAR_PAGE_FG})`,
     )
+  })
+
+  it('Solarized — stylesheet 改色使用 solarized profile', () => {
+    const style = document.createElement('style')
+    style.textContent = `
+      body { background-color: #fff; }
+      .secondary-hero__text-box { background-color: #fff; color: #000; }
+    `
+    document.head.appendChild(style)
+
+    const baseCss = `:root { ${CSS_VAR_PAGE_BG}: rgb(0, 43, 54); ${CSS_VAR_PAGE_FG}: rgb(147, 161, 161); }`
+    const ok = paintRecolorStylesheetPath(themeFilters, solarizedTheme, document, baseCss)
+    expect(ok).toBe(true)
+    const el = document.getElementById(STYLE_ELEMENT_ID)
+    expect(el?.textContent).toContain('secondary-hero__text-box')
+    expect(el?.textContent).not.toContain('rgb(255, 255, 255)')
+    expect(el?.textContent).toContain(CSS_VAR_PAGE_BG)
   })
 
   it('RFC 032 — baseCss 与 recolor 层合并注入，不覆盖铺底变量', () => {
@@ -89,12 +112,7 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     document.head.appendChild(style)
 
     const baseCss = `:root { ${CSS_VAR_PAGE_BG}: rgb(24, 26, 27); }`
-    const ok = paintRecolorPath(
-      { brightness: 100, contrast: 100, sepia: 0, saturate: 100 },
-      'dark',
-      document,
-      baseCss,
-    )
+    const ok = paintRecolorPath(themeFilters, darkTheme, document, baseCss)
     expect(ok).toBe(true)
     const el = document.getElementById(STYLE_ELEMENT_ID)
     expect(el?.textContent).toContain(CSS_VAR_PAGE_BG)
@@ -106,10 +124,7 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     p.setAttribute('style', 'color:#000')
     document.body.appendChild(p)
 
-    const ok = paintRecolorPath(
-      { brightness: 100, contrast: 100, sepia: 0, saturate: 100 },
-      'dark',
-    )
+    const ok = paintRecolorPath(themeFilters, darkTheme)
     expect(ok).toBe(false)
     expect(p.getAttribute(INLINE_STYLE_BACKUP_ATTR)).toBeNull()
     expect(p.style.getPropertyValue('color')).toBe('rgb(0, 0, 0)')

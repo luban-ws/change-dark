@@ -9,7 +9,7 @@ import {
   modifyColor as wasmModifyColor,
   PROFILE_TAG_DARK,
   PROFILE_TAG_SOLARIZED_DARK,
-} from '@luban-ws/dark-engine'
+} from '@change-dark/dark-engine'
 
 /** 色用途标签（决定走哪条曲线，RFC 031 §2.6）。 */
 export type ColorUse = 'bg' | 'fg' | 'border'

@@ -1,5 +1,5 @@
 import type { Rgb } from './modify-colors'
-import { parseCssColorTokenWasmRgb } from '@luban-ws/dark-engine'
+import { parseCssColorTokenWasmRgb } from '@change-dark/dark-engine'
 import { getRecolorSkipReason } from './recolor-known-limitations'
 
 /**

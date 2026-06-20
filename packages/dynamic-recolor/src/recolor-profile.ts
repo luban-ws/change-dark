@@ -6,12 +6,12 @@ import { DEFAULT_DARK_PROFILE, rgbToHsl } from './modify-colors'
 import {
   PAGE_PALETTE_SOLARIZED_DARK,
   type PagePalette,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 import {
   PROFILE_TAG_DARK,
   PROFILE_TAG_SOLARIZED_DARK,
   type RecolorProfileTag,
-} from '@luban-ws/dark-engine'
+} from '@change-dark/dark-engine'
 
 /** Solarized Dark pole（base03 / base1）。 */
 export const SOLARIZED_DARK_PROFILE: ColorProfile = {

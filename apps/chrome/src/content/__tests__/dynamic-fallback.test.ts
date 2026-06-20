@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { STATIC_FALLBACK_RGB } from '@luban-ws/extension-settings'
+import { STATIC_FALLBACK_RGB } from '@change-dark/extension-settings'
 
 import { resolveDynamicBaseRgbWithBranch } from '../dynamic-fallback'
 
@@ -8,7 +8,7 @@ vi.mock('../sampling', () => ({
   collectPageBackgroundRgbBuffer: vi.fn(),
 }))
 
-vi.mock('@luban-ws/dark-engine', () => ({
+vi.mock('@change-dark/dark-engine', () => ({
   kMeansDarkerCentroid: vi.fn(() => new Uint8Array([10, 20, 30])),
   kMeansRgbCentroids: vi.fn(() => new Uint8Array([40, 50, 60, 0, 0, 0])),
 }))

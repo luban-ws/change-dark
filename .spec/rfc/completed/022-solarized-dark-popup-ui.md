@@ -36,7 +36,7 @@
 ## Testing
 
 - 手工：在 macOS / Windows 将系统切换为 **深色模式**，打开 popup 与 options 标签页，确认背景、卡片、链接色、焦点环与 Solarized 一致。
-- 回归：`pnpm --filter @luban-ws/chrome lint`；无新增 Vitest 要求（纯 CSS）。
+- 回归：`pnpm --filter @change-dark/chrome lint`；无新增 Vitest 要求（纯 CSS）。
 
 ## Implementation（落地）
 

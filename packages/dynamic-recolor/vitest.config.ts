@@ -7,12 +7,12 @@ export default defineConfig({
   plugins: [wasm(), topLevelAwait()],
   resolve: {
     alias: {
-      '@luban-ws/dark-engine': path.resolve(__dirname, '../dark-engine/src/index.ts'),
-      '@luban-ws/extension-settings': path.resolve(
+      '@change-dark/dark-engine': path.resolve(__dirname, '../dark-engine/src/index.ts'),
+      '@change-dark/extension-settings': path.resolve(
         __dirname,
         '../extension-settings/src/index.ts',
       ),
-      '@luban-ws/injected-styles': path.resolve(__dirname, '../injected-styles/src/css.ts'),
+      '@change-dark/injected-styles': path.resolve(__dirname, '../injected-styles/src/css.ts'),
     },
   },
   test: {

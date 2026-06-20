@@ -7,7 +7,7 @@ import {
   persistGlobalPolicy,
   readGlobalPolicy,
   toggleCurrentOriginInDenylist,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 
 /** 安装、更新与浏览器启动时规范化存储（RFC 004）。 */
 chrome.runtime.onInstalled.addListener(() => {

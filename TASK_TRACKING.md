@@ -75,7 +75,19 @@
 | T-044 | [031](./.spec/rfc/completed/031-dynamic-recolor-engine.md) | Dynamic 改色引擎 Phase 1 | ✅ Done |
 | T-045 | [032](./.spec/rfc/completed/032-theme-mode-product-consolidation.md) | Dynamic-only 产品整合 | ✅ Done |
 
-## Backlog（无独立 RFC，下一个建议 **033**）
+## RFC 033 — 跨站点表面修复层（进行中）
+
+| ID | 专属 RFC | 内容 | 状态 |
+|----|----------|------|------|
+| T-046 | [033](./.spec/rfc/033-cross-site-surface-repair-layer.md) | Surface Repair：三层 sweep、启发式、border/box-shadow recolor | 🔄 In progress |
+
+## RFC 034 — Site Profile Catalog（进行中）
+
+| ID | 专属 RFC | 内容 | 状态 |
+|----|----------|------|------|
+| T-047 | [034](./.spec/rfc/034-site-profile-catalog.md) | `@change-dark/site-catalog`、GMP profile、policy 合并 | 🔄 In progress |
+
+## Backlog（无独立 RFC，下一个建议 **035**）
 
 | 方向 | 说明 |
 |------|------|

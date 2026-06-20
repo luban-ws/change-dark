@@ -11,17 +11,21 @@ export default defineConfig({
   plugins: [react(), wasm(), topLevelAwait(), crx({ manifest })],
   resolve: {
     alias: {
-      '@luban-ws/extension-settings': path.resolve(
+      '@change-dark/extension-settings': path.resolve(
         __dirname,
         '../../packages/extension-settings/src/index.ts',
       ),
-      '@luban-ws/injected-styles': path.resolve(
+      '@change-dark/injected-styles': path.resolve(
         __dirname,
         '../../packages/injected-styles/src/index.ts',
       ),
-      '@luban-ws/dynamic-recolor': path.resolve(
+      '@change-dark/dynamic-recolor': path.resolve(
         __dirname,
         '../../packages/dynamic-recolor/src/index.ts',
+      ),
+      '@change-dark/site-catalog': path.resolve(
+        __dirname,
+        '../../packages/site-catalog/src/index.ts',
       ),
     },
   },

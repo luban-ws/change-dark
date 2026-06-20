@@ -5,12 +5,12 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/index.ts',
-      name: 'LubanShared',
+      name: 'LubanSiteCatalog',
       fileName: 'index',
     },
     emptyOutDir: true,
     rollupOptions: {
-      external: ['@luban-ws/dark-engine'],
+      external: ['@change-dark/extension-settings'],
     },
   },
   plugins: [dts({ rollupTypes: true })],

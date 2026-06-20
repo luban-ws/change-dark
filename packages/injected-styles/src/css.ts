@@ -1,5 +1,6 @@
 import {
   CSS_VAR_PAGE_BG,
+  CSS_VAR_PAGE_BORDER,
   CSS_VAR_PAGE_FG,
   ROOT_ATTR,
   STYLE_ELEMENT_CUSTOM_CSS_ID,
@@ -12,8 +13,13 @@ import {
   isIdentityThemeFilters,
   CD_TEXT_LIKE_SELECTORS,
   CD_BLOCK_BACKGROUND_SELECTORS,
+  CD_THEME_SHELL_SURFACE_SELECTORS,
+  CD_THEME_SHELL_HEADER_NAV_SELECTORS,
+  CD_THEME_SHELL_HEADER_NAV_ACTIVE_SELECTORS,
+  CD_THEME_SHELL_NEUTRAL_SURFACE_UTILITY_SELECTORS,
+  CD_THEME_SHELL_NEUTRAL_LINE_UTILITY_SELECTORS,
   CD_MEDIA_ELEMENT_SELECTORS,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 
 /** 根据 WASM 计算出的颜色生成最小侵入的全局样式；可选 RFC 011 `filter` 链。 */
 export function buildDarkCss(
@@ -31,6 +37,7 @@ export function buildDarkCss(
     :root {
       ${CSS_VAR_PAGE_BG}: ${pageBg};
       ${CSS_VAR_PAGE_FG}: ${pageFg};
+      ${CSS_VAR_PAGE_BORDER}: color-mix(in srgb, var(${CSS_VAR_PAGE_BG}) 68%, black);
       --cd-scrollbar-track: color-mix(in srgb, var(${CSS_VAR_PAGE_BG}) 88%, black);
       --cd-scrollbar-thumb: color-mix(in srgb, var(${CSS_VAR_PAGE_FG}) 45%, var(${CSS_VAR_PAGE_BG}));
       color-scheme: dark !important;
@@ -129,17 +136,65 @@ export function buildRecolorDynamicCss(
   return parts.join('\n\n')
 }
 
-/** 将样式写入页面，若已存在则更新文本内容。 */
+/**
+ * 引擎主题壳（RFC 032/034）：WASM 改色之后仍强制 `--cd-page-bg/fg`。
+ * 选择器不用 :where()，否则特异性低于逐条 class 改色规则。
+ */
+export function buildThemePaletteShellCss(): string {
+  return `
+    html[${ROOT_ATTR}],
+    html[${ROOT_ATTR}] ${CD_THEME_SHELL_SURFACE_SELECTORS} {
+      background-color: var(${CSS_VAR_PAGE_BG}) !important;
+      color: var(${CSS_VAR_PAGE_FG}) !important;
+    }
+    html[${ROOT_ATTR}] main,
+    html[${ROOT_ATTR}] main[role="main"],
+    html[${ROOT_ATTR}] [role="main"] {
+      border-left-color: var(${CSS_VAR_PAGE_BG}) !important;
+      border-right-color: var(${CSS_VAR_PAGE_BG}) !important;
+    }
+    html[${ROOT_ATTR}] ${CD_THEME_SHELL_HEADER_NAV_SELECTORS} {
+      color: var(${CSS_VAR_PAGE_FG}) !important;
+    }
+    html[${ROOT_ATTR}] ${CD_THEME_SHELL_HEADER_NAV_ACTIVE_SELECTORS} {
+      background-color: color-mix(in srgb, var(${CSS_VAR_PAGE_FG}) 14%, var(${CSS_VAR_PAGE_BG})) !important;
+      color: var(${CSS_VAR_PAGE_FG}) !important;
+    }
+    html[${ROOT_ATTR}] ${CD_THEME_SHELL_NEUTRAL_SURFACE_UTILITY_SELECTORS} {
+      background-color: var(${CSS_VAR_PAGE_BG}) !important;
+      border-color: var(${CSS_VAR_PAGE_BORDER}) !important;
+    }
+    html[${ROOT_ATTR}] ${CD_THEME_SHELL_NEUTRAL_LINE_UTILITY_SELECTORS} {
+      border-color: var(${CSS_VAR_PAGE_BORDER}) !important;
+      outline-color: var(${CSS_VAR_PAGE_BORDER}) !important;
+      --tw-ring-color: var(${CSS_VAR_PAGE_BORDER}) !important;
+      --tw-ring-offset-color: var(${CSS_VAR_PAGE_BG}) !important;
+    }
+  `.trim()
+}
+
+/** MO / recolor 重建会把主样式移到 head 末尾；将 catalog / 用户 CSS 再 pinned 到最末，保证 `--cd-page-bg` 主题层不被 WASM 改色覆盖。 */
+export function repinAuxiliaryInjectionStyles(
+  head: HTMLElement = document.head ?? document.documentElement,
+): void {
+  for (const id of [STYLE_ELEMENT_TYPOGRAPHY_ID, STYLE_ELEMENT_CUSTOM_CSS_ID]) {
+    const el = document.getElementById(id)
+    if (el) head.appendChild(el)
+  }
+}
+
+/** 将样式写入页面；每次更新移到 `<head>` 末尾，确保覆盖后加载的 author stylesheet。 */
 export function ensureStyleElement(cssText: string): void {
   const doc = document.documentElement
+  const head = document.head ?? doc
   let el = document.getElementById(STYLE_ELEMENT_ID) as HTMLStyleElement | null
   if (!el) {
     el = document.createElement('style')
     el.id = STYLE_ELEMENT_ID
-    // document_start：尽量插在 head 之前也可行，优先 head。
-    ;(document.head ?? doc).appendChild(el)
   }
   el.textContent = cssText
+  head.appendChild(el)
+  repinAuxiliaryInjectionStyles(head)
 }
 
 /**
@@ -159,6 +214,7 @@ export function ensureTypographyStyleElement(cssText: string): void {
     ;(document.head ?? doc).appendChild(el)
   }
   el.textContent = trimmed
+  ;(document.head ?? doc).appendChild(el)
 }
 
 /**
@@ -178,4 +234,5 @@ export function ensureCustomCssStyleElement(cssText: string): void {
     ;(document.head ?? doc).appendChild(el)
   }
   el.textContent = trimmed
+  ;(document.head ?? doc).appendChild(el)
 }

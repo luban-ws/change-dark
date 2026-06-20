@@ -7,13 +7,13 @@ import {
   INLINE_STYLE_BACKUP_ATTR,
   ROOT_ATTR,
   STYLE_ELEMENT_ID,
-} from '@luban-ws/extension-settings'
-import { buildStaticDarkCss } from '@luban-ws/injected-styles'
+  CSS_VAR_PAGE_FG,
+} from '@change-dark/extension-settings'
+import { buildStaticDarkCss } from '@change-dark/injected-styles'
 import {
   buildRecolorOverrideStylesheet,
-  modifyColor,
-  parseCssColorToken,
-} from '@luban-ws/dynamic-recolor'
+  resolveThemePalette,
+} from '@change-dark/dynamic-recolor'
 
 import { paintRecolorPath } from '../recolor-path'
 import {
@@ -33,6 +33,7 @@ const themeFilters = {
 
 const budget = { maxNodes: 120, maxMs: 35 }
 const baseCss = buildStaticDarkCss('rgb(10, 12, 14)', 'rgb(230, 230, 235)')
+const darkTheme = resolveThemePalette('dark', 'rgb(10, 12, 14)', 'rgb(230, 230, 235)')
 
 describe('RFC 031 P1-4 — MutationObserver 动态补色', () => {
   beforeEach(() => {
@@ -52,9 +53,9 @@ describe('RFC 031 P1-4 — MutationObserver 动态补色', () => {
     const seed = document.createElement('style')
     seed.textContent = 'body { color: #000; background-color: #fff; }'
     document.head.appendChild(seed)
-    expect(paintRecolorPath(themeFilters, 'dark', document, baseCss)).toBe(true)
+    expect(paintRecolorPath(themeFilters, darkTheme, document, baseCss)).toBe(true)
 
-    startRecolorDynamicObserver(themeFilters, budget, 'dark', baseCss)
+    startRecolorDynamicObserver(themeFilters, budget, darkTheme, baseCss)
 
     const style = document.createElement('style')
     style.textContent = '.late { color: #000; }'
@@ -73,8 +74,8 @@ describe('RFC 031 P1-4 — MutationObserver 动态补色', () => {
     const seed = document.createElement('style')
     seed.textContent = 'body { color: #000; background-color: #fff; }'
     document.head.appendChild(seed)
-    paintRecolorPath(themeFilters, 'dark', document, baseCss)
-    startRecolorDynamicObserver(themeFilters, budget, 'dark', baseCss)
+    paintRecolorPath(themeFilters, darkTheme, document, baseCss)
+    startRecolorDynamicObserver(themeFilters, budget, darkTheme, baseCss)
 
     const style = document.createElement('style')
     style.textContent = '.late { color: #000; }'
@@ -92,8 +93,8 @@ describe('RFC 031 P1-4 — MutationObserver 动态补色', () => {
     const seed = document.createElement('style')
     seed.textContent = 'body { color: #000; background-color: #fff; }'
     document.head.appendChild(seed)
-    paintRecolorPath(themeFilters, 'dark', document, baseCss)
-    startRecolorDynamicObserver(themeFilters, budget, 'dark', baseCss)
+    paintRecolorPath(themeFilters, darkTheme, document, baseCss)
+    startRecolorDynamicObserver(themeFilters, budget, darkTheme, baseCss)
 
     const p = document.createElement('p')
     p.setAttribute('style', 'color:#000')
@@ -103,8 +104,8 @@ describe('RFC 031 P1-4 — MutationObserver 动态补色', () => {
     flushRecolorDynamicObserverRafForTests()
 
     expect(p.getAttribute(INLINE_STYLE_BACKUP_ATTR)).toBe('color:#000')
-    expect(parseCssColorToken(p.style.getPropertyValue('color'))).toEqual(
-      modifyColor({ r: 0, g: 0, b: 0 }, 'fg'),
+    expect(p.style.getPropertyValue('color').trim()).toBe(
+      `var(${CSS_VAR_PAGE_FG})`,
     )
   })
 })

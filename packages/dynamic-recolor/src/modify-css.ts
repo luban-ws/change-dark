@@ -12,6 +12,8 @@ import {
   type ColorProfile,
   type ColorUse,
 } from './modify-colors'
+import { recolorLightDarkToPaletteVar } from './light-dark'
+import { paletteCssVarForRecolor } from './palette-apply'
 
 /** RFC 031 §2.6：Phase 1 直接支持的 longhand 属性 → 色用途。 */
 export const RECOLOR_LONGHAND_PROPERTIES: Readonly<Record<string, ColorUse>> = {
@@ -59,8 +61,12 @@ export function recolorCssColorValue(
   use: ColorUse,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
 ): string | null {
+  const lightDarkVar = recolorLightDarkToPaletteVar(value)
+  if (lightDarkVar) return lightDarkVar
   const rgb = parseCssColorToken(value)
   if (!rgb) return null
+  const paletteVar = paletteCssVarForRecolor(rgb, use)
+  if (paletteVar) return paletteVar
   return formatRgbHex(modifyColor(rgb, use, profile))
 }
 

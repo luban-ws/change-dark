@@ -1,8 +1,10 @@
 /** Chrome 扩展：用户设置、storage 键、站点策略与迁移。 */
 export * from './constants'
 export * from './style-selectors'
+export * from './surface-heuristics'
 export * from './theme-mode'
 export * from './page-palette'
+export * from './theme-palette'
 export * from './theme-filters'
 export * from './typography'
 export * from './site-list'

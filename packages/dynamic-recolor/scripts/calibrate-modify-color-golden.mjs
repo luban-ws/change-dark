@@ -36,7 +36,7 @@ if (cargo.status !== 0) {
 console.log('Rust golden_vectors_rfc_027: OK')
 
 const fixture = JSON.parse(readFileSync(fixturePath, 'utf8'))
-const eng = await import('@luban-ws/dark-engine')
+const eng = await import('@change-dark/dark-engine')
 if (eng.__tla) await eng.__tla
 const { modifyColorRgb, COLOR_USE_BG, COLOR_USE_FG, COLOR_USE_BORDER } = eng
 const useTag = {

@@ -4,11 +4,11 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   resolve: {
     alias: {
-      '@luban-ws/extension-settings': path.resolve(
+      '@change-dark/extension-settings': path.resolve(
         __dirname,
         '../extension-settings/src/index.ts',
       ),
-      '@luban-ws/injected-styles': path.resolve(__dirname, './src/css.ts'),
+      '@change-dark/injected-styles': path.resolve(__dirname, './src/css.ts'),
     },
   },
   test: {

@@ -1,5 +1,5 @@
 {
-  "name": "@luban-ws/injected-styles",
+  "name": "@change-dark/injected-styles",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@luban-ws/extension-settings": "workspace:*"
+    "@change-dark/extension-settings": "workspace:*"
   },
   "devDependencies": {
     "jsdom": "^25.0.1",

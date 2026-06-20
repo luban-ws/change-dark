@@ -1,6 +1,6 @@
 import React from 'react'
 import { usePopupT } from '../usePopupT'
-import type { ThemeFiltersStateV1 } from '@luban-ws/extension-settings'
+import type { ThemeFiltersStateV1 } from '@change-dark/extension-settings'
 import type { PopupTranslationKey } from '../i18n'
 import { Card, Text, Flex, Box, Slider } from '@radix-ui/themes'
 

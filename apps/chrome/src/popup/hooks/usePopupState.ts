@@ -20,7 +20,7 @@ import {
   STORAGE_KEY_AUTO_DARK_THRESHOLD, DEFAULT_AUTO_DARK_THRESHOLD,
   type GlobalPolicy,
   typographyStateToSettings, clampTypographySettings, type TypographySettingsV1,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 
 export function usePopupState() {
   const [origin, setOrigin] = useState<string | null>(null)

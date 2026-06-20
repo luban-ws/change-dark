@@ -1,7 +1,7 @@
 /**
  * 自 `public/icons/icon.svg` 生成商店 / 清单所需 PNG（16–48 满幅；128 按 Chrome Web Store 规范：约 96×96 主图形 + 透明边距至 128×128）。
  * @see https://developer.chrome.com/docs/webstore/images#icon-size
- * 修改矢量稿后执行：`pnpm --filter @luban-ws/chrome run icons`
+ * 修改矢量稿后执行：`pnpm --filter @change-dark/chrome run icons`
  */
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'

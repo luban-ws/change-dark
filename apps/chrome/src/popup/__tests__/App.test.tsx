@@ -60,7 +60,7 @@ vi.mock('../i18n', () => ({
   POPUP_LOCALES: { en: { translation: popupEn } },
 }))
 
-/** 供 `vi.mock('@luban-ws/extension-settings')` 工厂闭包引用（必须 hoisted）。 */
+/** 供 `vi.mock('@change-dark/extension-settings')` 工厂闭包引用（必须 hoisted）。 */
 const popupMocks = vi.hoisted(() => ({
   mockPersistGlobalPolicy: vi.fn(async (_p: string) => {}),
   mockPersistPagePalette: vi.fn(async (_p: string) => {}),
@@ -95,7 +95,7 @@ vi.mock('../usePopupT', () => ({
   }),
 }))
 
-vi.mock('@luban-ws/extension-settings', async (importOriginal) => {
+vi.mock('@change-dark/extension-settings', async (importOriginal) => {
   const actual = await importOriginal<any>()
   return {
     ...actual,

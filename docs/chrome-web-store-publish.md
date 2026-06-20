@@ -20,7 +20,7 @@
 
 ```bash
 pnpm install
-pnpm --filter @luban-ws/chrome run pack
+pnpm --filter @change-dark/chrome run pack
 ```
 
 含义：`vite build` 得到 `apps/chrome/dist/`，再打成 **`apps/chrome/change-dark-extension.zip`**（根目录内含 `manifest.json`，已在 `.gitignore`）。**不要**把仓库根目录或 `src/` 打成 ZIP 上传。
@@ -46,7 +46,7 @@ pnpm --filter @luban-ws/chrome run pack
 ## 4. 发布更新（新版本）
 
 1. 在 `apps/chrome/package.json` 中 **递增** `version`（例如 `0.1.0` → `0.1.1`）。
-2. 再次执行：`pnpm --filter @luban-ws/chrome run pack`。
+2. 再次执行：`pnpm --filter @change-dark/chrome run pack`。
 3. 在控制台打开该扩展 → **Package**（或「软件包」）→ 上传新的 ZIP → 如需可同时更新商店文案 → **Submit for review**。
 
 若仅改商店文案、未改包体，按控制台提示保存/提交即可（仍以官方界面为准）。
@@ -76,7 +76,7 @@ pnpm --filter @luban-ws/chrome run pack
 
 ## 6. 发布前最小核对（与 listing 文档互补）
 
-- [ ] `pnpm --filter @luban-ws/chrome run pack` 成功，ZIP 根目录为 `manifest.json`。
+- [ ] `pnpm --filter @change-dark/chrome run pack` 成功，ZIP 根目录为 `manifest.json`。
 - [ ] `apps/chrome/package.json` 的 `version` 大于商店当前版本（如是更新）。
 - [ ] 隐私政策 URL、首页 URL 与 `store-listing-meta` / 后台一致且可访问。
 - [ ] 截图、图标尺寸与 [listing §5](./chrome-web-store-listing.md) 一致。

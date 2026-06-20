@@ -39,7 +39,7 @@
 
 - Playwright + `launchPersistentContext` + `--load-extension=dist`
 - 默认 **headed**（MV3 SW 可靠）；`HEADLESS=true` 时可能无法发现 SW
-- 前置：`pnpm --filter @luban-ws/chrome build` + `pnpm exec playwright install chromium`
+- 前置：`pnpm --filter @change-dark/chrome build` + `pnpm exec playwright install chromium`
 
 ---
 

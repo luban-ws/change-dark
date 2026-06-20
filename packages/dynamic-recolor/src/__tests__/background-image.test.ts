@@ -3,7 +3,7 @@
  */
 import { describe, expect, it, vi } from 'vitest'
 
-import { BG_IMAGE_STYLE_BACKUP_ATTR } from '@luban-ws/extension-settings'
+import { BG_IMAGE_STYLE_BACKUP_ATTR } from '@change-dark/extension-settings'
 import {
   analyzeImagePixelBuffer,
   brightnessFilterForAnalysis,

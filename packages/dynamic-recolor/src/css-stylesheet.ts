@@ -4,8 +4,11 @@
  * §5.3：整表改色走 `batchModifyColors` 单次 WASM，禁逐色过桥。
  */
 
+import { ROOT_ATTR } from '@change-dark/extension-settings'
 import { formatRgbHex, parseCssColorToken } from './color-parse'
 import { recolorBackgroundImageDeclaration } from './background-image-css'
+import { recolorBorderShorthandDeclaration } from './border-css'
+import { recolorBoxShadowDeclaration } from './box-shadow-css'
 import {
   colorUseForCssProperty,
 } from './modify-css'
@@ -16,6 +19,8 @@ import {
   type ColorUse,
   type Rgb,
 } from './modify-colors'
+import { recolorLightDarkToPaletteVar } from './light-dark'
+import { resolveThemedRecolorCssValue } from './palette-apply'
 
 /** 单条可注入的覆盖规则（含 @media / @keyframes 外层包裹）。 */
 export interface RecolorOverrideRule {
@@ -75,6 +80,10 @@ function stripImportant(value: string): string {
 function planDeclarationRecolor(property: string, rawValue: string): DeclarationRecolorPlan | null {
   const prop = property.trim()
   const val = stripImportant(rawValue)
+  const lightDarkLiteral = recolorLightDarkToPaletteVar(val)
+  if (lightDarkLiteral) {
+    return { prop, literal: lightDarkLiteral }
+  }
   const use = colorUseForCssProperty(prop)
   if (use) {
     const rgb = parseCssColorToken(val)
@@ -83,11 +92,22 @@ function planDeclarationRecolor(property: string, rawValue: string): Declaration
   }
   const bgLiteral = recolorBackgroundImageDeclaration(prop, val)
   if (bgLiteral) return { prop, literal: bgLiteral }
+  const borderLiteral = recolorBorderShorthandDeclaration(prop, val)
+  if (borderLiteral) return { prop, literal: borderLiteral }
+  const shadowLiteral = recolorBoxShadowDeclaration(prop, val)
+  if (shadowLiteral) return { prop, literal: shadowLiteral }
   return null
 }
 
 function formatRecoloredDeclaration(prop: string, value: string): string {
   return `${prop}: ${value} !important`
+}
+
+function formatBatchRecolorValue(
+  original: { rgb: Rgb; use: ColorUse },
+  wasmRgb: Rgb,
+): string {
+  return resolveThemedRecolorCssValue(original.rgb, original.use, wasmRgb, formatRgbHex)
 }
 
 function recolorDeclarationPlans(
@@ -104,9 +124,13 @@ function recolorDeclarationPlans(
       if (plan.literal != null) {
         return formatRecoloredDeclaration(plan.prop, plan.literal)
       }
+      const batch = plan.batch!
       const out = batchResults[batchCursor]!
       batchCursor += 1
-      return formatRecoloredDeclaration(plan.prop, formatRgbHex(out))
+      return formatRecoloredDeclaration(
+        plan.prop,
+        formatBatchRecolorValue(batch, out),
+      )
     })
     .join('; ')
 }
@@ -133,9 +157,42 @@ export function recolorDeclarationBlock(
   return recolorDeclarationPlans(plans, profile)
 }
 
+/** 为覆盖规则加 `html[ROOT_ATTR]` 前缀；@keyframes 步骤选择器保持不变。
+ *  见 CLAUDE.md — `:root` 即 <html>，禁止 `html[x] :root` 后代写法。 */
+function prefixSelectorPart(part: string): string {
+  const p = part.trim()
+  if (!p) return `html[${ROOT_ATTR}]`
+  // :root / :host 即 <html>，后代组合子 `html[x] :root` 永不匹配。
+  if (p === ':root' || p === ':host') return `html[${ROOT_ATTR}]`
+  if (p.startsWith('[')) return `html[${ROOT_ATTR}]${p}`
+  if (p.startsWith(':root')) {
+    const suffix = p.slice(':root'.length).trim()
+    if (!suffix) return `html[${ROOT_ATTR}]`
+    if (suffix.startsWith('.') || suffix.startsWith('[')) {
+      return `html[${ROOT_ATTR}]${suffix}`
+    }
+  }
+  if (p.startsWith(':host')) {
+    const suffix = p.slice(':host'.length).trim()
+    if (!suffix) return `html[${ROOT_ATTR}]`
+    if (suffix.startsWith('.') || suffix.startsWith('[')) {
+      return `html[${ROOT_ATTR}]${suffix}`
+    }
+  }
+  return `html[${ROOT_ATTR}] ${p}`
+}
+
+export function prefixRecolorOverrideSelector(selector: string): string {
+  const trimmed = selector.trim()
+  if (/^(?:from|to|\d+(?:\.\d+)?%)$/i.test(trimmed)) return trimmed
+  if (trimmed.startsWith(`html[${ROOT_ATTR}]`)) return trimmed
+  const parts = trimmed.split(',').map((part) => prefixSelectorPart(part))
+  return [...new Set(parts)].join(', ')
+}
+
 /** 格式化单条覆盖规则（恢复 @media / @keyframes 嵌套）。 */
 export function formatRecolorOverrideRule(rule: RecolorOverrideRule): string {
-  const inner = `${rule.selector} { ${rule.declarations} }`
+  const inner = `${prefixRecolorOverrideSelector(rule.selector)} { ${rule.declarations} }`
   return rule.wrappers.reduceRight((body, wrap) => `${wrap} { ${body} }`, inner)
 }
 
@@ -201,9 +258,13 @@ function buildRulesFromDrafts(
         if (plan.literal != null) {
           return formatRecoloredDeclaration(plan.prop, plan.literal)
         }
+        const batch = plan.batch!
         const out = batchResults[batchCursor]!
         batchCursor += 1
-        return formatRecoloredDeclaration(plan.prop, formatRgbHex(out))
+        return formatRecoloredDeclaration(
+          plan.prop,
+          formatBatchRecolorValue(batch, out),
+        )
       })
       .join('; ')
 

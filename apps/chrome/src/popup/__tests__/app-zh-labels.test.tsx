@@ -40,7 +40,7 @@ vi.mock('../usePopupT', () => ({
   }),
 }))
 
-vi.mock('@luban-ws/extension-settings', async (importOriginal) => {
+vi.mock('@change-dark/extension-settings', async (importOriginal) => {
   const actual = await importOriginal<any>()
   return {
     ...actual,

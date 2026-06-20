@@ -10,7 +10,7 @@ import {
   isPastDeadline,
   type SamplingBudget,
   type ThemeFiltersStateV1,
-} from '@luban-ws/extension-settings'
+} from '@change-dark/extension-settings'
 import { recolorElementInlineStyle } from './inline-style-recolor'
 import { hasBitmapBackgroundImage } from './background-image-css'
 import { applyRecolorInjection } from './recolor-inject'

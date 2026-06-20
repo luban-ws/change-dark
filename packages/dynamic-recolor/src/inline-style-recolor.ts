@@ -4,7 +4,7 @@
  * 改色前备份原始 `style` 到 `INLINE_STYLE_BACKUP_ATTR`，重绘/关闭时从备份还原，避免二次改色漂移。
  */
 
-import { INLINE_STYLE_BACKUP_ATTR } from '@luban-ws/extension-settings'
+import { INLINE_STYLE_BACKUP_ATTR } from '@change-dark/extension-settings'
 import {
   RECOLOR_LONGHAND_PROPERTIES,
   readInlineStyleProperty,

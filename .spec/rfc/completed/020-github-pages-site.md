@@ -21,7 +21,7 @@
 ## Non-goals
 
 - 不在此 RFC 中托管扩展 `.crx` / Chrome Web Store 跳转（另立 RFC）。
-- 不强制与扩展共用同一构建任务（部署工作流可只跑 `pnpm --filter @luban-ws/site build`）。
+- 不强制与扩展共用同一构建任务（部署工作流可只跑 `pnpm --filter @change-dark/site build`）。
 
 ## Implementation（验收对照）
 
@@ -41,8 +41,8 @@
 
 ## Testing
 
-- `pnpm --filter @luban-ws/site test`（Vitest）。
-- 本地：`pnpm --filter @luban-ws/site build` 后 `preview`，必要时 `VITE_BASE_PATH=/repo/` 模拟子路径。
+- `pnpm --filter @change-dark/site test`（Vitest）。
+- 本地：`pnpm --filter @change-dark/site build` 后 `preview`，必要时 `VITE_BASE_PATH=/repo/` 模拟子路径。
 
 ## Decision log
 

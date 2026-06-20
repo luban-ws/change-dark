@@ -1,0 +1,38 @@
+---
+description: Dynamic recolor CSS injection invariants — :root prefix, light-dark, theme shell order
+globs: packages/dynamic-recolor/**/*,packages/injected-styles/**/*,apps/chrome/src/content/**/*
+alwaysApply: false
+---
+
+# Dynamic recolor CSS invariants
+
+Read `CLAUDE.md` § "CSS injection invariants" before changing recolor or theme shell.
+
+## :root / :host prefix (critical)
+
+`:root` is the document element (`<html>`). **Never** emit:
+
+```css
+html[data-change-dark-root] :root { ... }  /* INVALID — zero matches */
+```
+
+Use `html[data-change-dark-root]` or compound `html[data-change-dark-root][data-theme="kumo"]`.
+
+When editing `prefixRecolorOverrideSelector`, add tests that:
+
+- `:root` → `html[ROOT_ATTR]` (no space before `:root` as descendant)
+- `:root, [data-theme="x"]` → comma list with root mapped correctly
+
+## light-dark() + color-scheme
+
+Extension sets `color-scheme: dark`. Author tokens like `light-dark(#fff, oklch(17% 0 0))` resolve to the **dark** branch unless we rewrite the **`--*` definition** in stylesheet recolor (`recolorLightDarkToPaletteVar`) or theme-shell utility selectors (`CD_THEME_SHELL_NEUTRAL_SURFACE_UTILITY_SELECTORS`).
+
+## Theme shell
+
+- Append **last** in `mergeRecolorStyleText`
+- No `:where()` on shell selectors (specificity vs WASM class rules)
+- Shell sets `background-color` / `color` with `!important`
+
+## Verification
+
+Do not close site-specific color bugs without checking injected CSS matches DOM (invalid selectors fail silently). Prefer `document.querySelector` + computed style over string-only unit tests.

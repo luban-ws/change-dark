@@ -10,7 +10,7 @@ export default defineConfig({
     },
     emptyOutDir: true,
     rollupOptions: {
-      external: ['@luban-ws/extension-settings'],
+      external: ['@change-dark/extension-settings'],
     },
   },
   plugins: [dts({ rollupTypes: true })],
