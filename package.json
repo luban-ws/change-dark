@@ -8,7 +8,8 @@
     "test": "turbo run test",
     "test:e2e": "turbo run test:e2e",
     "test:e2e:report": "turbo run test:e2e:report",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "release:chrome": "node scripts/release-chrome.mjs"
   },
   "devDependencies": {
     "turbo": "^2.4.4",
