@@ -4,12 +4,17 @@
 
 import {
   GLOBAL_DEFAULT_SITE_POLICY,
+  mergeSitePolicies,
   resolveSitePolicy,
   type MergedSitePolicyV1,
   type SiteProfilePatchV1,
 } from '@change-dark/site-catalog'
 
-let activePolicy: MergedSitePolicyV1 = GLOBAL_DEFAULT_SITE_POLICY
+let activePolicy: MergedSitePolicyV1 = cloneDefaultSitePolicy()
+
+function cloneDefaultSitePolicy(): MergedSitePolicyV1 {
+  return mergeSitePolicies([], undefined)
+}
 
 export function refreshActiveSitePolicy(
   doc: Document,
@@ -26,5 +31,5 @@ export function getActiveSitePolicy(): MergedSitePolicyV1 {
 }
 
 export function resetActiveSitePolicyForTests(): void {
-  activePolicy = GLOBAL_DEFAULT_SITE_POLICY
+  activePolicy = cloneDefaultSitePolicy()
 }

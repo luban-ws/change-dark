@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, expect, it, beforeEach } from 'vitest'
+import { describe, expect, it, beforeEach, vi } from 'vitest'
 
 import { sweepVisibleLightSurfaces } from '../visible-light-surface-sweep'
 import { SURFACE_FLOOR_ATTR } from '../light-surface-utils'
@@ -22,6 +22,19 @@ function mockRect(el: HTMLElement, width: number, height: number): void {
     }) as DOMRect
 }
 
+/** Linux CI jsdom：computed 常为 rgb(0,0,0)，须保留真实 getComputedStyle 供其它字段。 */
+function stubEmptyComputedBackground(): void {
+  const real = window.getComputedStyle.bind(window)
+  vi.spyOn(window, 'getComputedStyle').mockImplementation((target) => {
+    const base = real(target as Element)
+    return {
+      ...base,
+      backgroundColor: 'rgb(0, 0, 0)',
+      backgroundImage: 'none',
+    } as CSSStyleDeclaration
+  })
+}
+
 describe('sweepVisibleLightSurfaces', () => {
   const budget = { maxNodes: 80, maxMs: 35 }
 
@@ -29,6 +42,7 @@ describe('sweepVisibleLightSurfaces', () => {
     document.body.innerHTML = ''
     document.body.style.cssText = ''
     resetActiveSitePolicyForTests()
+    vi.restoreAllMocks()
     Object.defineProperty(document.documentElement, 'clientWidth', {
       configurable: true,
       value: 1200,
@@ -40,6 +54,8 @@ describe('sweepVisibleLightSurfaces', () => {
   })
 
   it('铺地标 footer 与大面积 section，不铺透明 grid', () => {
+    stubEmptyComputedBackground()
+
     const footer = document.createElement('footer')
     footer.className = 'h-c-footer'
     footer.style.backgroundColor = 'rgb(248, 249, 250)'

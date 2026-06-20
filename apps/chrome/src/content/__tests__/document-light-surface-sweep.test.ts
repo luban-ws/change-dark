@@ -83,7 +83,7 @@ describe('shouldPaintOpaqueLightSurface', () => {
     document.body.appendChild(footer)
 
     vi.spyOn(window, 'getComputedStyle').mockReturnValue({
-      backgroundColor: '',
+      backgroundColor: 'rgb(0, 0, 0)',
       backgroundImage: 'none',
     } as CSSStyleDeclaration)
 

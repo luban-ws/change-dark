@@ -46,9 +46,10 @@ function readInlineBackgroundColor(el: HTMLElement): string {
 }
 
 function resolveAuthorBackgroundColor(el: HTMLElement, cs: CSSStyleDeclaration): string {
-  const computed = cs.backgroundColor?.trim() ?? ''
-  if (parseBackgroundAlpha(computed) >= OPAQUE_ALPHA_MIN) return computed
-  return readInlineBackgroundColor(el) || computed
+  const inline = readInlineBackgroundColor(el)
+  // 元素自身 inline 背景优先 — jsdom/Linux 常给出错误的 inherited computed（如 rgb(0,0,0)）。
+  if (inline) return inline
+  return cs.backgroundColor?.trim() ?? ''
 }
 
 export function shouldSkipLightSurfaceTarget(el: HTMLElement): boolean {
