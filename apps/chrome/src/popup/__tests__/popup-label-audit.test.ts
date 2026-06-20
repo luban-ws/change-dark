@@ -6,7 +6,7 @@ vi.hoisted(() => {
   globalThis.chrome = {
     i18n: { getUILanguage: () => 'zh-CN' },
     storage: { local: { get: async () => ({}), set: async () => {} } },
-  } as typeof chrome
+  } as unknown as typeof chrome
 })
 
 import i18n, { POPUP_LOCALES, type PopupTranslationKey } from '../i18n'

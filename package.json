@@ -9,9 +9,13 @@
     "test:e2e": "turbo run test:e2e",
     "test:e2e:report": "turbo run test:e2e:report",
     "lint": "turbo run lint",
-    "release:chrome": "node scripts/release-chrome.mjs"
+    "check:pre-commit": "pnpm run lint",
+    "check:pre-push": "pnpm run build && pnpm run test && pnpm run lint",
+    "release:chrome": "node scripts/release-chrome.mjs",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
     "turbo": "^2.4.4",
     "typescript": "^5.7.3"
   }

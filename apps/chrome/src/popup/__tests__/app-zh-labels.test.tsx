@@ -24,7 +24,7 @@ vi.hoisted(() => {
     tabs: {
       query: vi.fn(() => Promise.resolve([{ url: 'http://example.com' } as chrome.tabs.Tab])),
     },
-  } as typeof chrome
+  } as unknown as typeof chrome
 })
 
 vi.mock('../i18n', async (importOriginal) => {
@@ -134,7 +134,7 @@ describe('App 中文标签全覆盖', () => {
 
     for (const key of ZH_VISIBLE_SECTION_KEYS) {
       const en = POPUP_LOCALES.en.translation[key]
-      if (en === zh[key]) continue
+      if (String(en) === String(zh[key])) continue
       expect(within(app).queryByText(en), `仍显示英文: ${key} → ${en}`).toBeNull()
     }
   })
