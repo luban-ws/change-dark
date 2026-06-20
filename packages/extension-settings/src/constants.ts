@@ -123,6 +123,12 @@ export const CSS_VAR_PAGE_FG = '--cd-page-fg'
 /** 中性分隔线 / 边框（比 page-bg 更深，便于卡片与页面区分）。 */
 export const CSS_VAR_PAGE_BORDER = '--cd-page-border'
 
+/** 抬升表面（登录卡片等，略亮于 page-bg）。 */
+export const CSS_VAR_PAGE_SURFACE = '--cd-page-surface'
+
+/** 表单控件内凹底（input / textarea）。 */
+export const CSS_VAR_PAGE_INPUT_BG = '--cd-page-input-bg'
+
 /** 内容脚本与迁移逻辑共同关心的 local 键（顺序无关）。 */
 export const STORAGE_KEYS_AFFECTING_INJECTION: readonly string[] = [
   STORAGE_KEY_SCHEMA_VERSION,

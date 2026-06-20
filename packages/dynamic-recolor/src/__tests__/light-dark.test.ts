@@ -110,4 +110,17 @@ describe('buildRecolorOverrideStylesheet light-dark custom properties', () => {
     expect(out).toContain(`html[${ROOT_ATTR}] {`)
     expect(out).not.toContain(`html[${ROOT_ATTR}] :root`)
   })
+
+  it('maps --*-line custom properties to page border var', () => {
+    const css = `
+      :root {
+        --color-kumo-line: light-dark(#eee, oklch(35% 0 0));
+      }
+      .ring-kumo-line { --tw-ring-color: var(--color-kumo-line); }
+    `
+    const out = buildRecolorOverrideStylesheet(css)
+    expect(out).toContain(
+      `--color-kumo-line: var(${CSS_VAR_PAGE_BORDER}) !important`,
+    )
+  })
 })

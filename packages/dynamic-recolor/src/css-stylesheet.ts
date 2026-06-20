@@ -4,7 +4,7 @@
  * §5.3：整表改色走 `batchModifyColors` 单次 WASM，禁逐色过桥。
  */
 
-import { ROOT_ATTR } from '@change-dark/extension-settings'
+import { ROOT_ATTR, CSS_VAR_PAGE_BORDER } from '@change-dark/extension-settings'
 import { formatRgbHex, parseCssColorToken } from './color-parse'
 import { recolorBackgroundImageDeclaration } from './background-image-css'
 import { recolorBorderShorthandDeclaration } from './border-css'
@@ -82,6 +82,9 @@ function planDeclarationRecolor(property: string, rawValue: string): Declaration
   const val = stripImportant(rawValue)
   const lightDarkLiteral = recolorLightDarkToPaletteVar(val)
   if (lightDarkLiteral) {
+    if (prop.startsWith('--') && /-line|-hairline|-ring|-stroke|-divider|-border/i.test(prop)) {
+      return { prop, literal: `var(${CSS_VAR_PAGE_BORDER})` }
+    }
     return { prop, literal: lightDarkLiteral }
   }
   const use = colorUseForCssProperty(prop)

@@ -29,10 +29,25 @@ describe('buildDarkCss', () => {
     expect(sheet).toContain('scrollbar-width: thin')
   })
 
-  it('包含 page-border 分隔色变量', () => {
+  it('包含 page-border / surface / input 变量', () => {
     const sheet = buildDarkCss('rgb(0, 43, 54)', 'rgb(147, 161, 161)')
     expect(sheet).toContain('--cd-page-border')
-    expect(sheet).toContain('color-mix(in srgb, var(--cd-page-bg) 68%, black)')
+    expect(sheet).toContain('--cd-page-surface')
+    expect(sheet).toContain('--cd-page-input-bg')
+    expect(sheet).toContain(
+      'color-mix(in srgb, var(--cd-page-fg) 82%, var(--cd-page-bg))',
+    )
+  })
+
+  it('传入 derived 时使用字面量 border/surface/input', () => {
+    const sheet = buildDarkCss('rgb(0, 43, 54)', 'rgb(147, 161, 161)', undefined, {
+      pageBorder: 'rgb(101, 123, 131)',
+      pageSurface: 'rgb(7, 54, 66)',
+      pageInputBg: 'rgb(0, 31, 39)',
+    })
+    expect(sheet).toContain('--cd-page-border: rgb(101, 123, 131)')
+    expect(sheet).toContain('--cd-page-surface: rgb(7, 54, 66)')
+    expect(sheet).toContain('--cd-page-input-bg: rgb(0, 31, 39)')
   })
 
   it('非中性滤镜时注入 filter', () => {
@@ -136,5 +151,7 @@ describe('buildThemePaletteShellCss（RFC 032 引擎主题壳）', () => {
     expect(shell).toContain('bg-kumo-base')
     expect(shell).toContain(CSS_VAR_PAGE_BORDER)
     expect(shell).toContain('ring-kumo')
+    expect(shell).toContain('--cd-page-input-bg')
+    expect(shell).toContain('main input')
   })
 })

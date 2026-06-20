@@ -62,6 +62,18 @@ export const CD_THEME_SHELL_NEUTRAL_LINE_UTILITY_SELECTORS = [
   '[class*="border-neutral"]',
   '[class*="ring-kumo-line"]',
   '[class*="ring-kumo-hairline"]',
+  'main [class*="ring-"]',
+  'main button[class*="border"]',
+  'main button[class*="ring"]',
+  'header [class*="bg-kumo-base"]',
+  'header a[class*="border"]',
+].join(', ') as const
+
+/** 表单控件：input / textarea / select（Cloudflare Kumo 登录框）。 */
+export const CD_THEME_SHELL_FORM_CONTROL_SELECTORS = [
+  'main input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"])',
+  'main textarea',
+  'main select',
 ].join(', ') as const
 
 /**

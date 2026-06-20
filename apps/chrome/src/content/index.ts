@@ -46,7 +46,7 @@ import {
   readGlobalPolicy,
   readAutoDarkThreshold,
   sanitizeSiteCustomCss,
-  resolvePageColorsForPalette,
+  resolveThemePageCssValues,
 } from '@change-dark/extension-settings'
 import {
   buildStaticDarkCss,
@@ -97,13 +97,22 @@ function buildSampledPalette(
   budget: SamplingBudget,
 ): { baseCss: string; theme: ResolvedThemePalette } {
   const { rgb: baseRgb } = resolveDynamicBaseRgbWithBranch(budget)
-  const { pageBg, pageFg } = resolvePageColorsForPalette(
+  const themeValues = resolveThemePageCssValues(
     pagePalette,
     mixBackgroundAndForegroundFromBase(baseRgb),
   )
   return {
-    baseCss: buildStaticDarkCss(pageBg, pageFg, themeFilters),
-    theme: resolveThemePalette(pagePalette, pageBg, pageFg),
+    baseCss: buildStaticDarkCss(
+      themeValues.pageBg,
+      themeValues.pageFg,
+      themeFilters,
+      {
+        pageBorder: themeValues.pageBorder,
+        pageSurface: themeValues.pageSurface,
+        pageInputBg: themeValues.pageInputBg,
+      },
+    ),
+    theme: resolveThemePalette(pagePalette, themeValues.pageBg, themeValues.pageFg),
   }
 }
 

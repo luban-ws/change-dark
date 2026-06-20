@@ -2,6 +2,8 @@ import {
   CSS_VAR_PAGE_BG,
   CSS_VAR_PAGE_BORDER,
   CSS_VAR_PAGE_FG,
+  CSS_VAR_PAGE_INPUT_BG,
+  CSS_VAR_PAGE_SURFACE,
   ROOT_ATTR,
   STYLE_ELEMENT_CUSTOM_CSS_ID,
   STYLE_ELEMENT_ID,
@@ -18,14 +20,17 @@ import {
   CD_THEME_SHELL_HEADER_NAV_ACTIVE_SELECTORS,
   CD_THEME_SHELL_NEUTRAL_SURFACE_UTILITY_SELECTORS,
   CD_THEME_SHELL_NEUTRAL_LINE_UTILITY_SELECTORS,
+  CD_THEME_SHELL_FORM_CONTROL_SELECTORS,
   CD_MEDIA_ELEMENT_SELECTORS,
 } from '@change-dark/extension-settings'
+import type { ThemePageDerivedColors } from '@change-dark/extension-settings'
 
 /** 根据 WASM 计算出的颜色生成最小侵入的全局样式；可选 RFC 011 `filter` 链。 */
 export function buildDarkCss(
   pageBg: string,
   pageFg: string,
   themeFilters?: ThemeFiltersStateV1,
+  derived?: ThemePageDerivedColors,
 ): string {
   const tf = themeFilters ? clampThemeFilters(themeFilters) : undefined
   const filterBlock =
@@ -33,11 +38,23 @@ export function buildDarkCss(
       ? `filter: ${buildThemeFilterValue(tf)} !important;`
       : ''
 
+  const pageBorder =
+    derived?.pageBorder ??
+    `color-mix(in srgb, var(${CSS_VAR_PAGE_FG}) 82%, var(${CSS_VAR_PAGE_BG}))`
+  const pageSurface =
+    derived?.pageSurface ??
+    `color-mix(in srgb, var(${CSS_VAR_PAGE_FG}) 24%, var(${CSS_VAR_PAGE_BG}))`
+  const pageInputBg =
+    derived?.pageInputBg ??
+    `color-mix(in srgb, var(${CSS_VAR_PAGE_BG}) 65%, black)`
+
   return `
     :root {
       ${CSS_VAR_PAGE_BG}: ${pageBg};
       ${CSS_VAR_PAGE_FG}: ${pageFg};
-      ${CSS_VAR_PAGE_BORDER}: color-mix(in srgb, var(${CSS_VAR_PAGE_BG}) 68%, black);
+      ${CSS_VAR_PAGE_BORDER}: ${pageBorder};
+      ${CSS_VAR_PAGE_SURFACE}: ${pageSurface};
+      ${CSS_VAR_PAGE_INPUT_BG}: ${pageInputBg};
       --cd-scrollbar-track: color-mix(in srgb, var(${CSS_VAR_PAGE_BG}) 88%, black);
       --cd-scrollbar-thumb: color-mix(in srgb, var(${CSS_VAR_PAGE_FG}) 45%, var(${CSS_VAR_PAGE_BG}));
       color-scheme: dark !important;
@@ -77,8 +94,9 @@ export function buildStaticDarkCss(
   pageBg: string,
   pageFg: string,
   themeFilters?: ThemeFiltersStateV1,
+  derived?: ThemePageDerivedColors,
 ): string {
-  const base = buildDarkCss(pageBg, pageFg, themeFilters)
+  const base = buildDarkCss(pageBg, pageFg, themeFilters, derived)
   return `${base}
     html[${ROOT_ATTR}] ${CD_TEXT_LIKE_SELECTORS} {
       color: var(${CSS_VAR_PAGE_FG}) !important;
@@ -161,14 +179,25 @@ export function buildThemePaletteShellCss(): string {
       color: var(${CSS_VAR_PAGE_FG}) !important;
     }
     html[${ROOT_ATTR}] ${CD_THEME_SHELL_NEUTRAL_SURFACE_UTILITY_SELECTORS} {
-      background-color: var(${CSS_VAR_PAGE_BG}) !important;
+      background-color: var(${CSS_VAR_PAGE_SURFACE}) !important;
       border-color: var(${CSS_VAR_PAGE_BORDER}) !important;
+      box-shadow: 0 0 0 2px var(${CSS_VAR_PAGE_BORDER}) !important;
+      outline: 1px solid var(${CSS_VAR_PAGE_BORDER}) !important;
+      outline-offset: -1px;
     }
     html[${ROOT_ATTR}] ${CD_THEME_SHELL_NEUTRAL_LINE_UTILITY_SELECTORS} {
       border-color: var(${CSS_VAR_PAGE_BORDER}) !important;
       outline-color: var(${CSS_VAR_PAGE_BORDER}) !important;
       --tw-ring-color: var(${CSS_VAR_PAGE_BORDER}) !important;
-      --tw-ring-offset-color: var(${CSS_VAR_PAGE_BG}) !important;
+      --tw-ring-offset-color: var(${CSS_VAR_PAGE_SURFACE}) !important;
+      box-shadow: 0 0 0 1px var(${CSS_VAR_PAGE_BORDER}) !important;
+    }
+    html[${ROOT_ATTR}] ${CD_THEME_SHELL_FORM_CONTROL_SELECTORS} {
+      background-color: var(${CSS_VAR_PAGE_INPUT_BG}) !important;
+      border-color: var(${CSS_VAR_PAGE_BORDER}) !important;
+      color: var(${CSS_VAR_PAGE_FG}) !important;
+      --tw-ring-color: var(${CSS_VAR_PAGE_BORDER}) !important;
+      box-shadow: 0 0 0 1px var(${CSS_VAR_PAGE_BORDER}) !important;
     }
   `.trim()
 }
