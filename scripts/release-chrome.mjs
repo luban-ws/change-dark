@@ -8,7 +8,7 @@
  *   pnpm release:chrome -- --bump patch --commit
  *   pnpm release:chrome -- --dry-run
  */
-import { execSync, spawnSync } from 'node:child_process'
+import { execFileSync, execSync, spawnSync } from 'node:child_process'
 import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -178,14 +178,16 @@ function isPkgDirty() {
 
 function gitNotesSinceLastTag() {
   try {
-    const last = execSync('git describe --tags --abbrev=0 2>/dev/null', {
+    const last = execSync('git', ['describe', '--tags', '--abbrev=0'], {
       cwd: repoRoot,
       encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
     }).trim()
-    const log = execSync(`git log ${last}..HEAD --pretty=format:%h %s`, {
-      cwd: repoRoot,
-      encoding: 'utf8',
-    }).trim()
+    const log = execFileSync(
+      'git',
+      ['log', `${last}..HEAD`, '--pretty=format:%h %s'],
+      { cwd: repoRoot, encoding: 'utf8' },
+    ).trim()
     return log ? `Changes since ${last}:\n\n${log}` : `Release ${tagName(readPkg().version)}`
   } catch {
     return `Release ${tagName(readPkg().version)}`

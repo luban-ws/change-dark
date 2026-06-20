@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { describe, expect, it, beforeEach } from 'vitest'
+import { describe, expect, it, beforeEach, vi } from 'vitest'
 
 import { THEME_PAGE_BACKGROUND_CSS } from '@change-dark/extension-settings'
 import { sweepDocumentLightSurfaces } from '../document-light-surface-sweep'
@@ -75,6 +75,20 @@ describe('shouldPaintOpaqueLightSurface', () => {
     mockRect(panel, 500, 300, 50, 50)
     document.body.appendChild(panel)
     expect(shouldPaintOpaqueLightSurface(panel)).toBe(true)
+  })
+
+  it('computed 为空时回退 inline background-color（jsdom/Linux CI）', () => {
+    const footer = document.createElement('footer')
+    footer.style.backgroundColor = 'rgb(248, 249, 250)'
+    document.body.appendChild(footer)
+
+    vi.spyOn(window, 'getComputedStyle').mockReturnValue({
+      backgroundColor: '',
+      backgroundImage: 'none',
+    } as CSSStyleDeclaration)
+
+    expect(shouldPaintOpaqueLightSurface(footer)).toBe(true)
+    vi.restoreAllMocks()
   })
 })
 

@@ -25,7 +25,7 @@ export function relativeSurfaceLuma(rgb: readonly [number, number, number]): num
 
 export function parseBackgroundAlpha(input: string): number {
   const color = input.trim().toLowerCase()
-  if (color === 'transparent') return 0
+  if (!color || color === 'transparent') return 0
   if (color.startsWith('rgba(')) {
     const alphaPart = color.slice(color.lastIndexOf(',') + 1, -1).trim()
     if (alphaPart.endsWith('%')) return parseFloat(alphaPart) / 100
@@ -33,6 +33,22 @@ export function parseBackgroundAlpha(input: string): number {
     return Number.isFinite(alpha) ? alpha : 1
   }
   return 1
+}
+
+/** jsdom / 部分环境 computed background 为空时回退 inline style。 */
+function readInlineBackgroundColor(el: HTMLElement): string {
+  const direct = el.style.backgroundColor?.trim()
+  if (direct) return direct
+  const bg = el.style.background?.trim()
+  if (!bg || bg === 'transparent') return bg ?? ''
+  if (/^(rgb|rgba|#|hsl)/i.test(bg)) return bg
+  return ''
+}
+
+function resolveAuthorBackgroundColor(el: HTMLElement, cs: CSSStyleDeclaration): string {
+  const computed = cs.backgroundColor?.trim() ?? ''
+  if (parseBackgroundAlpha(computed) >= OPAQUE_ALPHA_MIN) return computed
+  return readInlineBackgroundColor(el) || computed
 }
 
 export function shouldSkipLightSurfaceTarget(el: HTMLElement): boolean {
@@ -60,7 +76,7 @@ export function isTransparentLayoutSurface(
   if (hasAuthorBackgroundImage(el, styleCache)) return true
   const cs = styleCache?.get(el) ?? getComputedStyle(el)
   if (styleCache && !styleCache.has(el)) styleCache.set(el, cs)
-  return parseBackgroundAlpha(cs.backgroundColor) < OPAQUE_ALPHA_MIN
+  return parseBackgroundAlpha(resolveAuthorBackgroundColor(el, cs)) < OPAQUE_ALPHA_MIN
 }
 
 export function hasOpaqueLightFill(
@@ -70,7 +86,7 @@ export function hasOpaqueLightFill(
   if (isTransparentLayoutSurface(el, styleCache)) return false
   const cs = styleCache?.get(el) ?? getComputedStyle(el)
   if (styleCache && !styleCache.has(el)) styleCache.set(el, cs)
-  const triplet = parseCssRgbToTriplet(cs.backgroundColor)
+  const triplet = parseCssRgbToTriplet(resolveAuthorBackgroundColor(el, cs))
   if (!triplet) return false
   return relativeSurfaceLuma(triplet) > LIGHT_SURFACE_LUMA
 }
