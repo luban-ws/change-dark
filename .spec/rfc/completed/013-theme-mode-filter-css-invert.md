@@ -43,7 +43,7 @@
 | 媒体 | `buildFilterInvertMediaSelectorList`：`img` / `picture` / `svg` / `video` / `audio` / `canvas` / `object` / `embed` / `iframe` / `[role="img"]` 使用同链再反相，抵消整页反相对 replaced 内容的大致观感（2026-04-19 起与 RFC 027 对齐） |
 | 边界 | **`iframe` 元素**：父文档中对 iframe **框** 做媒体补偿；**跨域子文档**内仍须各自内容脚本注入。**shadow DOM**：继承宿主文档注入，封闭 shadow 内样式不由此表覆盖（最小可行） |
 | Popup | 第三项「Filter（CSS 反相）」+ 性能/已暗站点/滤镜顺序/iframe 提示 |
-| 实现 | `buildFilterInvertCss` + `resolveFilterCssInjectionScope` + `buildFilterInvertMediaSelectorList`（`packages/shared/src/css.ts`）；内容脚本 `THEME_MODE_FILTER_CSS` 分支无 WASM |
+| 实现 | `buildFilterInvertCss` + `resolveFilterCssInjectionScope` + `buildFilterInvertMediaSelectorList`（`packages/injected-styles/src/css.ts`，原 monolith `packages/shared`）；内容脚本 `THEME_MODE_FILTER_CSS` 分支无 WASM（**RFC 032 后已移除 Filter 用户模式**） |
 | 原生已暗 | **不注入**本模式：`POLICY_AUTO` 时与全模式一同提前退出；`POLICY_ON` 时仍禁止 Filter（反相），Dynamic/Static 可注入（RFC 025）。 |
 
 ## Known issues

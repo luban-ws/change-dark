@@ -42,7 +42,7 @@
 | **Dynamic（WASM 采色）** | ✅ | ⏭ | ✅ | ✅ | ❌ |
 | **Static（固定样式）** | ✅ | ⏭ | ✅ | ✅ | ❌ |
 
-**原生暗判定**：`measureNativelyDarkSnapshot`（内容脚本）→ `isNativelyDarkFromHtmlBodyBackgrounds`（`packages/shared/src/native-dark-surface.ts`），阈值来自存储而非硬编码 80。
+**原生暗判定**：`measureNativelyDarkSnapshot`（内容脚本）→ `isNativelyDarkFromHtmlBodyBackgrounds`（`packages/extension-settings/src/native-dark-surface.ts`），阈值来自存储而非硬编码 80。
 
 **页面调色板**：与上表正交；`dark` 与 `solarized-dark` 在 **凡写入底/字色或 Filter 壳层** 的路径上必须一致（`readEffectivePagePaletteForPage()` → `buildFilterInvertCss` / `buildFilterPlusCss` / `colorsForPalette` 等）。
 

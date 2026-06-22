@@ -2,7 +2,7 @@
 
 **English:** A **Chromium (Manifest V3)** extension that applies a **forced dark appearance** to websites. Heavy color math runs in **Rust → WebAssembly**; the host UI, content scripts, and bundling are **TypeScript** with **Vite** and [**CRXJS**](https://github.com/crxjs/chrome-extension-tools).
 
-**中文：** 在网页上注入暗色样式与主题策略；配色聚合、亮度聚类等在 **WASM** 中完成，扩展侧为 MV3 + 存储策略，规格以 **`docs/rfc/`** 为准（一事一 RFC）。
+**中文：** 在网页上注入暗色样式与主题策略；配色聚合、亮度聚类等在 **WASM** 中完成，扩展侧为 MV3 + 存储策略，规格以 **`.spec/rfc/`** 为准（一事一 RFC）。**产品仅保留 Dynamic 模式**（RFC 032）。
 
 ---
 
@@ -14,12 +14,13 @@
 
 | 能力 | 说明 |
 |------|------|
-| **Dynamic** | 视口采样 + `kMeansDarkerCentroid`（亮度轴 Lloyd、Otsu 候选、暗分位回退等），见 [RFC 023](docs/rfc/023-dynamic-color-engine-pipeline.md) |
-| **Static** | 固定基色，无采样，见 [RFC 015](docs/rfc/015-theme-mode-static.md) |
-| **Filter / Filter+** | CSS 反相或 SVG 滤镜路径，见 [RFC 013](docs/rfc/013-theme-mode-filter-css-invert.md)、[RFC 014](docs/rfc/014-theme-mode-filter-plus-svg.md) |
-| **全局策略** | On/Off 与工具栏一致，见 [RFC 008](docs/rfc/008-global-on-off-policy.md) |
-| **按站覆盖** | Only for、站点列表与 pattern，见 [RFC 016](docs/rfc/016-only-for-per-site-overrides.md)、[RFC 017](docs/rfc/017-site-list-patterns-regex.md) |
-| **页面配色 / 字体** | Solarized 等页面调色板、字体与描边，见 [RFC 022](docs/rfc/022-solarized-dark-popup-ui.md)、[RFC 018](docs/rfc/018-font-and-text-stroke.md) |
+| **Dynamic** | 视口采样 + stylesheet/inline 改色 + WASM `modifyColor`；见 [RFC 023](.spec/rfc/completed/023-dynamic-color-engine-pipeline.md)、[RFC 031](.spec/rfc/completed/031-dynamic-recolor-engine.md) |
+| **全局策略** | Auto / On / Off，见 [RFC 008](.spec/rfc/completed/008-global-on-off-policy.md) |
+| **按站覆盖** | Only for、站点列表与 pattern，见 [RFC 016](.spec/rfc/completed/016-only-for-per-site-overrides.md)、[RFC 017](.spec/rfc/completed/017-site-list-patterns-regex.md) |
+| **页面配色 / 字体** | Solarized 等页面调色板、字体与描边，见 [RFC 022](.spec/rfc/completed/022-solarized-dark-popup-ui.md)、[RFC 018](.spec/rfc/completed/018-font-and-text-stroke.md) |
+| **站点 catalog** | 跨站 surface repair / recolor profile，见 [RFC 034](.spec/rfc/034-site-profile-catalog.md) |
+
+> Static、Filter、Filter+ 已于 [RFC 032](.spec/rfc/completed/032-theme-mode-product-consolidation.md) 从产品中移除（历史 RFC 仍保留在 `.spec/rfc/completed/`）。
 
 行为上可参考 [Dark Reader Help](https://darkreader.org/help/en/)，实现为独立代码路径，非 fork。
 
@@ -27,11 +28,15 @@
 
 | 路径 | 职责 |
 |------|------|
-| `apps/chrome/` | 扩展：MV3 service worker、content scripts、Popup/Options；Vite + CRXJS → `apps/chrome/dist` |
-| `apps/site/` | 落地页（React + Vite）：产品介绍、选项页截图、`RFC` 链接；见 [RFC 020](docs/rfc/020-github-pages-site.md)；静态资源如 `apps/site/public/popup-options.png` |
-| `packages/dark-engine/` | `wasm-pack` → gitignored `pkg/` → Vite → **`dist/`**（WASM 内联进 `index.mjs`；`finish-dist.mjs` 生成类型与 CJS 桥） |
-| `packages/dark-color-utils/` | Rust crate `dark_color_utils`（单元测试）；供 `dark-engine` 与宿主引用 |
-| `docs/rfc/` | 规格正文（`NNN-*.md`）；**RFC 索引与路线图**见 [ROADMAP.md](ROADMAP.md) |
+| `apps/chrome/` | 扩展：MV3 service worker、content scripts、Popup；`@change-dark/chrome` |
+| `apps/site/` | 落地页（React + Vite）；`@change-dark/site` |
+| `packages/dark-engine/` | Rust/WASM 颜色计算；`@change-dark/dark-engine` |
+| `packages/dark-color-utils/` | Rust 颜色算法 crate（单元测试） |
+| `packages/dynamic-recolor/` | Stylesheet/inline 改色、`light-dark()`、WASM glue；`@change-dark/dynamic-recolor` |
+| `packages/injected-styles/` | `buildDarkCss`、theme shell、`<style>` 注入；`@change-dark/injected-styles` |
+| `packages/extension-settings/` | 常量、选择器、palette、storage；`@change-dark/extension-settings` |
+| `packages/site-catalog/` | 站点 profile catalog（RFC 034）；`@change-dark/site-catalog` |
+| `.spec/rfc/` | 规格正文；**RFC 索引**见 [ROADMAP.md](ROADMAP.md) |
 | `.github/workflows/ci.yml` | 全仓 `pnpm` install、`build`、`test`、`lint`（含 `wasm32-unknown-unknown`） |
 | `.github/workflows/deploy-github-pages.yml` | 仅构建 `@change-dark/site` 并部署 **GitHub Pages** |
 
@@ -75,10 +80,10 @@ pnpm --filter @change-dark/site dev   # 仅预览落地页
 | 文档 | 内容 |
 |------|------|
 | [ROADMAP.md](ROADMAP.md) | **RFC 索引**、约定、下一编号、阶段与里程碑 |
-| [RFC 001](docs/rfc/001-rust-wasm-monorepo-and-chrome-host.md) | 架构基线（Approved） |
-| [RFC 023](docs/rfc/023-dynamic-color-engine-pipeline.md) | Dynamic 配色管线（采样 / 聚合语义） |
+| [RFC 001](.spec/rfc/completed/001-rust-wasm-monorepo-and-chrome-host.md) | 架构基线（Approved） |
+| [RFC 023](.spec/rfc/completed/023-dynamic-color-engine-pipeline.md) | Dynamic 配色管线（采样 / 聚合语义） |
 | [TASK_TRACKING.md](TASK_TRACKING.md) | 任务 ID 与 RFC 对应 |
-| [RFC 021](docs/rfc/021-project-status-and-backlog.md) | 状态快照与 backlog（元文档） |
+| [RFC 021](.spec/rfc/completed/021-project-status-and-backlog.md) | 状态快照与 backlog（元文档） |
 | [docs/chrome-web-store-listing.md](docs/chrome-web-store-listing.md) | Chrome 网上应用店：政策对齐、隐私 URL、权限英文稿、素材规格、ZIP 说明 |
 | [docs/chrome-web-store-publish.md](docs/chrome-web-store-publish.md) | **发布步骤**：开发者账号、`pack`、后台上传/更新、（可选）Publish API |
 
@@ -91,7 +96,7 @@ pnpm --filter @change-dark/site dev   # 仅预览落地页
 - **`@change-dark/chrome`**：CRXJS + Vite → `apps/chrome/dist`。
 - **`@change-dark/site`**：React 静态站 → `apps/site/dist`。
 
-Scope：**`@change-dark/*`**。
+Scope：**`@change-dark/*`**（workspace 内 `private: true`，不发布 npm）。
 
 ## License
 

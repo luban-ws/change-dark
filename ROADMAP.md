@@ -19,53 +19,53 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 
 | RFC | 标题 | 状态 |
 |-----|------|------|
-| [001](./docs/rfc/completed/001-rust-wasm-monorepo-and-chrome-host.md) | Rust/WASM 核心与 Chrome 宿主 monorepo | ✅ |
+| [001](./.spec/rfc/completed/001-rust-wasm-monorepo-and-chrome-host.md) | Rust/WASM 核心与 Chrome 宿主 monorepo | ✅ |
 
 ### 算法与扩展能力（T-010～T-013）
 
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
-| [004](./docs/rfc/completed/004-policy-storage-migration-from-enabled-boolean.md) | T-010 | 策略存储与 `enabled` 迁移 | ✅ |
-| [005](./docs/rfc/completed/005-wasm-batch-color-api.md) | T-011 | WASM 批颜色 API | ✅ |
-| [006](./docs/rfc/completed/006-content-script-sampling-budget-fallback.md) | T-012 | 采样、预算、回退 | ✅ |
-| [007](./docs/rfc/completed/007-popup-options-minimal-ui.md) | T-013 | Popup / Options 最小 UI | ✅ |
+| [004](./.spec/rfc/completed/004-policy-storage-migration-from-enabled-boolean.md) | T-010 | 策略存储与 `enabled` 迁移 | ✅ |
+| [005](./.spec/rfc/completed/005-wasm-batch-color-api.md) | T-011 | WASM 批颜色 API | ✅ |
+| [006](./.spec/rfc/completed/006-content-script-sampling-budget-fallback.md) | T-012 | 采样、预算、回退 | ✅ |
+| [007](./.spec/rfc/completed/007-popup-options-minimal-ui.md) | T-013 | Popup / Options 最小 UI | ✅ |
 
 ### 产品能力（T-020～T-031）
 
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
-| [008](./docs/rfc/completed/008-global-on-off-policy.md) | T-020 | 全局 On/Off（Auto/On/Off 三态策略） | ✅ |
-| [009](./docs/rfc/completed/009-toggle-site-ignore-list.md) | T-021 | Toggle site / 忽略列表 | ✅ |
-| [010](./docs/rfc/completed/010-extension-hotkeys.md) | T-022 | 快捷键 | ✅ |
-| [011](./docs/rfc/completed/011-theme-filter-sliders.md) | T-023 | 滤镜滑块 | ✅ |
-| [012](./docs/rfc/completed/012-theme-mode-dynamic.md) | T-024 | Dynamic 模式 | ✅ |
-| [013](./docs/rfc/completed/013-theme-mode-filter-css-invert.md) | T-025 | Filter（CSS 反相） | ✅ |
-| [014](./docs/rfc/completed/014-theme-mode-filter-plus-svg.md) | T-026 | Filter+（SVG） | ✅ |
-| [015](./docs/rfc/completed/015-theme-mode-static.md) | T-027 | Static 模式 | ✅ |
-| [016](./docs/rfc/completed/016-only-for-per-site-overrides.md) | T-028 | Only for / 按站覆盖 | ✅ |
-| [017](./docs/rfc/completed/017-site-list-patterns-regex.md) | T-029 | 站点列表 pattern/regex | ✅ |
-| [018](./docs/rfc/completed/018-font-and-text-stroke.md) | T-030 | 字体与文本描边 | ✅ |
-| [019](./docs/rfc/completed/019-per-site-css-selector-fixes.md) | T-031 | 每站 CSS 选择器修复 | ✅ |
+| [008](./.spec/rfc/completed/008-global-on-off-policy.md) | T-020 | 全局 On/Off（Auto/On/Off 三态策略） | ✅ |
+| [009](./.spec/rfc/completed/009-toggle-site-ignore-list.md) | T-021 | Toggle site / 忽略列表 | ✅ |
+| [010](./.spec/rfc/completed/010-extension-hotkeys.md) | T-022 | 快捷键 | ✅ |
+| [011](./.spec/rfc/completed/011-theme-filter-sliders.md) | T-023 | 滤镜滑块 | ✅ |
+| [012](./.spec/rfc/completed/012-theme-mode-dynamic.md) | T-024 | Dynamic 模式 | ✅ |
+| [013](./.spec/rfc/completed/013-theme-mode-filter-css-invert.md) | T-025 | Filter（CSS 反相） | ✅ |
+| [014](./.spec/rfc/completed/014-theme-mode-filter-plus-svg.md) | T-026 | Filter+（SVG） | ✅ |
+| [015](./.spec/rfc/completed/015-theme-mode-static.md) | T-027 | Static 模式 | ✅ |
+| [016](./.spec/rfc/completed/016-only-for-per-site-overrides.md) | T-028 | Only for / 按站覆盖 | ✅ |
+| [017](./.spec/rfc/completed/017-site-list-patterns-regex.md) | T-029 | 站点列表 pattern/regex | ✅ |
+| [018](./.spec/rfc/completed/018-font-and-text-stroke.md) | T-030 | 字体与文本描边 | ✅ |
+| [019](./.spec/rfc/completed/019-per-site-css-selector-fixes.md) | T-031 | 每站 CSS 选择器修复 | ✅ |
 
 ### 发布与站点
 
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
-| [020](./docs/rfc/completed/020-github-pages-site.md) | T-032 | GitHub Pages 落地页（`apps/site`） | ✅ |
+| [020](./.spec/rfc/completed/020-github-pages-site.md) | T-032 | GitHub Pages 落地页（`apps/site`） | ✅ |
 
 ### UI / 品牌
 
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
-| [022](./docs/rfc/completed/022-solarized-dark-popup-ui.md) | T-034 | Popup / Options：Solarized Dark 配色 | ✅ |
-| [024](./docs/rfc/completed/024-popup-modernization-radix-ui-auto-dark-detection.md) | T-036 | Popup 现代化：Radix UI + 嫦娥品牌 + Auto 智能检测 | ✅ |
+| [022](./.spec/rfc/completed/022-solarized-dark-popup-ui.md) | T-034 | Popup / Options：Solarized Dark 配色 | ✅ |
+| [024](./.spec/rfc/completed/024-popup-modernization-radix-ui-auto-dark-detection.md) | T-036 | Popup 现代化：Radix UI + 嫦娥品牌 + Auto 智能检测 | ✅ |
 
 ### 设计记录
 
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
-| [023](./docs/rfc/completed/023-dynamic-color-engine-pipeline.md) | T-035 | Dynamic 配色管线：采样、聚合语义讨论 | ✅ |
-| [025](./docs/rfc/completed/025-policy-mode-behavior-matrix.md) | T-037 | 策略×模式行为矩阵：Auto/On/Off × Filter/Filter+/Dynamic/Static | ✅ |
+| [023](./.spec/rfc/completed/023-dynamic-color-engine-pipeline.md) | T-035 | Dynamic 配色管线：采样、聚合语义讨论 | ✅ |
+| [025](./.spec/rfc/completed/025-policy-mode-behavior-matrix.md) | T-037 | 策略×模式行为矩阵：Auto/On/Off × Filter/Filter+/Dynamic/Static | ✅ |
 | [031](./.spec/rfc/completed/031-dynamic-recolor-engine.md) | T-044 | Dynamic 逐规则改色（Rust/WASM）；Phase 1 ✅ | ✅ |
 | [026](./.spec/rfc/completed/026-e2e-testing-strategy.md) | T-039 | E2E：**仅 Dynamic** | ✅ |
 | [029](./.spec/rfc/completed/029-theme-mode-dynamic-refinement.md) | T-042 | Dynamic **唯一产品** | ✅ |

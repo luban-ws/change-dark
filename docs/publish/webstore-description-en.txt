@@ -10,7 +10,7 @@ Selena is a high-performance dark mode extension powered by advanced on-device c
 
 ● Zero-Tracking Privacy: Built on the modern Manifest V3 platform, Selena is committed to a privacy-first experience. All rule processing and style calculations run 100% locally on your computer—no browsing data ever leaves your device.
 
-● Granular Per-Site Control: Fine-tune your experience for individual domains. Choose between Dynamic (sampling), Static (base colors), or Filter modes to perfectly match the reading atmosphere for every site you visit.
+● Granular Per-Site Control: Fine-tune your experience for individual domains with per-origin overrides, whitelist/blacklist patterns, and optional site-specific CSS fixes.
 
 【 Key Features 】
 

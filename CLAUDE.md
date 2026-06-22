@@ -11,7 +11,7 @@ Chrome extension + monorepo for **Dynamic-only** dark mode (RFC 031). Workspace 
 | `packages/injected-styles` | `buildDarkCss`, theme shell, style element injection |
 | `packages/extension-settings` | Constants, selectors, palette, storage |
 | `packages/dark-engine` | Rust/WASM color parse + modify |
-| `docs/rfc/` | Specs; completed → `docs/rfc/completed/` |
+| `.spec/rfc/` | Specs; completed → `.spec/rfc/completed/` |
 
 ## Theme = palette contract
 

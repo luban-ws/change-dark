@@ -2,4 +2,4 @@
 
 The single, specific purpose of the "Selena" extension is to "Provide a high-fidelity forced dark appearance for any website to enhance readability and vision protection."
 
-All included features—specifically global dark-mode toggling, per-site override configuration, and multiple theme modes (Dynamic, Static, and Filter)—are exclusively designed to achieve this core aesthetic goal. The extension contains no unrelated functionalities and does not perform any tasks outside of styling and local color analysis. We are committed to a clean, single-purpose browsing utility as defined by the Chrome Web Store Program Policies.
+All included features—specifically global dark-mode toggling, per-site override configuration, and the Dynamic recolor engine—are exclusively designed to achieve this core aesthetic goal. The extension contains no unrelated functionalities and does not perform any tasks outside of styling and local color analysis. We are committed to a clean, single-purpose browsing utility as defined by the Chrome Web Store Program Policies.

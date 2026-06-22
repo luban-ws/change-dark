@@ -2,7 +2,7 @@
 
 1. Storage Permission (storage):
 Justification: This permission is essential for local preference persistence across browser sessions.
-Specific Usage: The extension uses the storage API to save and retrieve user settings such as the global on/off state, selected theme modes (e.g., Dynamic or Static), and origin-specific override rules. This ensures a consistent user experience while respecting the user's custom reading environment.
+Specific Usage: The extension uses the storage API to save and retrieve user settings such as the global on/off state, page palette preferences, and origin-specific override rules. This ensures a consistent user experience while respecting the user's custom reading environment.
 
 2. Host Permissions (<all_urls> or broad wildcard):
 Justification: The core utility of "Selena" is to provide instant, high-fidelity dark mode rendering across any URL the user navigates to.

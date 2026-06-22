@@ -159,7 +159,7 @@ content/index.ts (applyForcedDark)
         ├─ suggested_foreground_for_dark_bg(...)  ← WASM
         │  └─ 返回前景色建议
         │
-        └─ buildStaticDarkCss(pageBg, pageFg)  ← @change-dark/extension-settings (TS)
+        └─ buildStaticDarkCss(pageBg, pageFg)  ← @change-dark/injected-styles (TS)
            └─ 注入 <style> 到页面
 ```
 

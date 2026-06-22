@@ -4,8 +4,8 @@
  *
  * live `darkreader` npm 不导出 `modifyColor`；向量以 `dark-color-utils` 为准。
  *
- * 用法（须在 `packages/shared` 目录，以便 WASM 模块解析）：
- *   cd packages/shared && node scripts/calibrate-modify-color-golden.mjs
+ * 用法（须在 `packages/dynamic-recolor` 目录，以便 WASM 模块解析）：
+ *   cd packages/dynamic-recolor && node scripts/calibrate-modify-color-golden.mjs
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'

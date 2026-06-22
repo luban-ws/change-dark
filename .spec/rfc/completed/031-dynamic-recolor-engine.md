@@ -197,7 +197,7 @@ DR issue #2583 未解，因为这是**架构分叉**，不是细节：引擎看�
 | S2 | 1 张 `<style>` 全规则 | golden CSS 文件 in→out 快照 | stylesheet 重写通 | ✅ **完成** |
 | S3 | 整页所有 `styleSheets` + 注入覆盖 | fixture 页观感对 | P1-1 达成 | ✅ **完成** |
 
-**S0 落地**（2026-06-06，2026-06-07 改色下沉 Rust）：改色真源 = **Rust/WASM** `dark-engine::modifyColor` / `batchModifyColor`（算法 `dark-color-utils`）。`packages/shared/src/modify-colors.ts` 仅留**类型 + HSL 工具 + 默认 profile**，`modifyColor()` 直调 WASM。§2.7 golden 向量已回填（`modify-color-golden.json` + Rust `golden_vectors_rfc_027`）。
+**S0 落地**（2026-06-06，2026-06-07 改色下沉 Rust）：改色真源 = **Rust/WASM** `dark-engine::modifyColor` / `batchModifyColor`（算法 `dark-color-utils`）。`packages/dynamic-recolor/src/modify-colors.ts` 仅留**类型 + HSL 工具 + 默认 profile**，`modifyColor()` 直调 WASM。§2.7 golden 向量已回填（`modify-color-golden.json` + Rust `golden_vectors_rfc_027`）。
 
 S0→S3 是骨架；P1-3（内联）、P1-4（MutationObserver）、P1-5（背景图）在骨架绿后并行加。
 
@@ -273,7 +273,7 @@ ColorProfile = {
 
 「Rust 批比 DR 的 TS 逐色快多少」需**基准量化**（典型重站：首屏改色总耗时、主线程阻塞 ms、ΔE 正确性同时记录）。基准用于**对外宣称领先幅度**与回归守门，不是「是否用 Rust」的开关——用 Rust 已定（§1.1）。
 
-**回归测试**（2026-06-07）：`modify-colors-perf.test.ts` — 500 色重复页，`batchModifyColors` 须快于逐色 loop；批去重输出与标量一致。Golden 校准脚本：`packages/shared/scripts/calibrate-modify-color-golden.mjs`（Rust 真源 ↔ JSON fixture ↔ WASM）。
+**回归测试**（2026-06-07）：`modify-colors-perf.test.ts` — 500 色重复页，`batchModifyColors` 须快于逐色 loop；批去重输出与标量一致。Golden 校准脚本：`packages/dynamic-recolor/scripts/calibrate-modify-color-golden.mjs`（Rust 真源 ↔ JSON fixture ↔ WASM）。
 
 ---
 
@@ -332,7 +332,7 @@ ColorProfile = {
 - 2026-06-07：**Phase 1 收尾**。§5.3 性能回归测 + golden 校准脚本；P1-1/P1-2 标 ✅；§5.1 全表 ✅。
 - 2026-06-06：**文档缺口修补**：§3.1 回退改为**写死决策树**（`paintSampledFallbackPath`，非 `paintStaticPath`；部分跨域局限明确）；§3.3 新增 **`modify-css` 层规格**（嵌套规则递归 `@media`/`@import`/keyframes/CSS nesting、覆盖式注入不原地改、Shadow DOM/跨域 iframe 列待办边界）；§8 风险「上万规则」与 §6 已决对齐；029 §3 用户口径更新为新引擎语义、§0 失效「§4.2」引用修正。
 - 2026-06-07：**§5.1.1 ColorProfile 全链路**。Rust `profile_for_tag` + WASM `profile_tag` 参；TS `recolor-profile.ts`（dark / solarized-dark）；`paintRecolorPath`、MO、`buildRecolorInjection` 透传 profile。
-- 2026-06-07：**Phase 1 完成 → Completed**。S0–S3、P1-1–P1-6、§2.7 golden、§5.1 全表、§5.3 基准；归档至 `docs/rfc/completed/`。
+- 2026-06-07：**Phase 1 完成 → Completed**。S0–S3、P1-1–P1-6、§2.7 golden、§5.1 全表、§5.3 基准；归档至 `.spec/rfc/completed/`。
 
 ---
 
