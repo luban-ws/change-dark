@@ -18,6 +18,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const repoRoot = join(__dirname, '..')
 const chromeRoot = join(repoRoot, 'apps/chrome')
 const pkgPath = join(chromeRoot, 'package.json')
+const sitePkgPath = join(repoRoot, 'apps/site/package.json')
 const zipPath = join(repoRoot, 'dist/chrome/change-dark-extension.zip')
 
 const TAG_PREFIX = 'v'
@@ -219,10 +220,21 @@ if (opts.bump) {
   const next = bumpVersion(pkg.version, opts.bump)
   console.log(`版本: ${pkg.version} → ${next}`)
   pkg.version = next
-  if (!opts.dryRun) writePkg(pkg)
+  if (!opts.dryRun) {
+    writePkg(pkg)
+    try {
+      if (existsSync(sitePkgPath)) {
+        const sitePkg = JSON.parse(readFileSync(sitePkgPath, 'utf8'))
+        sitePkg.version = next
+        writeFileSync(sitePkgPath, `${JSON.stringify(sitePkg, null, 4)}\n`, 'utf8')
+      }
+    } catch (e) {
+      console.error('Failed to sync apps/site/package.json:', e)
+    }
+  }
   if (opts.commit && !opts.dryRun) {
-    run(`git add "${pkgPath}"`)
-    run(`git commit -m "chore(chrome): release v${pkg.version}"`)
+    run(`git add "${pkgPath}" "${sitePkgPath}"`)
+    run(`git commit -m "chore(release): bump version to v${pkg.version}"`)
   } else if (opts.bump && !opts.dryRun && isPkgDirty()) {
     console.warn(
       '\n警告: package.json 已改版本但未 commit。建议加 --commit，或手动 commit 后再打 tag。\n',
