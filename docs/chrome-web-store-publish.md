@@ -1,6 +1,8 @@
 # Chrome 网上应用店 — 发布操作指南（嫦娥 Selena）
 
-**政策、素材规格、权限英文稿、隐私 URL** 等与后台表单一一对齐的内容见 [**chrome-web-store-listing.md**](./chrome-web-store-listing.md)。本文只讲 **账号 → 后台操作 → 更新版本 →（可选）API 自动化**。
+**政策、素材规格、权限英文稿、隐私 URL** 等与后台表单一一对齐的内容见 [**chrome-web-store-listing.md**](./chrome-web-store-listing.md)。  
+**后台每个字段怎么填、贴哪段文案** 见 [**chrome-web-store-dashboard-fill-guide.md**](./chrome-web-store-dashboard-fill-guide.md)。  
+本文只讲 **账号 → 后台操作 → 更新版本 →（可选）API 自动化**。
 
 官方面向： [Chrome Web Store Developer Program](https://developer.chrome.com/docs/webstore) 、[Prepare your extension](https://developer.chrome.com/docs/webstore/prepare)、[Publish in the Chrome Web Store](https://developer.chrome.com/docs/webstore/publish)（以当前英文文档为准）。
 
@@ -35,7 +37,7 @@ pnpm --filter @change-dark/chrome run pack
 
 1. 打开 [Developer Dashboard](https://chrome.google.com/webstore/devconsole/) → **New Item**（或「新增项目」）。
 2. **Upload**（上传）选择上一步生成的 **`change-dark-extension.zip`**。首次上传会分配 **扩展 ID**（`chrome://extensions` 里 Developer mode 下可见），请记下来；后续 **Publish API** 要用。
-3. 按左侧 Tab 逐项填写（与 [listing 文档](./chrome-web-store-listing.md) 一致即可）：
+3. 按左侧 Tab 逐项填写（**字段级说明**见 [dashboard 填写指南](./chrome-web-store-dashboard-fill-guide.md)；文案摘要见 [listing 文档](./chrome-web-store-listing.md)）：
    - **Store listing**：说明、截图、宣传图、类别等。
    - **Privacy practices**：Single purpose、远程代码、数据使用、**Privacy policy URL**（须与 `privacy.html` 一致且 HTTPS 可访问）。
    - **Distribution** 等区域/可见性选项。
@@ -81,4 +83,26 @@ pnpm --filter @change-dark/chrome run pack
 - [ ] 隐私政策 URL、首页 URL 与 `store-listing-meta` / 后台一致且可访问。
 - [ ] 截图、图标尺寸与 [listing §5](./chrome-web-store-listing.md) 一致。
 
-更多条目见 [chrome-web-store-listing.md §9](./chrome-web-store-listing.md#9-上架前自检清单摘要)。
+### 重新生成商店截图（1280×800 + 440×280）
+
+在 monorepo 根目录：
+
+```bash
+pnpm --filter @change-dark/chrome run build
+pnpm --filter @change-dark/chrome run test:e2e:install   # 首次需安装 Chromium
+pnpm run screenshots:store
+```
+
+产出（默认覆盖 `docs/publish/`）：
+
+| 文件 | 用途 |
+|------|------|
+| `screenshot-en-1280x800.png` | 商店截图（英文 Options UI） |
+| `screenshot-zh-1280x800.png` | 商店截图（中文 Options UI） |
+| `promo-tile-440x280.png` | 小型宣传图（由英文截图裁切） |
+| `screenshot-page-demo-1280x800.png` | 可选：浅色 fixture 页暗色效果演示 |
+
+仅 UI、不要 page demo：`pnpm --filter @change-dark/chrome run screenshots:store -- --ui-only`  
+若 service worker 未就绪：`HEADLESS=false pnpm run screenshots:store`
+
+更多条目见 [chrome-web-store-dashboard-fill-guide.md §8](./chrome-web-store-dashboard-fill-guide.md#八提审前最终勾选清单) 与 [listing §9](./chrome-web-store-listing.md#9-上架前自检清单摘要)。

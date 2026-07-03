@@ -125,7 +125,10 @@ describe('App 中文标签全覆盖', () => {
     expect(app).toBeTruthy()
 
     await within(app).findByText(zh.extName)
-    fireEvent.click(within(app).getAllByText(zh.lblScopeSite)[0]!)
+    const siteScopeButtons = await within(app).findAllByText(zh.lblScopeSite)
+    fireEvent.click(siteScopeButtons[0]!)
+    // SiteToolsPanel customCss only renders after origin resolves and editScope === 'site'
+    await within(app).findByText(zh.customCss)
 
     for (const key of ZH_VISIBLE_SECTION_KEYS) {
       const nodes = within(app).queryAllByText(zh[key])

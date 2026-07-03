@@ -1,6 +1,6 @@
 # Roadmap — 嫦娥 / Selena
 
-**下一个可用 RFC 编号：035**（Phase 2 / CSS 变量等后续）。  
+**下一个可用 RFC 编号：036**（Phase 2 / CSS 变量等后续）。  
 RFC 文档根目录：**`.spec/rfc/`**（completed 在 `.spec/rfc/completed/`）。  
 WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)  
 任务追踪：[TASK_TRACKING.md](./TASK_TRACKING.md)
@@ -72,6 +72,7 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 | [032](./.spec/rfc/completed/032-theme-mode-product-consolidation.md) | T-045 | Dynamic-only：删模式/迁移/铺底 | ✅ |
 | [033](./.spec/rfc/033-cross-site-surface-repair-layer.md) | T-046 | 跨站点表面修复层（三层 sweep + border recolor） | 🔄 Under Review |
 | [034](./.spec/rfc/034-site-profile-catalog.md) | T-047 | Site Profile Catalog（数据驱动，超越 DR） | 🔄 Phase 1 |
+| [035](./.spec/rfc/035-chrome-web-store-release-v0.1.2.md) | T-048 | Chrome Web Store 发布（v0.1.2+） | 📝 Draft |
 
 ---
 
@@ -83,6 +84,7 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 |-----|------|------|------|
 | [033](./.spec/rfc/033-cross-site-surface-repair-layer.md) | T-046 | Surface Repair Layer | 🔄 |
 | [034](./.spec/rfc/034-site-profile-catalog.md) | T-047 | Site Profile Catalog + `@change-dark/site-catalog` | 🔄 |
+| [035](./.spec/rfc/035-chrome-web-store-release-v0.1.2.md) | T-048 | CWS 发布：CI/E2E 门禁 + listing + v0.1.2 提审 | 📝 Draft |
 
 ### Rejected（产品范围外）
 
@@ -96,7 +98,7 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 
 | 方向 | 说明 | 优先级 |
 |------|------|--------|
-| **Chrome Web Store 上架** | 打包、隐私政策、审核素材与说明 | 中 |
+| **CWS Publish API / CI 自动上传** | 见 [RFC 035](./.spec/rfc/035-chrome-web-store-release-v0.1.2.md) §3 Out of scope | 低 |
 
 ---
 

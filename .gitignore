@@ -16,3 +16,5 @@ playwright-report/
 playwright-video/
 test-results
 .test-user-data
+.codegraph/
+graphify-out/

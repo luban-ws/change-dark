@@ -1,48 +1,59 @@
-# 嫦娥 (Selena) 发布宣贯指南
+# 嫦娥 (Selena) — Chrome 网上应用店素材包
 
-本文件详细说明了 **嫦娥 (Selena)** 扩展的核心用途及其对用户的独特价值，旨在为发布、推广及商店审核提供核心文案参考。
+本目录存放 **商店 listing 可粘贴文案** 与 **截图/宣传图**。后台怎么填、贴哪一栏，请看主指南：
 
-## 1. 产品用途：为何而生？
+**→ [chrome-web-store-dashboard-fill-guide.md](../chrome-web-store-dashboard-fill-guide.md)**（逐项填写手册）
 
-**嫦娥 (Selena)** 是一款专为 Chromium 系列浏览器设计的 **“高保真强制暗色引擎”**。
+配套文档：
 
-它并非简单的滤镜叠加。它的主要用途是在任何不支持暗色模式的网页上，通过 **智能样式注入 (Style Injection)** 与 **WASM 颜色计算**，强行构建出一套既尊重原始设计逻辑、又能有效保护视力的暗色视觉方案。
-
-### 核心功能定位：
-- **全局生效**：一键让全球互联网进入暗色时代。
-- **智能采样**：利用底层核心快速分析页面配色，确保生成的暗色背景深邃但不压抑。
-- **动态适配**：随系统主题自动切换，无需人工干预。
-
----
-
-## 2. 为什么用户应该安装它？
-
-在市面上众多暗色模式插件中，**嫦娥 (Selena)** 的不可替代性源于以下四大支柱：
-
-### 🎯 A. 专业级的视觉“非侵入性” (Non-Invasive Aesthetics)
-大多数插件只是粗暴地将颜色翻转（Invert），导致图片变色、UI 支离破碎。
-- **Selena 的优势**：我们尊重设计价值。插件会保留图片的原始外观，仅处理背景与文字的对比关系，输出的结果呈现出一种“原生暗色”的高级质感。
-
-### ⚡ B. 极致的性能表现 (Native Performance)
-渲染大型复杂页面（如 GitHub、Google Sheets）时，传统插件往往会导致明显掉帧。
-- **Selena 的优势**：我们将核心计算逻辑（Color Logic）封装在 **Rust / WebAssembly** 模块中。这种接近原生的执行速度确保了样式的毫秒级注入，无论页面多重，主线程依然丝稳如初。
-
-### 🛡️ C. 绝对的隐私承诺 (100% Local & Privacy First)
-用户浏览的每一个网页都是极其私密的。
-- **Selena 的优势**：我们不收集、不上传、不利用。所有的规则匹配和颜色分析均在用户的 **本地浏览器环境** 中完成。作为一款合规的 MV3 扩展，我们拒绝任何形式的远程代码和追踪器。
-
-### ⚙️ D. 精细化的“按站”管控 (Granular Control)
-并不是每个网站都需要同样的暗色策略。
-- **Selena 的优势**：用户可以为不同的域名设定专属模式（动态、静态、或忽略）。这种“千站千面”的管控能力，让 Selena 成为了一款真正的专业级开发者/重度阅读工具。
+| 文档 | 内容 |
+|------|------|
+| [chrome-web-store-dashboard-fill-guide.md](../chrome-web-store-dashboard-fill-guide.md) | Dashboard 每个 Tab/字段怎么填 |
+| [chrome-web-store-listing.md](../chrome-web-store-listing.md) | 政策、规格、权限英文稿 |
+| [chrome-web-store-publish.md](../chrome-web-store-publish.md) | 打包 ZIP、首次上架、更新版本 |
 
 ---
 
-## 3. 目标受众
+## 本目录文件一览
 
-- **重度阅读者/夜修族**：需要长期面对屏幕，追求极致护眼体验的用户。
-- **开发者/创意人士**：对网页加载性能有洁癖，且审美挑剔的高级用户。
-- **隐私倡导者**：对扩展程序安全性有深度顾虑，追求代码透明与本地化运行的用户。
+| 文件 | 用途 | 粘贴到后台 |
+|------|------|------------|
+| `webstore-description-en.txt` | 英文商品长描述 | Store listing → Description |
+| `webstore-description-zh.txt` | 中文商品长描述 | 添加 zh_CN 语言时使用 |
+| `single-purpose-statement-en.txt` | 单一用途（英文） | Privacy → Single purpose |
+| `single-purpose-statement-zh.txt` | 单一用途（中文参考） | 内部校对用 |
+| `permission-justifications-en.txt` | 权限理由（英文） | Privacy → Permission justification |
+| `permission-justifications-zh.txt` | 权限理由（中文参考） | 内部校对用 |
+| `screenshot-en-1280x800.png` | 英文 UI 截图 | Screenshots #1 |
+| `screenshot-zh-1280x800.png` | 中文 UI 截图 | Screenshots #2 |
+| `screenshot-page-demo-1280x800.png` | 页面暗色效果演示 | Screenshots #3（可选） |
+| `promo-tile-440x280.png` | 小型宣传图 | Small promo tile |
+| `hero-tile-1400x560.png` | Marquee 宣传图 | Marquee（可选） |
+
+**短描述（≤132 字符）** 不在此目录，单一数据源：`apps/chrome/src/store-listing-meta.ts`。
+
+**商店图标 128×128**：构建后 `apps/chrome/dist/icons/icon-128.png`。
 
 ---
 
-> **结语**：安装 **嫦娥 (Selena)**，不仅仅是安装了一个插件，更是为你的浏览器装配了一套具备“审美感知力”的高性能视觉引擎。
+## 重新生成截图
+
+```bash
+pnpm --filter @change-dark/chrome run build
+pnpm --filter @change-dark/chrome run test:e2e:install   # 首次需安装 Chromium
+pnpm run screenshots:store
+```
+
+仅 UI、不要页面演示：
+
+```bash
+pnpm --filter @change-dark/chrome run screenshots:store -- --ui-only
+```
+
+---
+
+## 产品定位（宣贯摘要）
+
+**嫦娥 (Selena)** 是 Manifest V3 **Dynamic-only** 强制暗色扩展：在设备上用 Rust/WebAssembly 分析并重写页面样式，支持全局/按站规则与可选 CSS，**不上传**浏览数据到开发者服务器。
+
+详细价值主张见上文各 `webstore-description-*.txt`。

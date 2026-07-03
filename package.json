@@ -12,6 +12,8 @@
     "check:pre-commit": "pnpm run lint",
     "check:pre-push": "pnpm run build && pnpm run test && pnpm run lint",
     "release:chrome": "node scripts/release-chrome.mjs",
+    "screenshots:store": "pnpm --filter @change-dark/chrome run screenshots:store",
+    "screenshots:site-to-store": "pnpm --filter @change-dark/chrome run screenshots:site-to-store",
     "prepare": "husky && node scripts/hooks/configure-git-hooks.mjs"
   },
   "devDependencies": {

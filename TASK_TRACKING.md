@@ -87,11 +87,29 @@
 |----|----------|------|------|
 | T-047 | [034](./.spec/rfc/034-site-profile-catalog.md) | `@change-dark/site-catalog`、GMP profile、policy 合并 | 🔄 In progress |
 
-## Backlog（无独立 RFC，下一个建议 **035**）
+## RFC 035 — Chrome Web Store 发布 v0.1.2+（Draft）
+
+| ID | 专属 RFC | 内容 | 状态 |
+|----|----------|------|------|
+| T-048 | [035](./.spec/rfc/035-chrome-web-store-release-v0.1.2.md) | CI 绿 + E2E P0 + listing 同步 + bump 0.1.2 + 提审 | 🔄 Ready to submit |
+
+### T-048 子任务（见 RFC §5）
+
+| 子项 | 内容 | 状态 |
+|------|------|------|
+| A1 | 修复 `visible-light-surface-sweep` Linux CI | ✅ |
+| A2 | E2E P0 发布前跑通 | ✅ 10/10 |
+| B1 | `chrome-web-store-listing.md` Dynamic-only | ✅ |
+| B2 | 截图与当前 popup 一致 | ✅（已有 `docs/publish/screenshot-*`） |
+| C1 | version 0.1.2 | ✅ |
+| C2 | pack → `change-dark-extension.zip` | ✅ |
+| C3 | Dashboard 提交 | ☐ 人工 |
+
+## Backlog（下一个建议 **036**）
 
 | 方向 | 说明 |
 |------|------|
-| Chrome Web Store | 上架材料与隐私政策 |
+| CWS Publish API | CI 自动上传 draft package |
 
 ## 设计文档
 

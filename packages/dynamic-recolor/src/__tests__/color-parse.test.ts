@@ -6,6 +6,8 @@ describe('parseCssRgbToTriplet', () => {
   it('解析 rgb / rgba', () => {
     expect(parseCssRgbToTriplet('rgb(10, 20, 30)')).toEqual([10, 20, 30])
     expect(parseCssRgbToTriplet('rgba(255, 0, 128, 0.5)')).toEqual([255, 0, 128])
+    // 纯 TS 路径：不依赖 WASM 初始化
+    expect(parseCssRgbToTriplet('rgb(248, 249, 250)')).toEqual([248, 249, 250])
   })
 
   it('忽略 transparent 与空串', () => {

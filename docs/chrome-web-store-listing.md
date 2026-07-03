@@ -1,6 +1,10 @@
 # Chrome 网上应用店 — 与官方要求逐项对齐（嫦娥 Selena）
 
-下文对照 **现行** [开发者计划政策](https://developer.chrome.com/docs/webstore/program-policies/)、[上架准备](https://developer.chrome.com/docs/webstore/prepare)、[商品详情页](https://developer.chrome.com/docs/webstore/cws-dashboard-listing)、[隐私权实践](https://developer.chrome.com/docs/webstore/cws-dashboard-privacy)、[图片规格](https://developer.chrome.com/docs/webstore/images)、[MV3 附加要求](https://developer.chrome.com/docs/webstore/program-policies/mv3-requirements)、[疑难排解（权限）](https://developer.chrome.com/docs/webstore/troubleshooting#excessive_permissions)。依法合规以你方律师与最终提交内容为准。
+**实操填写**：按控制台逐项粘贴文案与素材 → [**chrome-web-store-dashboard-fill-guide.md**](./chrome-web-store-dashboard-fill-guide.md)  
+**打包上传**：账号、ZIP、提交流程 → [chrome-web-store-publish.md](./chrome-web-store-publish.md)  
+**本目录文案与截图**： [publish/](./publish/)
+
+下文对照 **现行** [开发者计划政策](https://developer.chrome.com/docs/webstore/program-policies)、[上架准备](https://developer.chrome.com/docs/webstore/prepare)、[商品详情页](https://developer.chrome.com/docs/webstore/cws-dashboard-listing)、[隐私权实践](https://developer.chrome.com/docs/webstore/cws-dashboard-privacy)、[图片规格](https://developer.chrome.com/docs/webstore/images)、[MV3 附加要求](https://developer.chrome.com/docs/webstore/program-policies/mv3-requirements)、[疑难排解（权限）](https://developer.chrome.com/docs/webstore/troubleshooting#excessive_permissions)。依法合规以你方律师与最终提交内容为准。
 
 ---
 
@@ -42,7 +46,7 @@
 
 **`storage`**
 
-> Stores the user’s extension settings locally in the browser (global policy, theme mode, filter sliders, site list, per-site overrides, typography, optional CSS). No account; settings are not synced to our servers for core functionality.
+> Stores the user’s extension settings locally in the browser (global policy, Dynamic dark palette, site list, per-site overrides, typography, optional CSS). No account; settings are not synced to our servers for core functionality.
 
 **`host_permissions` / `<all_urls>`**
 
@@ -58,7 +62,7 @@
 
 与商店说明、popup 功能一致，示例（英文，可自行微调）：
 
-> This extension’s single purpose is to apply a forced dark appearance (and related user-configured theme, filter, typography, and optional per-site CSS) on websites the user visits.
+> This extension’s single purpose is to apply a forced dark appearance (Dynamic recolor with on-device WebAssembly, user-chosen palette, typography, and optional per-site CSS) on websites the user visits.
 
 ### 4.2 Remote code（远程代码）
 
@@ -106,7 +110,7 @@
 
 **Detailed description（商品详情长文，可自行增删）**
 
-> **Selena** (嫦娥) is a Manifest V3 extension for Chromium-based browsers. Its **single purpose** is to apply a **forced dark appearance** on websites you visit, with optional per-site rules, theme modes (including Dynamic sampling with WebAssembly), filters, typography, and optional site-specific CSS snippets.
+> **Selena** (嫦娥) is a Manifest V3 extension for Chromium-based browsers. Its **single purpose** is to apply a **forced dark appearance** on websites you visit using **Dynamic recolor** (Rust/WebAssembly stylesheet analysis), with user-chosen palettes, per-site rules, typography options, and optional site-specific CSS snippets.
 >
 > **Privacy**  
 > Settings are stored locally using Chrome extension storage. The privacy policy URL explains how page-related data is processed for theming. If you use the optional support link (e.g. Buy Me a Coffee), you leave the extension UI and third-party sites apply.

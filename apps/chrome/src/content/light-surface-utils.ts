@@ -37,9 +37,12 @@ export function parseBackgroundAlpha(input: string): number {
 
 /** jsdom / 部分环境 computed background 为空时回退 inline style。 */
 function readInlineBackgroundColor(el: HTMLElement): string {
+  const fromProperty = el.style.getPropertyValue('background-color').trim()
+  if (fromProperty && fromProperty !== 'transparent') return fromProperty
   const direct = el.style.backgroundColor?.trim()
-  if (direct) return direct
-  const bg = el.style.background?.trim()
+  if (direct && direct !== 'transparent') return direct
+  const bg =
+    el.style.getPropertyValue('background').trim() || el.style.background?.trim()
   if (!bg || bg === 'transparent') return bg ?? ''
   if (/^(rgb|rgba|#|hsl)/i.test(bg)) return bg
   return ''
@@ -93,8 +96,9 @@ export function hasOpaqueLightFill(
 }
 
 function matchesNeverPaint(el: HTMLElement, policy: ResolvedSurfaceRepairPolicy): boolean {
-  if (!policy.neverPaintSelectorList) return false
-  return el.matches(policy.neverPaintSelectorList)
+  const selectors = policy.neverPaintSelectorList?.trim()
+  if (!selectors) return false
+  return el.matches(selectors)
 }
 
 function isPolicyLandmark(el: HTMLElement, policy: ResolvedSurfaceRepairPolicy): boolean {

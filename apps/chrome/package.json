@@ -1,6 +1,6 @@
 {
     "name": "@change-dark/chrome",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "private": true,
     "type": "module",
     "scripts": {
@@ -13,6 +13,8 @@
         "test:e2e": "playwright test",
         "test:e2e:install": "playwright install chromium",
         "test:e2e:report": "playwright show-report",
+        "screenshots:store": "node scripts/capture-store-screenshots.mjs",
+        "screenshots:site-to-store": "node scripts/import-site-screenshots-for-store.mjs",
         "lint": "tsc -p tsconfig.json --noEmit"
     },
     "dependencies": {
