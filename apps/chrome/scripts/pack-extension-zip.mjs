@@ -9,13 +9,18 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const chromeRoot = join(__dirname, '..')
+const repoRoot = join(chromeRoot, '../..')
 const distDir = join(chromeRoot, 'dist')
-const outZip = join(chromeRoot, 'change-dark-extension.zip')
+const outDir = join(repoRoot, 'dist/chrome')
+const outZip = join(outDir, 'change-dark-extension.zip')
 
 if (!existsSync(distDir)) {
   console.error('Missing dist/; run vite build first.')
   process.exit(1)
 }
+
+import { mkdirSync } from 'node:fs'
+mkdirSync(outDir, { recursive: true })
 
 execSync(`zip -r -q "${outZip}" .`, { cwd: distDir, stdio: 'inherit' })
 console.warn('packed', outZip)

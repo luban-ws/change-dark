@@ -18,7 +18,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const repoRoot = join(__dirname, '..')
 const chromeRoot = join(repoRoot, 'apps/chrome')
 const pkgPath = join(chromeRoot, 'package.json')
-const zipPath = join(chromeRoot, 'change-dark-extension.zip')
+const zipPath = join(repoRoot, 'dist/chrome/change-dark-extension.zip')
 
 const TAG_PREFIX = 'v'
 

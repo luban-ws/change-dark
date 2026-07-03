@@ -11,6 +11,7 @@
     "lint": "turbo run lint",
     "check:pre-commit": "pnpm run lint",
     "check:pre-push": "pnpm run build && pnpm run test && pnpm run lint",
+    "pack:release": "pnpm run check:pre-push && pnpm --filter @change-dark/chrome run test:e2e:install && pnpm --filter @change-dark/chrome run test:e2e && pnpm --filter @change-dark/chrome run pack",
     "release:chrome": "node scripts/release-chrome.mjs",
     "screenshots:store": "pnpm --filter @change-dark/chrome run screenshots:store",
     "screenshots:site-to-store": "pnpm --filter @change-dark/chrome run screenshots:site-to-store",
