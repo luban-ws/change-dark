@@ -1,5 +1,5 @@
 /**
- * RFC 031 §3 / S3：从 `document.styleSheets` 收集可读 CSS 文本（跨域 sheet 跳过）。
+ * RFC 0031 §3 / S3：从 `document.styleSheets` 收集可读 CSS 文本（跨域 sheet 跳过）。
  */
 
 export interface ReadableStylesheetCollectResult {
@@ -43,7 +43,7 @@ export function collectReadableStylesheetCssTexts(
   return { cssChunks, readableSheetCount }
 }
 
-/** 是否存在至少一段非空可读 CSS（RFC 031 §3.1 主路径门槛）。 */
+/** 是否存在至少一段非空可读 CSS（RFC 0031 §3.1 主路径门槛）。 */
 export function hasReadableStylesheetCss(doc: Document): boolean {
   const { cssChunks } = collectReadableStylesheetCssTexts(doc)
   return cssChunks.some((chunk) => chunk.trim().length > 0)

@@ -44,7 +44,7 @@ pub fn foreground_for_dark_background(bg_r: u8, bg_g: u8, bg_b: u8) -> (u8, u8, 
     }
 }
 
-/// 与 [RFC 005]/[RFC 006] 一致：**扁平 RGB**，每连续 3 字节为 `(r,g,b)`。
+/// 与 [RFC 0005]/[RFC 0006] 一致：**扁平 RGB**，每连续 3 字节为 `(r,g,b)`。
 /// `rgb.len()` 须为 3 的倍数；否则返回 `None`。
 #[inline]
 pub fn batch_relative_luminance(rgb: &[u8]) -> Option<Vec<f64>> {

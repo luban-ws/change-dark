@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "mapId": "dynamic-recolor-style-roots",
+  "revision": 1,
+  "project": {
+    "id": "change-dark",
+    "name": "Change Dark Dynamic recolor subsystem"
+  },
+  "modules": [
+    {
+      "id": "content-runtime",
+      "role": "generic",
+      "roleAssessment": {
+        "basis": "out-of-taxonomy",
+        "note": "Content-script runtime coordinates extension settings, page lifecycle, observers and recolor entry points; Birdify roles have no extension-runtime category."
+      },
+      "name": "Content runtime",
+      "kind": "local",
+      "responsibility": "Start page recoloring and coordinate its runtime lifecycle.",
+      "ownership": [{ "kind": "directory", "path": "apps/chrome/src/content" }],
+      "evidence": [{ "path": "apps/chrome/src/content/index.ts", "symbol": "applyFastDynamicPaintShell", "note": "Coordinates the initial Dynamic recolor path." }],
+      "status": "supported",
+      "openQuestions": [],
+      "layout": { "row": 0, "column": 0 }
+    },
+    {
+      "id": "recolor-pipeline",
+      "role": "generic",
+      "roleAssessment": {
+        "basis": "out-of-taxonomy",
+        "note": "This package transforms CSS rules and colors; Birdify roles have no library/engine category."
+      },
+      "name": "Dynamic recolor pipeline",
+      "kind": "local",
+      "responsibility": "Collect stylesheet text, build recolor overrides and apply them to the document.",
+      "ownership": [{ "kind": "directory", "path": "packages/dynamic-recolor/src" }],
+      "evidence": [{ "path": "packages/dynamic-recolor/src/recolor-inject.ts", "symbol": "buildRecolorInjection", "note": "Builds recolor overrides from collected document stylesheet text." }],
+      "status": "supported",
+      "openQuestions": [],
+      "layout": { "row": 1, "column": 1 }
+    },
+    {
+      "id": "stylesheet-collection",
+      "role": "generic",
+      "roleAssessment": {
+        "basis": "out-of-taxonomy",
+        "note": "Stylesheet collection is a source-reading responsibility, not one of the available interaction, backend, cache or database roles."
+      },
+      "name": "Stylesheet collection",
+      "kind": "local",
+      "responsibility": "Read cssRules from document stylesheets and isolate unreadable stylesheet failures.",
+      "ownership": [{ "kind": "file", "path": "packages/dynamic-recolor/src/stylesheet-collect.ts" }],
+      "evidence": [{ "path": "packages/dynamic-recolor/src/stylesheet-collect.ts", "symbol": "collectReadableStylesheetCssTexts", "note": "Iterates document.styleSheets and skips rules that throw." }],
+      "status": "supported",
+      "openQuestions": [],
+      "layout": { "row": 2, "column": 1 }
+    },
+    {
+      "id": "recolor-observer",
+      "role": "generic",
+      "roleAssessment": {
+        "basis": "out-of-taxonomy",
+        "note": "The observer schedules DOM recolor work; this is not a user-interface or service responsibility in Birdify's role set."
+      },
+      "name": "Recolor mutation observer",
+      "kind": "local",
+      "responsibility": "Batch document mutations and refresh recolor work within idle scheduling budgets.",
+      "ownership": [{ "kind": "file", "path": "apps/chrome/src/content/recolor-observer.ts" }],
+      "evidence": [{ "path": "apps/chrome/src/content/recolor-observer.ts", "symbol": "startRecolorDynamicObserver", "note": "Observes document.documentElement and batches recolor mutation records." }],
+      "status": "supported",
+      "openQuestions": [],
+      "layout": { "row": 2, "column": 0 }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "runtime-pipeline",
+      "from": "content-runtime",
+      "to": "recolor-pipeline",
+      "label": "starts document recoloring",
+      "evidence": [{ "path": "apps/chrome/src/content/recolor-path.ts", "symbol": "paintRecolorStylesheetPath", "note": "Calls the dynamic-recolor package to build and apply stylesheet overrides." }],
+      "status": "supported",
+      "openQuestions": [],
+      "kind": "request",
+      "visibility": "overview"
+    },
+    {
+      "id": "pipeline-collector",
+      "from": "recolor-pipeline",
+      "to": "stylesheet-collection",
+      "label": "reads source CSS",
+      "evidence": [{ "path": "packages/dynamic-recolor/src/recolor-inject.ts", "symbol": "buildRecolorInjection", "note": "Calls the collector before transforming the joined CSS chunks." }],
+      "status": "supported",
+      "openQuestions": [],
+      "kind": "request",
+      "visibility": "overview"
+    },
+    {
+      "id": "runtime-observer",
+      "from": "content-runtime",
+      "to": "recolor-observer",
+      "label": "starts mutation refresh",
+      "evidence": [{ "path": "apps/chrome/src/content/index.ts", "symbol": "applyHeavyDynamicPaintWork", "note": "Starts the recolor observer after initial document paint." }],
+      "status": "supported",
+      "openQuestions": [],
+      "kind": "request",
+      "visibility": "overview"
+    },
+    {
+      "id": "observer-pipeline",
+      "from": "recolor-observer",
+      "to": "recolor-pipeline",
+      "label": "rebuilds after document mutations",
+      "evidence": [{ "path": "apps/chrome/src/content/recolor-observer.ts", "symbol": "flushPendingRecords", "note": "Calls applyRecolorMutationFlush for stylesheet and inline-style mutations." }],
+      "status": "supported",
+      "openQuestions": [],
+      "kind": "request",
+      "visibility": "overview"
+    }
+  ]
+}

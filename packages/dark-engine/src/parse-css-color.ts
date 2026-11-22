@@ -1,5 +1,5 @@
 /**
- * RFC 031 §5.1：WASM CSS 颜色 token 解析薄封装。
+ * RFC 0031 §5.1：WASM CSS 颜色 token 解析薄封装。
  */
 import { parseCssColorTokenWasm } from '../pkg/dark_engine.js'
 

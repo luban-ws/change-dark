@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-5：位图压暗 — 仅 CSS `background-image` 换 brightness-only SVG blob URL。
+ * RFC 0031 P1-5：位图压暗 — 仅 CSS `background-image` 换 brightness-only SVG blob URL。
  * `<img>` / `<picture>` 等 inline 媒体不改（Dynamic 对齐 DR「照片不动」）。
  */
 

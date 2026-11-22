@@ -1,5 +1,5 @@
 /**
- * RFC 034：URL / origin 匹配 catalog 条目。
+ * RFC 0034：URL / origin 匹配 catalog 条目。
  */
 
 import type { SiteProfileMatchV1, SiteProfileV1 } from './types'

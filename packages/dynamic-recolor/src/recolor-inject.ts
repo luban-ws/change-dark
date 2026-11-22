@@ -1,5 +1,5 @@
 /**
- * RFC 031：Dynamic 改色样式注入（stylesheet 覆盖 + 壳层）。
+ * RFC 0031：Dynamic 改色样式注入（stylesheet 覆盖 + 壳层）。
  */
 
 import { ROOT_ATTR, type ThemeFiltersStateV1 } from '@change-dark/extension-settings'

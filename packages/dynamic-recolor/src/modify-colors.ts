@@ -1,5 +1,5 @@
 /**
- * RFC 031 §2：`modifyColor` 真源在 Rust/WASM（`dark-color-utils` + `dark-engine`）。
+ * RFC 0031 §2：`modifyColor` 真源在 Rust/WASM（`dark-color-utils` + `dark-engine`）。
  * 本文件保留类型、默认 profile 与 HSL 工具（测试/文档用）；改色走 WASM。
  */
 
@@ -11,7 +11,7 @@ import {
   PROFILE_TAG_SOLARIZED_DARK,
 } from '@change-dark/dark-engine'
 
-/** 色用途标签（决定走哪条曲线，RFC 031 §2.6）。 */
+/** 色用途标签（决定走哪条曲线，RFC 0031 §2.6）。 */
 export type ColorUse = 'bg' | 'fg' | 'border'
 
 export interface Rgb {
@@ -30,7 +30,7 @@ export interface Hsl {
 }
 
 /**
- * 颜色模型 profile（RFC 031 §5.1.1）：DR 默认值是**默认 profile**，非合约。
+ * 颜色模型 profile（RFC 0031 §5.1.1）：DR 默认值是**默认 profile**，非合约。
  */
 export interface ColorProfile {
   id: 'dark' | 'solarized-dark'
@@ -40,7 +40,7 @@ export interface ColorProfile {
   poleFg: Hsl
 }
 
-/** RFC 031 §2.1：`dark` 默认 profile。pole bg≈#181a1b、fg≈#e8e6e3。 */
+/** RFC 0031 §2.1：`dark` 默认 profile。pole bg≈#181a1b、fg≈#e8e6e3。 */
 export const DEFAULT_DARK_PROFILE: ColorProfile = {
   id: 'dark',
   maxBgLightness: 0.4,
@@ -49,7 +49,7 @@ export const DEFAULT_DARK_PROFILE: ColorProfile = {
   poleFg: rgbToHsl({ r: 0xe8, g: 0xe6, b: 0xe3 }),
 }
 
-/** 线性缩放（RFC 031 §2.5 基元，测试/文档用）。 */
+/** 线性缩放（RFC 0031 §2.5 基元，测试/文档用）。 */
 export function scale(
   x: number,
   inLo: number,
@@ -115,7 +115,7 @@ export function hslToRgb({ h, s, l }: Hsl): Rgb {
 }
 
 /**
- * 主入口：Rust/WASM 改色（RFC 031 §2）。
+ * 主入口：Rust/WASM 改色（RFC 0031 §2）。
  */
 export function modifyColor(
   rgb: Rgb,
@@ -138,7 +138,7 @@ function colorProfileToWasmTag(profile: ColorProfile) {
     : PROFILE_TAG_DARK
 }
 
-/** RFC 031 §5.3：整表/整块改色一次 WASM 批变换（禁逐色过桥）。 */
+/** RFC 0031 §5.3：整表/整块改色一次 WASM 批变换（禁逐色过桥）。 */
 export function batchModifyColors(
   items: ReadonlyArray<{ rgb: Rgb; use: ColorUse }>,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,

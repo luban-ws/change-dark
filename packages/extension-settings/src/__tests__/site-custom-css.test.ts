@@ -6,7 +6,7 @@ import {
   sanitizeSiteCustomCss,
 } from '../site-custom-css'
 
-describe('RFC 019 site-custom-css', () => {
+describe('RFC 0019 site-custom-css', () => {
   it('sanitizeSiteCustomCss 去空字节、截断、弱化 breakout 与 javascript:', () => {
     expect(sanitizeSiteCustomCss('a\0b')).toBe('ab')
     expect(sanitizeSiteCustomCss('x'.repeat(MAX_SITE_CUSTOM_CSS_CHARS + 10)).length).toBe(

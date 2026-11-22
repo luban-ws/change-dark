@@ -1,4 +1,4 @@
-//! RFC 031 §5.1：CSS 颜色 token 解析（`#hex` / `rgb()` / `hsl()` / 命名色）。
+//! RFC 0031 §5.1：CSS 颜色 token 解析（`#hex` / `rgb()` / `hsl()` / 命名色）。
 
 use crate::modify_colors::Rgb;
 

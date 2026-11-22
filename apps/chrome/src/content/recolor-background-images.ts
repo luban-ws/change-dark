@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-5：Dynamic 位图背景 idle 扫描（RFC 006 预算墙）。
+ * RFC 0031 P1-5：Dynamic 位图背景 idle 扫描（RFC 0006 预算墙）。
  */
 
 import { computeDeadlineMs, isPastDeadline, type SamplingBudget } from '@change-dark/extension-settings'

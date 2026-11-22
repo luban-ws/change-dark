@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-4：Dynamic 改色 MutationObserver（rAF 合并 + RFC 006 idle 分片）。
+ * RFC 0031 P1-4：Dynamic 改色 MutationObserver（rAF 合并 + RFC 0006 idle 分片）。
  */
 
 import {

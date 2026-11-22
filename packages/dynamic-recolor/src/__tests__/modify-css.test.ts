@@ -24,7 +24,7 @@ describe('readInlineStyleProperty', () => {
   })
 })
 
-describe('RFC 031 S1 — 单元素单条 color', () => {
+describe('RFC 0031 S1 — 单元素单条 color', () => {
   it('<p style="color:#000"> → 中性深字绑 palette fg', () => {
     expect(recolorInlineStyleAttribute('color:#000')).toBe(
       `color: var(${CSS_VAR_PAGE_FG})`,

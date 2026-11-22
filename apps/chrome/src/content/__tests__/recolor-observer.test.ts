@@ -35,7 +35,7 @@ const budget = { maxNodes: 120, maxMs: 35 }
 const baseCss = buildStaticDarkCss('rgb(10, 12, 14)', 'rgb(230, 230, 235)')
 const darkTheme = resolveThemePalette('dark', 'rgb(10, 12, 14)', 'rgb(230, 230, 235)')
 
-describe('RFC 031 P1-4 — MutationObserver 动态补色', () => {
+describe('RFC 0031 P1-4 — MutationObserver 动态补色', () => {
   beforeEach(() => {
     document.head.innerHTML = ''
     document.body.innerHTML = ''

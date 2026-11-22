@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-6：Dynamic 逐规则改色 Phase 1 已知限制（与 DR #2583 同档）。
+ * RFC 0031 P1-6：Dynamic 逐规则改色 Phase 1 已知限制（与 DR #2583 同档）。
  *
  * 静态 stylesheet 重写读**声明原文**，无法解析/改写的 token 跳过并保留站点原色。
  */
@@ -24,7 +24,7 @@ export interface RecolorKnownLimitation {
   reference?: string
 }
 
-/** RFC 031 P1-6 完整已知限制表（文档真源）。 */
+/** RFC 0031 P1-6 完整已知限制表（文档真源）。 */
 export const RECOLOR_KNOWN_LIMITATIONS: readonly RecolorKnownLimitation[] = [
   {
     id: RECOLOR_SKIP_REASON.CSS_VAR,
@@ -52,7 +52,7 @@ export const RECOLOR_KNOWN_LIMITATIONS: readonly RecolorKnownLimitation[] = [
   {
     id: 'cross-origin-iframe',
     title: '跨域 iframe',
-    description: '与 RFC 013 一致：无法向跨域子文档注入改色样式。',
+    description: '与 RFC 0013 一致：无法向跨域子文档注入改色样式。',
   },
 ] as const
 

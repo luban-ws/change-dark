@@ -13,7 +13,7 @@ vi.mock('@change-dark/dark-engine', () => ({
   kMeansRgbCentroids: vi.fn(() => new Uint8Array([40, 50, 60, 0, 0, 0])),
 }))
 
-describe('RFC 029 §4.1 — Dynamic 回退分支诊断', () => {
+describe('RFC 0029 §4.1 — Dynamic 回退分支诊断', () => {
   it('样本不足 → empty-buffer + STATIC_FALLBACK_RGB', async () => {
     const { collectPageBackgroundRgbBuffer } = await import('../sampling')
     vi.mocked(collectPageBackgroundRgbBuffer).mockReturnValue(new Uint8Array([1, 2, 3]))

@@ -1,5 +1,5 @@
 /**
- * 页面主题 = palette id + 已解析的 page 色 + WASM ColorProfile（RFC 031 §5.1.1）。
+ * 页面主题 = palette id + 已解析的 page 色 + WASM ColorProfile（RFC 0031 §5.1.1）。
  * 内容脚本采样后调用 `resolveThemePalette`，再传入改色 / 铺底 / surface 各层。
  */
 

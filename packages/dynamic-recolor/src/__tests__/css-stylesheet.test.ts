@@ -61,7 +61,7 @@ describe('prefixRecolorOverrideSelector', () => {
   })
 })
 
-describe('RFC 031 S2 — 单张 <style> 全规则 golden in→out', () => {
+describe('RFC 0031 S2 — 单张 <style> 全规则 golden in→out', () => {
   const input = readFixture('recolor-basic.input.css')
 
   it('collectRecolorOverrideRules 覆盖 body / header / @media / @keyframes', () => {

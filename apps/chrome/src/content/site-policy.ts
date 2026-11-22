@@ -1,5 +1,5 @@
 /**
- * RFC 034：当前文档解析并缓存 Site Policy。
+ * RFC 0034：当前文档解析并缓存 Site Policy。
  */
 
 import {

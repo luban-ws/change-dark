@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** RFC 026：为 Playwright 提供本地 fixture 静态页。 */
+/** RFC 0026：为 Playwright 提供本地 fixture 静态页。 */
 import http from 'node:http'
 import fs from 'node:fs'
 import path from 'node:path'

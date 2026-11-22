@@ -64,7 +64,7 @@ import {
 } from '@change-dark/dynamic-recolor'
 
 /**
- * 内容脚本注入约定（RFC 031 Dynamic-only）：
+ * 内容脚本注入约定（RFC 0031 Dynamic-only）：
  * - **原生暗页**：`auto` → 不注入；`on` → 仍注入 Dynamic。
  * - **页面调色板**：`readEffectivePagePaletteForPage()` 传入 Dynamic 主路径与采样回退。
  */
@@ -90,7 +90,7 @@ function mixBackgroundAndForegroundFromBase(baseRgb: Uint8Array): { pageBg: stri
   return { pageBg: rgb(bgParts), pageFg: rgb(fgParts) }
 }
 
-/** Dynamic 采样铺底 CSS + 解析后的主题 preset（RFC 031 §5.1.1）。 */
+/** Dynamic 采样铺底 CSS + 解析后的主题 preset（RFC 0031 §5.1.1）。 */
 function buildSampledPalette(
   themeFilters: ThemeFiltersStateV1,
   pagePalette: PagePalette,
@@ -116,7 +116,7 @@ function buildSampledPalette(
   }
 }
 
-/** 合并 RFC 034 catalog 与用户 RFC 019 自定义 CSS。 */
+/** 合并 RFC 0034 catalog 与用户 RFC 0019 自定义 CSS。 */
 function mergeEffectiveCustomCss(userCss: string): string {
   const catalogCss = getActiveSitePolicy().customCss.trim()
   return sanitizeSiteCustomCss([catalogCss, userCss.trim()].filter(Boolean).join('\n'))

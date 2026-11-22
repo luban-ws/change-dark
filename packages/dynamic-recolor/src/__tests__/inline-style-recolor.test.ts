@@ -11,7 +11,7 @@ import {
   restoreInlineStylesInDocument,
 } from '../inline-style-recolor'
 
-describe('RFC 031 P1-3 — 内联 element.style 改色', () => {
+describe('RFC 0031 P1-3 — 内联 element.style 改色', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
     restoreInlineStylesInDocument(document)

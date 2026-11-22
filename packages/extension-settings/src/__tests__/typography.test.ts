@@ -15,7 +15,7 @@ import {
   sanitizeCustomFontFamily,
 } from '../typography'
 
-describe('RFC 018 typography', () => {
+describe('RFC 0018 typography', () => {
   it('sanitizeCustomFontFamily 去除危险字符并截断', () => {
     expect(sanitizeCustomFontFamily('  Foo Bar  ')).toBe('Foo Bar')
     const stripped = sanitizeCustomFontFamily('a;b{color:red}')

@@ -1,5 +1,5 @@
 /**
- * RFC 029 §4 / RFC 031 §3.1：Dynamic 采样单色回退 — 基色解析与分支诊断。
+ * RFC 0029 §4 / RFC 0031 §3.1：Dynamic 采样单色回退 — 基色解析与分支诊断。
  */
 import {
   kMeansDarkerCentroid,
@@ -10,7 +10,7 @@ import { STATIC_FALLBACK_RGB, type SamplingBudget } from '@change-dark/extension
 
 import { collectPageBackgroundRgbBuffer } from './sampling'
 
-/** 回退层聚合分支（RFC 029 §4.1 分层诊断）。 */
+/** 回退层聚合分支（RFC 0029 §4.1 分层诊断）。 */
 export type DynamicFallbackBranch =
   | 'darker-centroid'
   | 'k-means-k1'

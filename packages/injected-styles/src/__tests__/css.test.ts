@@ -62,7 +62,7 @@ describe('buildDarkCss', () => {
   })
 })
 
-describe('buildStaticDarkCss（RFC 015 回退）', () => {
+describe('buildStaticDarkCss（RFC 0015 回退）', () => {
   it('包含 buildDarkCss 基底与 :where 排版色', () => {
     const sheet = buildStaticDarkCss('rgb(1, 2, 3)', 'rgb(200, 200, 210)')
     expect(sheet).toContain('rgb(1, 2, 3)')
@@ -107,7 +107,7 @@ describe('ensureStyleElement', () => {
   })
 })
 
-describe('buildRecolorShellCss / buildRecolorDynamicCss (RFC 031 S3)', () => {
+describe('buildRecolorShellCss / buildRecolorDynamicCss (RFC 0031 S3)', () => {
   it('壳层含 color-scheme，无全局 pageBg 铺色', () => {
     const shell = buildRecolorShellCss()
     expect(shell).toContain(`html[${ROOT_ATTR}]`)
@@ -136,7 +136,7 @@ describe('buildRecolorShellCss / buildRecolorDynamicCss (RFC 031 S3)', () => {
   })
 })
 
-describe('buildThemePaletteShellCss（RFC 032 引擎主题壳）', () => {
+describe('buildThemePaletteShellCss（RFC 0032 引擎主题壳）', () => {
   it('强制 html/body/main/header 与组件壳使用 palette 变量（无 :where）', () => {
     const shell = buildThemePaletteShellCss()
     expect(shell).toContain(`var(${CSS_VAR_PAGE_BG})`)

@@ -25,7 +25,7 @@ import {
 } from '@change-dark/extension-settings'
 import type { ThemePageDerivedColors } from '@change-dark/extension-settings'
 
-/** 根据 WASM 计算出的颜色生成最小侵入的全局样式；可选 RFC 011 `filter` 链。 */
+/** 根据 WASM 计算出的颜色生成最小侵入的全局样式；可选 RFC 0011 `filter` 链。 */
 export function buildDarkCss(
   pageBg: string,
   pageFg: string,
@@ -88,7 +88,7 @@ export function buildDarkCss(
 /**
  * 在 `buildDarkCss` 之上为常见文本节点强制 `color`（`!important`），覆盖站点 author 规则。
  * **Dynamic 与 Static（WASM 着色路径）均使用本函数**，与仅含 html/body 的 `buildDarkCss` 区分。
- * RFC 011：非中性滤镜仍在 `html[ROOT_ATTR]` 根上。
+ * RFC 0011：非中性滤镜仍在 `html[ROOT_ATTR]` 根上。
  */
 export function buildStaticDarkCss(
   pageBg: string,
@@ -108,7 +108,7 @@ export function buildStaticDarkCss(
 }
 
 /**
- * RFC 031 Dynamic 主路径：逐规则改色覆盖层 + 可选 RFC 011 主题滤镜（挂在 body，不挂 html）。
+ * RFC 0031 Dynamic 主路径：逐规则改色覆盖层 + 可选 RFC 0011 主题滤镜（挂在 body，不挂 html）。
  */
 export function buildRecolorShellCss(themeFilters?: ThemeFiltersStateV1): string {
   const tf = themeFilters ? clampThemeFilters(themeFilters) : undefined
@@ -142,7 +142,7 @@ export function buildRecolorMediaProtectCss(): string {
   `.trim()
 }
 
-/** 壳层 + 媒体保护 + RFC 031 改色覆盖 CSS（`buildRecolorOverrideStylesheet` 输出）。 */
+/** 壳层 + 媒体保护 + RFC 0031 改色覆盖 CSS（`buildRecolorOverrideStylesheet` 输出）。 */
 export function buildRecolorDynamicCss(
   overrideCss: string,
   themeFilters?: ThemeFiltersStateV1,
@@ -155,7 +155,7 @@ export function buildRecolorDynamicCss(
 }
 
 /**
- * 引擎主题壳（RFC 032/034）：WASM 改色之后仍强制 `--cd-page-bg/fg`。
+ * 引擎主题壳（RFC 0032/034）：WASM 改色之后仍强制 `--cd-page-bg/fg`。
  * 选择器不用 :where()，否则特异性低于逐条 class 改色规则。
  */
 export function buildThemePaletteShellCss(): string {
@@ -227,7 +227,7 @@ export function ensureStyleElement(cssText: string): void {
 }
 
 /**
- * RFC 018：第二条样式节点；`cssText` 为空或仅空白时移除节点。
+ * RFC 0018：第二条样式节点；`cssText` 为空或仅空白时移除节点。
  */
 export function ensureTypographyStyleElement(cssText: string): void {
   const trimmed = cssText.trim()
@@ -247,7 +247,7 @@ export function ensureTypographyStyleElement(cssText: string): void {
 }
 
 /**
- * RFC 019：每站用户 CSS；`cssText` 为空时移除节点。经 `sanitizeSiteCustomCss` 后再写入。
+ * RFC 0019：每站用户 CSS；`cssText` 为空时移除节点。经 `sanitizeSiteCustomCss` 后再写入。
  */
 export function ensureCustomCssStyleElement(cssText: string): void {
   const trimmed = sanitizeSiteCustomCss(cssText).trim()

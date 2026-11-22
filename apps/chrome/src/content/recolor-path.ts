@@ -1,5 +1,5 @@
 /**
- * RFC 031 / RFC 032：Dynamic 逐规则改色层（WASM modifyColor + stylesheet 覆盖）。
+ * RFC 0031 / RFC 0032：Dynamic 逐规则改色层（WASM modifyColor + stylesheet 覆盖）。
  */
 
 import {

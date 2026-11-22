@@ -35,7 +35,7 @@ describe('normalizeHttpOriginFromUrl', () => {
   })
 })
 
-describe('parseSiteListState（RFC 017 迁移）', () => {
+describe('parseSiteListState（RFC 0017 迁移）', () => {
   it('空或非法为默认 not-invert + 空 entries', () => {
     expect(parseSiteListState(undefined).entries).toEqual([])
     expect(parseSiteListState({}).entries).toEqual([])

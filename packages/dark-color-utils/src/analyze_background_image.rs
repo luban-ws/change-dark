@@ -1,4 +1,4 @@
-//! RFC 031 P1-5：位图背景图 RGBA 像素亮度分析（对齐 Dark Reader `image.ts` 阈值）。
+//! RFC 0031 P1-5：位图背景图 RGBA 像素亮度分析（对齐 Dark Reader `image.ts` 阈值）。
 
 use crate::relative_luminance;
 

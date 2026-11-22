@@ -1,5 +1,5 @@
 /**
- * RFC 031 §5.1.1：页面调色板 → 改色 ColorProfile / WASM profile 标签。
+ * RFC 0031 §5.1.1：页面调色板 → 改色 ColorProfile / WASM profile 标签。
  */
 import type { ColorProfile } from './modify-colors'
 import { DEFAULT_DARK_PROFILE, rgbToHsl } from './modify-colors'

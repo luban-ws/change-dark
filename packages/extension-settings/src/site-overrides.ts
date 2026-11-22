@@ -1,5 +1,5 @@
 /**
- * RFC 016：按 origin 覆盖主题滤镜（部分字段）；与全局合并后得到有效配置。
+ * RFC 0016：按 origin 覆盖主题滤镜（部分字段）；与全局合并后得到有效配置。
  */
 
 import { THEME_MODE_DYNAMIC, type ThemeMode } from './constants'
@@ -26,7 +26,7 @@ export interface SiteOverrideEntryV1 {
   /** @deprecated 仅 Dynamic；旧 storage 可能仍有此字段，解析时忽略。 */
   themeMode?: ThemeMode
   themeFilters?: Partial<ThemeFiltersStateV1>
-  /** RFC 018：与全局 `TypographySettingsV1` 差分。 */
+  /** RFC 0018：与全局 `TypographySettingsV1` 差分。 */
   typography?: Partial<TypographySettingsV1>
   /** 与全局 `PagePalette` 差分。 */
   pagePalette?: PagePalette
@@ -131,7 +131,7 @@ export function resolveEffectivePagePalette(
 }
 
 /**
- * RFC 018：合并全局字体/描边与单站 partial。
+ * RFC 0018：合并全局字体/描边与单站 partial。
  */
 export function resolveEffectiveTypography(
   origin: string,

@@ -9,7 +9,7 @@ import {
   toggleCurrentOriginInDenylist,
 } from '@change-dark/extension-settings'
 
-/** 安装、更新与浏览器启动时规范化存储（RFC 004）。 */
+/** 安装、更新与浏览器启动时规范化存储（RFC 0004）。 */
 chrome.runtime.onInstalled.addListener(() => {
   void ensureStorageMigrated()
 })
@@ -18,7 +18,7 @@ chrome.runtime.onStartup.addListener(() => {
   void ensureStorageMigrated()
 })
 
-/** RFC 010：快捷键 → 全局 policy 或当前站站点列表（精确 origin 切换）。 */
+/** RFC 0010：快捷键 → 全局 policy 或当前站站点列表（精确 origin 切换）。 */
 chrome.commands.onCommand.addListener((command) => {
   if (command === COMMAND_TOGGLE_GLOBAL) {
     void (async () => {

@@ -5,7 +5,7 @@ import {
   STORAGE_KEY_SAMPLING_MAX_NODES,
 } from './constants'
 
-/** RFC 006：单次采样预算（可由 storage 覆盖）。 */
+/** RFC 0006：单次采样预算（可由 storage 覆盖）。 */
 export interface SamplingBudget {
   maxNodes: number
   maxMs: number
@@ -36,7 +36,7 @@ export function resolveSamplingBudgetFromSnapshot(snapshot: Record<string, unkno
 }
 
 /**
- * 时间墙：`now >= deadline` 视为超预算（与 RFC 006 一致）。
+ * 时间墙：`now >= deadline` 视为超预算（与 RFC 0006 一致）。
  */
 export function computeDeadlineMs(nowMs: number, maxMs: number): number {
   return nowMs + maxMs

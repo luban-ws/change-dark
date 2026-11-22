@@ -1,5 +1,5 @@
 /**
- * RFC 031：WASM `modifyColor` / `batchModifyColor` 的 TS 薄封装。
+ * RFC 0031：WASM `modifyColor` / `batchModifyColor` 的 TS 薄封装。
  */
 import { batchModifyColor, modifyColor as wasmModifyColor } from '../pkg/dark_engine.js'
 

@@ -1,5 +1,5 @@
 /**
- * RFC 031 §3.3 / S2：CSS 文本 → 解析规则 → 改色 → 覆盖 stylesheet（只读原文，不原地改 cssRules）。
+ * RFC 0031 §3.3 / S2：CSS 文本 → 解析规则 → 改色 → 覆盖 stylesheet（只读原文，不原地改 cssRules）。
  *
  * §5.3：整表改色走 `batchModifyColors` 单次 WASM，禁逐色过桥。
  */

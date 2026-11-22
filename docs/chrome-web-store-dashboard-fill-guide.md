@@ -213,7 +213,7 @@ Injects a content script to apply user-configured forced-dark styling and relate
 
 1. 左侧各 Tab 无红色必填警告。
 2. 点击 **Submit for review**（或 **Publish** → 提交审核，以当前 UI 为准）。
-3. 状态变为 **Pending review** 后，在 RFC 035 Decision log 或 PR 中记录日期与版本号。
+3. 状态变为 **Pending review** 后，在 RFC 0035 Decision log 或 PR 中记录日期与版本号。
 4. 拒审时：保存邮件/控制台理由 → 对照 [疑难排解](https://developer.chrome.com/docs/webstore/troubleshooting) 修正 → bump patch → 重新 pack → 再提交。
 
 ---

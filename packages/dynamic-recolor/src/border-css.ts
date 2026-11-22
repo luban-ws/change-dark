@@ -1,5 +1,5 @@
 /**
- * RFC 031：改写 `border*` 简写声明内嵌的颜色 token（如 `24px solid #fff`）。
+ * RFC 0031：改写 `border*` 简写声明内嵌的颜色 token（如 `24px solid #fff`）。
  */
 
 import {

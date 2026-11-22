@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-5：WASM 背景图像素分析薄封装（Rust 真源）。
+ * RFC 0031 P1-5：WASM 背景图像素分析薄封装（Rust 真源）。
  */
 import {
   analyzeBackgroundImageRgbaWasm as wasmAnalyze,

@@ -1,5 +1,5 @@
 /**
- * RFC 019：每站自定义 CSS 片段（Dev tools 类）；存储与净化，防 `</style>` 逃逸与过大 payload。
+ * RFC 0019：每站自定义 CSS 片段（Dev tools 类）；存储与净化，防 `</style>` 逃逸与过大 payload。
  */
 
 export const SITE_CUSTOM_CSS_SCHEMA_VERSION = 1 as const

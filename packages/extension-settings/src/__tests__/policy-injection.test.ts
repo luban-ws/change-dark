@@ -10,13 +10,13 @@ import {
 import { resolveApplyDarkFromPolicy, resolvePolicyFromSnapshot } from '../migration'
 
 /**
- * 与内容脚本一致：由单次 storage 快照推导是否应注入强制暗色（RFC 008 验收用纯函数链）。
+ * 与内容脚本一致：由单次 storage 快照推导是否应注入强制暗色（RFC 0008 验收用纯函数链）。
  */
 function shouldInjectForcedDarkFromSnapshot(snapshot: Record<string, unknown>): boolean {
   return resolveApplyDarkFromPolicy(resolvePolicyFromSnapshot(snapshot))
 }
 
-describe('RFC 008 — 全局 policy → 是否注入', () => {
+describe('RFC 0008 — 全局 policy → 是否注入', () => {
   it('policy=off → 不注入', () => {
     expect(shouldInjectForcedDarkFromSnapshot({ [STORAGE_KEY_POLICY]: POLICY_OFF })).toBe(false)
     expect(resolveApplyDarkFromPolicy(POLICY_OFF)).toBe(false)

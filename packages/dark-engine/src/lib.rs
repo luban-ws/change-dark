@@ -44,7 +44,7 @@ fn check_batch_rgb(rgb: &[u8]) -> Result<(), JsValue> {
     Ok(())
 }
 
-/// 扁平 RGB → 每像素相对亮度 `Vec<f64>`（与 RFC 006 采样缓冲布局一致）。
+/// 扁平 RGB → 每像素相对亮度 `Vec<f64>`（与 RFC 0006 采样缓冲布局一致）。
 #[wasm_bindgen]
 pub fn batch_relative_luminance(rgb: &[u8]) -> Result<Vec<f64>, JsValue> {
     check_batch_rgb(rgb)?;
@@ -73,7 +73,7 @@ pub fn k_means_rgb_centroids(rgb: &[u8], k: u8, max_iter: u32) -> Result<Vec<u8>
         .ok_or_else(|| JsValue::from_str("k_means_rgb_centroids failed"))
 }
 
-/// Lloyd(L)+Otsu 两路候选取更暗、暗簇中位数与条件暗分位（扁平 3 字节）；详见 RFC 023。
+/// Lloyd(L)+Otsu 两路候选取更暗、暗簇中位数与条件暗分位（扁平 3 字节）；详见 RFC 0023。
 #[wasm_bindgen(js_name = kMeansDarkerCentroid)]
 pub fn k_means_darker_centroid(rgb: &[u8], max_iter: u32) -> Result<Vec<u8>, JsValue> {
     check_batch_rgb(rgb)?;
@@ -83,7 +83,7 @@ pub fn k_means_darker_centroid(rgb: &[u8], max_iter: u32) -> Result<Vec<u8>, JsV
         .ok_or_else(|| JsValue::from_str("kMeansDarkerCentroid failed"))
 }
 
-/// RFC 031 §2：单像素改色。`use_tag`: 0=bg, 1=fg, 2=border；`profile_tag`: 0=dark, 1=solarized-dark。
+/// RFC 0031 §2：单像素改色。`use_tag`: 0=bg, 1=fg, 2=border；`profile_tag`: 0=dark, 1=solarized-dark。
 #[wasm_bindgen(js_name = modifyColor)]
 pub fn modify_color_wasm(
     r: u8,
@@ -103,7 +103,7 @@ pub fn modify_color_wasm(
     Ok(vec![out.r, out.g, out.b])
 }
 
-/// RFC 031 §5.1：解析 CSS 颜色 token → `[r,g,b]`；无法解析返回空 vec。
+/// RFC 0031 §5.1：解析 CSS 颜色 token → `[r,g,b]`；无法解析返回空 vec。
 #[wasm_bindgen(js_name = parseCssColorTokenWasm)]
 pub fn parse_css_color_token_wasm(input: &str) -> Vec<u8> {
     match dark_color_utils::parse_css_color::parse_css_color_token(input.trim()) {
@@ -112,7 +112,7 @@ pub fn parse_css_color_token_wasm(input: &str) -> Vec<u8> {
     }
 }
 
-/// RFC 031 P1-5：分析 RGBA 背景图像素。返回 `[is_dark, is_light, is_transparent, opaque, total]`（0/1 + 计数）。
+/// RFC 0031 P1-5：分析 RGBA 背景图像素。返回 `[is_dark, is_light, is_transparent, opaque, total]`（0/1 + 计数）。
 #[wasm_bindgen(js_name = analyzeBackgroundImageRgbaWasm)]
 pub fn analyze_background_image_rgba_wasm(
     data: &[u8],
@@ -131,7 +131,7 @@ pub fn analyze_background_image_rgba_wasm(
     ])
 }
 
-/// RFC 031 P1-5：亮图压暗滤镜字符串；非亮图返回空字符串。
+/// RFC 0031 P1-5：亮图压暗滤镜字符串；非亮图返回空字符串。
 #[wasm_bindgen(js_name = brightnessFilterForBackgroundImageWasm)]
 pub fn brightness_filter_for_background_image_wasm(
     is_dark: bool,
@@ -152,7 +152,7 @@ pub fn brightness_filter_for_background_image_wasm(
     .unwrap_or_default()
 }
 
-/// RFC 031 §5：批量改色。`profile_tag`: 0=dark, 1=solarized-dark。
+/// RFC 0031 §5：批量改色。`profile_tag`: 0=dark, 1=solarized-dark。
 #[wasm_bindgen(js_name = batchModifyColor)]
 pub fn batch_modify_color_wasm(
     rgb: &[u8],

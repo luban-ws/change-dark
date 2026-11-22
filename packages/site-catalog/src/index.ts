@@ -1,4 +1,4 @@
-/** RFC 034 — Site Profile Catalog */
+/** RFC 0034 — Site Profile Catalog */
 export * from './types'
 export * from './defaults'
 export * from './match'

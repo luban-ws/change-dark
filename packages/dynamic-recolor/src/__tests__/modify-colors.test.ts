@@ -49,7 +49,7 @@ describe('rgbToHsl / hslToRgb 往返', () => {
   })
 })
 
-describe('modifyColor — 背景（RFC 031 §2.2）', () => {
+describe('modifyColor — 背景（RFC 0031 §2.2）', () => {
   it('白底变暗（L ≤ maxBgLightness 区）', () => {
     const out = modifyColor({ r: 255, g: 255, b: 255 }, 'bg')
     // 白底应落到接近 poleBg（很暗）
@@ -72,7 +72,7 @@ describe('modifyColor — 背景（RFC 031 §2.2）', () => {
   })
 })
 
-describe('modifyColor — 前景（RFC 031 §2.2）', () => {
+describe('modifyColor — 前景（RFC 0031 §2.2）', () => {
   it('黑字提亮到可读（L ≥ minFgLightness）', () => {
     const out = modifyColor({ r: 0, g: 0, b: 0 }, 'fg')
     expect(rgbToHsl(out).l).toBeGreaterThanOrEqual(
@@ -105,7 +105,7 @@ describe('色相保持（彩色非中性不被洗成灰）', () => {
   })
 })
 
-describe('边框（RFC 031 §2.2 反向窄区）', () => {
+describe('边框（RFC 0031 §2.2 反向窄区）', () => {
   it('亮边框压暗、暗边框提亮，落入 [0.2,0.5]', () => {
     const light = rgbToHsl(modifyColor({ r: 220, g: 220, b: 220 }, 'border')).l
     const dark = rgbToHsl(modifyColor({ r: 20, g: 20, b: 20 }, 'border')).l
@@ -116,7 +116,7 @@ describe('边框（RFC 031 §2.2 反向窄区）', () => {
   })
 })
 
-// RFC 031 §2.7：golden 向量 — WASM 输出与 Rust 真源对齐（见 modify-color-golden.json）。
+// RFC 0031 §2.7：golden 向量 — WASM 输出与 Rust 真源对齐（见 modify-color-golden.json）。
 describe('§2.7 golden 向量（WASM / Rust 校准）', () => {
   it.each(golden.vectors as Array<{ input: string; rgb: [number, number, number]; use: ColorUse; expected: string }>)(
     '$input ($use) → $expected',

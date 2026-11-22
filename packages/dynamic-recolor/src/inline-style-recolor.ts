@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-3：扫描并改写 DOM 内联 `element.style` 颜色 longhand。
+ * RFC 0031 P1-3：扫描并改写 DOM 内联 `element.style` 颜色 longhand。
  *
  * 改色前备份原始 `style` 到 `INLINE_STYLE_BACKUP_ATTR`，重绘/关闭时从备份还原，避免二次改色漂移。
  */

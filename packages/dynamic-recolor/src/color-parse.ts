@@ -3,7 +3,7 @@ import { parseCssColorTokenWasmRgb } from '@change-dark/dark-engine'
 import { getRecolorSkipReason } from './recolor-known-limitations'
 
 /**
- * RFC 031 §5.1：CSS 颜色 token 解析 — **Rust/WASM 真源**。
+ * RFC 0031 §5.1：CSS 颜色 token 解析 — **Rust/WASM 真源**。
  * Phase 1 跳过原因（`var()`、`currentcolor`、`transparent` 等）在 TS 层先判；其余交 WASM。
  */
 export function parseCssColorToken(input: string): Rgb | null {

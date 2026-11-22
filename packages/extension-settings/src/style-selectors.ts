@@ -1,11 +1,11 @@
 /**
- * 注入样式共用的 DOM 选择器常量（RFC 015 / 018 / 031）。
+ * 注入样式共用的 DOM 选择器常量（RFC 0015 / 018 / 031）。
  * 与 `injected-styles` / `dynamic-recolor` 共享，避免循环依赖。
  */
 
 import { CD_SURFACE_LANDMARK_SELECTORS } from './surface-heuristics'
 
-/** RFC 015 / 018：浅层文本类选择器（无裸 `*`）。 */
+/** RFC 0015 / 018：浅层文本类选择器（无裸 `*`）。 */
 export const CD_TEXT_LIKE_SELECTORS =
   ':where(main, article, aside, section, nav, p, span, h1, h2, h3, h4, h5, h6, li, td, th, blockquote, figcaption, label, dd, dt, a, code, pre)' as const
 
@@ -17,7 +17,7 @@ export const CD_BLOCK_BACKGROUND_SELECTORS =
   ':where(main, [role="main"])' as const
 
 /**
- * 主题壳层表面（RFC 032）：**禁止 :where()**，须高于 WASM 输出的 `html[root] .class` 改色规则。
+ * 主题壳层表面（RFC 0032）：**禁止 :where()**，须高于 WASM 输出的 `html[root] .class` 改色规则。
  */
 export const CD_THEME_SHELL_SURFACE_SELECTORS = [
   'body',

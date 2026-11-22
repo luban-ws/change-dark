@@ -48,7 +48,7 @@ export default defineManifest({
       '32': 'icons/icon-32.png',
     },
   },
-  /** 与 popup 同页，便于在新标签页中编辑长表单（RFC 007 渐进 options）。 */
+  /** 与 popup 同页，便于在新标签页中编辑长表单（RFC 0007 渐进 options）。 */
   options_ui: {
     page: 'src/popup/index.html',
     open_in_tab: true,

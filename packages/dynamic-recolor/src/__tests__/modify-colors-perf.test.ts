@@ -16,7 +16,7 @@ function buildHeavyPageColors(count: number) {
   return Array.from({ length: count }, (_, i) => palette[i % palette.length]!)
 }
 
-describe('RFC 031 §5.3 — 批改色性能回归', () => {
+describe('RFC 0031 §5.3 — 批改色性能回归', () => {
   it('批去重：重复输入与逐色 modifyColor 一致', () => {
     const item = { rgb: { r: 255, g: 255, b: 255 }, use: 'bg' as const }
     const repeated = Array.from({ length: 48 }, () => item)

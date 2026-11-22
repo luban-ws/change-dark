@@ -1,5 +1,5 @@
 /**
- * RFC 031：改写 `box-shadow` 声明内嵌的颜色 token。
+ * RFC 0031：改写 `box-shadow` 声明内嵌的颜色 token。
  */
 
 import {

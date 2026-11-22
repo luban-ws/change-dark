@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-4：MutationObserver 触发的改色增量计划与 flush（纯函数，可单测）。
+ * RFC 0031 P1-4：MutationObserver 触发的改色增量计划与 flush（纯函数，可单测）。
  */
 
 import {
@@ -157,7 +157,7 @@ export function analyzeRecolorMutations(
   }
 }
 
-/** RFC 031 P1-4 flush：按 RFC 006 预算墙处理内联元素；stylesheet 变更则全量重建覆盖层。 */
+/** RFC 0031 P1-4 flush：按 RFC 0006 预算墙处理内联元素；stylesheet 变更则全量重建覆盖层。 */
 export function applyRecolorMutationFlush(
   doc: Document,
   plan: RecolorMutationPlan,

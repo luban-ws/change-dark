@@ -1,6 +1,6 @@
 # change-dark — agent notes
 
-Chrome extension + monorepo for **Dynamic-only** dark mode (RFC 031). Workspace packages use **`@change-dark/*`**.
+Chrome extension + monorepo for **Dynamic-only** dark mode (RFC 0031). Workspace packages use **`@change-dark/*`**.
 
 ## Layout
 

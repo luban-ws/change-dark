@@ -1,5 +1,5 @@
 /**
- * RFC 034：Site Profile Catalog — 类型与 schema 版本。
+ * RFC 0034：Site Profile Catalog — 类型与 schema 版本。
  */
 
 export const SITE_PROFILE_SCHEMA_VERSION = 1 as const
@@ -41,7 +41,7 @@ export interface SiteProfileV1 {
   priority?: number
   surfaceRepair?: SiteSurfaceRepairProfileV1
   recolor?: SiteRecolorProfileV1
-  /** 最后手段；运行时经 RFC 019 sanitize */
+  /** 最后手段；运行时经 RFC 0019 sanitize */
   customCss?: string
 }
 

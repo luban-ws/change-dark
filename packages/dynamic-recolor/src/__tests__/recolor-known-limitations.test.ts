@@ -9,7 +9,7 @@ import {
 import { parseCssColorToken } from '../color-parse'
 import { buildRecolorOverrideStylesheet } from '../css-stylesheet'
 
-describe('RFC 031 P1-6 — CSS 变量已知限制', () => {
+describe('RFC 0031 P1-6 — CSS 变量已知限制', () => {
   it('已知限制表含 var() 与跨域 sheet', () => {
     const ids = RECOLOR_KNOWN_LIMITATIONS.map((x) => x.id)
     expect(ids).toContain(RECOLOR_SKIP_REASON.CSS_VAR)

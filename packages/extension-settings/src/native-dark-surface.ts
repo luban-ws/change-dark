@@ -1,5 +1,5 @@
 /**
- * 与 RFC 025 / 内容脚本 `applyForcedDark` 一致：用 html/body 的 computed background 判断「原生已暗」，
+ * 与 RFC 0025 / 内容脚本 `applyForcedDark` 一致：用 html/body 的 computed background 判断「原生已暗」，
  * 供 AUTO 全模式跳过与 Filter/Filter+ 单独跳过（避免反相把暗页变亮）。
  */
 
@@ -9,7 +9,7 @@ const RGB_PREFIX_RE = /rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/
 /** 从 `rgba(..., alpha)` 捕获 alpha；无则视为不透明。 */
 const RGBA_ALPHA_RE = /rgba\([^)]+,\s*([\d.]+)\)/
 
-/** 近全透明背景视为「无实色」，不参与已暗判定（与 RFC 025 一致）。 */
+/** 近全透明背景视为「无实色」，不参与已暗判定（与 RFC 0025 一致）。 */
 const NEAR_TRANSPARENT_ALPHA = 0.05
 
 /**

@@ -1,5 +1,5 @@
 /**
- * RFC 018：全局字体替换与文本描边；可与 RFC 016 单站部分覆盖合并。
+ * RFC 0018：全局字体替换与文本描边；可与 RFC 0016 单站部分覆盖合并。
  */
 
 import { ROOT_ATTR } from './constants'
@@ -188,7 +188,7 @@ export function isTypographyInjectionActive(t: TypographySettingsV1): boolean {
 }
 
 /**
- * RFC 018：在 `html[ROOT_ATTR]` 下注入字体（body）与描边（文本类节点）；空串表示不注入。
+ * RFC 0018：在 `html[ROOT_ATTR]` 下注入字体（body）与描边（文本类节点）；空串表示不注入。
  */
 export function buildTypographyCss(t: TypographySettingsV1): string {
   const c = clampTypographySettings(t)

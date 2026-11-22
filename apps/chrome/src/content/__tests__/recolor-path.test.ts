@@ -28,7 +28,7 @@ const solarizedTheme = resolveThemePalette(
   'rgb(147, 161, 161)',
 )
 
-describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
+describe('RFC 0031 S3 — 整页 styleSheets + 注入覆盖', () => {
   beforeEach(() => {
     document.head.innerHTML = ''
     document.body.innerHTML = ''
@@ -71,7 +71,7 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     expect(paintRecolorPath(themeFilters, darkTheme)).toBe(false)
   })
 
-  it('RFC 031 P1-3 — 内联 style 在同源 stylesheet 存在时一并改色', () => {
+  it('RFC 0031 P1-3 — 内联 style 在同源 stylesheet 存在时一并改色', () => {
     const style = document.createElement('style')
     style.textContent = 'body { background-color: #fff; }'
     document.head.appendChild(style)
@@ -106,7 +106,7 @@ describe('RFC 031 S3 — 整页 styleSheets + 注入覆盖', () => {
     expect(el?.textContent).toContain(CSS_VAR_PAGE_BG)
   })
 
-  it('RFC 032 — baseCss 与 recolor 层合并注入，不覆盖铺底变量', () => {
+  it('RFC 0032 — baseCss 与 recolor 层合并注入，不覆盖铺底变量', () => {
     const style = document.createElement('style')
     style.textContent = 'body { color: #000; background-color: #fff; }'
     document.head.appendChild(style)

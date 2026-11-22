@@ -21,7 +21,7 @@ const VIEWPORT_FRAC_Y = {
 } as const
 
 /**
- * 在 `requestIdleCallback` 不可用时用 `setTimeout(0)` 分片，避免长时间阻塞主线程（RFC 006）。
+ * 在 `requestIdleCallback` 不可用时用 `setTimeout(0)` 分片，避免长时间阻塞主线程（RFC 0006）。
  */
 export function scheduleIdleTask(task: () => void): void {
   const ric = (
@@ -59,7 +59,7 @@ export function whenDocumentComplete(): Promise<void> {
 
 /**
  * 分层抽样：视口 `elementsFromPoint` 若干点 + 文档树深度优先遍历；
- * 在节点数与时间墙任一达到上限时停止。输出 RFC 005 扁平 RGB。
+ * 在节点数与时间墙任一达到上限时停止。输出 RFC 0005 扁平 RGB。
  */
 export function collectPageBackgroundRgbBuffer(
   budget: SamplingBudget,

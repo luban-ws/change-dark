@@ -1,5 +1,5 @@
 /**
- * RFC 031 P1-5：从 CSS `background` / `background-image` 提取位图 URL 与渐变改色。
+ * RFC 0031 P1-5：从 CSS `background` / `background-image` 提取位图 URL 与渐变改色。
  */
 
 import {

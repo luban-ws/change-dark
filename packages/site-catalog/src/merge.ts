@@ -1,5 +1,5 @@
 /**
- * RFC 034：合并多条 profile + 用户 patch → ResolvedSurfaceRepairPolicy。
+ * RFC 0034：合并多条 profile + 用户 patch → ResolvedSurfaceRepairPolicy。
  */
 
 import {

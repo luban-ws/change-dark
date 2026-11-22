@@ -1,5 +1,5 @@
 /**
- * RFC 009 / 017：站点列表（精确 origin、glob、斜杠正则）与两种语义：列表内不套用 / 仅列表内套用。
+ * RFC 0009 / 017：站点列表（精确 origin、glob、斜杠正则）与两种语义：列表内不套用 / 仅列表内套用。
  */
 
 import {
@@ -8,7 +8,7 @@ import {
   type SiteListMode,
 } from './constants'
 
-/** 当前存储形状（RFC 017 v2）。 */
+/** 当前存储形状（RFC 0017 v2）。 */
 export interface SiteListStateV2 {
   v: 2
   mode: SiteListMode
@@ -22,7 +22,7 @@ export type SiteListStateV1 = { denylist: string[] }
 const MAX_SITE_RULE_LEN = 512 as const
 const MAX_REGEX_BODY_LEN = 256 as const
 
-/** 单表最大条数（缓解存储膨胀，RFC 017）。 */
+/** 单表最大条数（缓解存储膨胀，RFC 0017）。 */
 export const MAX_SITE_LIST_ENTRIES = 200 as const
 
 function originToHostname(origin: string): string {

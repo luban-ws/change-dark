@@ -179,7 +179,7 @@ describe('App & usePopupState Integration Coverage', () => {
     const tablist = within(app).getByRole('tablist')
     const supportTrigger = tablist.querySelector('[id$="-trigger-support"]')
     expect(supportTrigger).toBeTruthy()
-    // Radix Tabs 面板切换在 jsdom + fireEvent 下不可靠；真机交互见 E2E（RFC 026）。
+    // Radix Tabs 面板切换在 jsdom + fireEvent 下不可靠；真机交互见 E2E（RFC 0026）。
   })
 
   it('dispatches global policy storage changes', async () => {

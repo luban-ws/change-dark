@@ -109,7 +109,7 @@ describe('planStorageMigration', () => {
     expect(plan.needsWrite).toBe(true)
   })
 
-  it('RFC 032 — legacy theme-mode 写入 dynamic + schema 2', () => {
+  it('RFC 0032 — legacy theme-mode 写入 dynamic + schema 2', () => {
     for (const legacy of LEGACY_THEME_MODE_VALUES) {
       const plan = planStorageMigration({
         [STORAGE_KEY_SCHEMA_VERSION]: 1,
@@ -122,7 +122,7 @@ describe('planStorageMigration', () => {
     }
   })
 
-  it('RFC 032 — schema 2 + dynamic 且无遗留键则无需写盘', () => {
+  it('RFC 0032 — schema 2 + dynamic 且无遗留键则无需写盘', () => {
     const plan = planStorageMigration({
       [STORAGE_KEY_SCHEMA_VERSION]: CURRENT_STORAGE_SCHEMA_VERSION,
       [STORAGE_KEY_POLICY]: POLICY_ON,
@@ -132,7 +132,7 @@ describe('planStorageMigration', () => {
     expect(plan.writeThemeMode).toBe(false)
   })
 
-  it('RFC 032 — site-overrides 剥离 themeMode', () => {
+  it('RFC 0032 — site-overrides 剥离 themeMode', () => {
     const plan = planStorageMigration({
       [STORAGE_KEY_SCHEMA_VERSION]: CURRENT_STORAGE_SCHEMA_VERSION,
       [STORAGE_KEY_POLICY]: POLICY_ON,

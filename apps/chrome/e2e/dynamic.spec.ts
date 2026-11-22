@@ -11,7 +11,7 @@ import {
   waitForNoForcedDarkRoot,
 } from './helpers/extension'
 
-test.describe('RFC 026 P0 — Dynamic-only E2E', () => {
+test.describe('RFC 0026 P0 — Dynamic-only E2E', () => {
   test.beforeEach(async ({ context, extensionId }) => {
     void extensionId
     await seedDynamicOn(context)
@@ -86,7 +86,7 @@ test.describe('RFC 026 P0 — Dynamic-only E2E', () => {
   })
 })
 
-test.describe('RFC 026 — Popup policy 持久化', () => {
+test.describe('RFC 0026 — Popup policy 持久化', () => {
   test('切换 On 写入 storage', async ({ context, extensionId }) => {
     await seedDynamicOn(context)
     await setExtensionStorage(context, { [E2E_STORAGE.POLICY]: 'off' })

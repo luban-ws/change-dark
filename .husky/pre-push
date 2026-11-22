@@ -1,2 +1,10 @@
 #!/usr/bin/env sh
+# >>> reasongraph managed >>>
+if command -v reasongraph >/dev/null 2>&1; then
+  reasongraph hook pre-push || true
+else
+  "/opt/homebrew/Cellar/node/26.13.0_2/bin/node" "/opt/homebrew/Cellar/reasongraph/0.2.6/libexec/lib/node_modules/@borg0ai/reasongraph/dist/cli.js" hook pre-push || true
+fi
+# <<< reasongraph managed <<<
+
 exec "$(dirname "$0")/../scripts/hooks/pre-push.sh"

@@ -1,5 +1,5 @@
 /**
- * RFC 034：解析当前页的最终 Site Policy。
+ * RFC 0034：解析当前页的最终 Site Policy。
  */
 
 import { GLOBAL_DEFAULT_SITE_POLICY } from './defaults'

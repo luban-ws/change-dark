@@ -96,7 +96,7 @@ export async function readApplyDark(): Promise<boolean> {
 }
 
 /**
- * 内容脚本专用：全局策略允许 **且** 站点列表规则允许套用时才为 true（RFC 017）。
+ * 内容脚本专用：全局策略允许 **且** 站点列表规则允许套用时才为 true（RFC 0017）。
  */
 export async function readShouldApplyForcedDarkForPage(pageOrigin?: string): Promise<boolean> {
   const base = await readApplyDark()
@@ -108,19 +108,19 @@ export async function readShouldApplyForcedDarkForPage(pageOrigin?: string): Pro
 }
 
 /**
- * 读取站点列表（RFC 009 / 017 模型子集）。
+ * 读取站点列表（RFC 0009 / 017 模型子集）。
  */
 export async function readSiteListState(): Promise<SiteListStateV2> {
   const snap = await chrome.storage.local.get([...SITE_LIST_KEYS])
   return parseSiteListState(snap[STORAGE_KEY_SITE_LIST])
 }
 
-/** 持久化站点列表（RFC 017：`v:2` + `mode` + `entries`）。 */
+/** 持久化站点列表（RFC 0017：`v:2` + `mode` + `entries`）。 */
 export async function persistSiteListState(state: SiteListStateV2): Promise<void> {
   await chrome.storage.local.set({ [STORAGE_KEY_SITE_LIST]: state })
 }
 
-/** 将某 http(s) origin 在站点列表 `entries` 中切换（保持当前 `mode`；Popup / 快捷键 RFC 010）。 */
+/** 将某 http(s) origin 在站点列表 `entries` 中切换（保持当前 `mode`；Popup / 快捷键 RFC 0010）。 */
 export async function toggleCurrentOriginInDenylist(origin: string): Promise<void> {
   const cur = await readSiteListState()
   const next = toggleDenylistOrigin(origin, cur)
@@ -133,7 +133,7 @@ export async function toggleCurrentOriginInDenylist(origin: string): Promise<voi
 export const readEnabled = readApplyDark
 
 /**
- * RFC 006：读取采样预算（未写入 storage 时使用默认值）。
+ * RFC 0006：读取采样预算（未写入 storage 时使用默认值）。
  */
 export async function readSamplingBudget(): Promise<SamplingBudget> {
   const snap = await chrome.storage.local.get([...SAMPLING_KEYS])
@@ -141,7 +141,7 @@ export async function readSamplingBudget(): Promise<SamplingBudget> {
 }
 
 /**
- * Popup / Options 写入全局策略（RFC 004 / 007）；与迁移后的键一致并移除遗留 `enabled`。
+ * Popup / Options 写入全局策略（RFC 0004 / 007）；与迁移后的键一致并移除遗留 `enabled`。
  */
 export async function persistGlobalPolicy(policy: GlobalPolicy): Promise<void> {
   await chrome.storage.local.set({
@@ -151,13 +151,13 @@ export async function persistGlobalPolicy(policy: GlobalPolicy): Promise<void> {
   await chrome.storage.local.remove(STORAGE_KEY_ENABLED)
 }
 
-/** RFC 011：读取全局主题滤镜。 */
+/** RFC 0011：读取全局主题滤镜。 */
 export async function readThemeFiltersState(): Promise<ThemeFiltersStateV1> {
   const snap = await chrome.storage.local.get([...THEME_FILTER_KEYS])
   return parseThemeFiltersState(snap[STORAGE_KEY_THEME_FILTERS])
 }
 
-/** RFC 011：写入全局主题滤镜（Popup 滑块）。 */
+/** RFC 0011：写入全局主题滤镜（Popup 滑块）。 */
 export async function persistThemeFiltersState(state: ThemeFiltersStateV1): Promise<void> {
   await chrome.storage.local.set({
     [STORAGE_KEY_THEME_FILTERS]: clampThemeFilters(state),
@@ -193,24 +193,24 @@ export async function persistPagePalette(p: PagePalette): Promise<void> {
   await chrome.storage.local.set({ [STORAGE_KEY_PAGE_PALETTE]: p })
 }
 
-/** RFC 016：读取站点覆盖表。 */
+/** RFC 0016：读取站点覆盖表。 */
 export async function readSiteOverridesState(): Promise<SiteOverridesStateV1> {
   const snap = await chrome.storage.local.get([...SITE_OVERRIDE_KEYS])
   return parseSiteOverridesState(snap[STORAGE_KEY_SITE_OVERRIDES])
 }
 
-/** RFC 016：写入整表（内部使用）。 */
+/** RFC 0016：写入整表（内部使用）。 */
 export async function persistSiteOverridesState(state: SiteOverridesStateV1): Promise<void> {
   await chrome.storage.local.set({ [STORAGE_KEY_SITE_OVERRIDES]: state })
 }
 
-/** RFC 018：读取全局字体/描边。 */
+/** RFC 0018：读取全局字体/描边。 */
 export async function readTypographyState(): Promise<TypographyStateV1> {
   const snap = await chrome.storage.local.get([...TYPOGRAPHY_KEYS])
   return parseTypographyState(snap[STORAGE_KEY_TYPOGRAPHY])
 }
 
-/** RFC 018：写入全局字体/描边（Popup）。 */
+/** RFC 0018：写入全局字体/描边（Popup）。 */
 export async function persistTypographyState(state: TypographyStateV1): Promise<void> {
   const c = clampTypographySettings(
     typographyStateToSettings({ ...DEFAULT_TYPOGRAPHY_STATE, ...state }),
@@ -220,19 +220,19 @@ export async function persistTypographyState(state: TypographyStateV1): Promise<
   })
 }
 
-/** RFC 019：读取每站自定义 CSS 表。 */
+/** RFC 0019：读取每站自定义 CSS 表。 */
 export async function readSiteCustomCssState(): Promise<SiteCustomCssStateV1> {
   const snap = await chrome.storage.local.get([...SITE_CUSTOM_CSS_KEYS])
   return parseSiteCustomCssState(snap[STORAGE_KEY_SITE_CUSTOM_CSS])
 }
 
-/** RFC 019：写入整表（内部使用）。 */
+/** RFC 0019：写入整表（内部使用）。 */
 export async function persistSiteCustomCssState(state: SiteCustomCssStateV1): Promise<void> {
   await chrome.storage.local.set({ [STORAGE_KEY_SITE_CUSTOM_CSS]: state })
 }
 
 /**
- * RFC 019：当前页 origin 的用户 CSS（已 sanitize）；无则为空串。
+ * RFC 0019：当前页 origin 的用户 CSS（已 sanitize）；无则为空串。
  */
 export async function readSiteCustomCssForPage(pageOrigin?: string): Promise<string> {
   const origin =
@@ -241,7 +241,7 @@ export async function readSiteCustomCssForPage(pageOrigin?: string): Promise<str
   return state.byOrigin[origin]?.css ?? ''
 }
 
-/** RFC 019：写入或清空某 origin 的自定义 CSS（Popup）。 */
+/** RFC 0019：写入或清空某 origin 的自定义 CSS（Popup）。 */
 export async function persistSiteCustomCssForOrigin(origin: string, css: string): Promise<void> {
   const cur = await readSiteCustomCssState()
   const byOrigin = { ...cur.byOrigin }
@@ -254,7 +254,7 @@ export async function persistSiteCustomCssForOrigin(origin: string, css: string)
   await persistSiteCustomCssState({ v: 1, byOrigin })
 }
 
-/** RFC 016 / 019：是否存在该 origin 的主题/字体覆盖或自定义 CSS。 */
+/** RFC 0016 / 019：是否存在该 origin 的主题/字体覆盖或自定义 CSS。 */
 export async function hasSiteScopedDataForOrigin(origin: string): Promise<boolean> {
   const [ov, cssText] = await Promise.all([
     readSiteOverridesState(),
@@ -264,7 +264,7 @@ export async function hasSiteScopedDataForOrigin(origin: string): Promise<boolea
 }
 
 /**
- * RFC 016：按当前页 origin 合并全局主题与覆盖，供内容脚本注入。
+ * RFC 0016：按当前页 origin 合并全局主题与覆盖，供内容脚本注入。
  */
 export async function readEffectiveThemeForPage(pageOrigin?: string): Promise<{
   themeMode: ThemeMode
@@ -294,7 +294,7 @@ export async function readEffectivePagePaletteForPage(pageOrigin?: string): Prom
 }
 
 /**
- * RFC 018：按当前页合并全局与单站字体/描边。
+ * RFC 0018：按当前页合并全局与单站字体/描边。
  */
 export async function readEffectiveTypographyForPage(pageOrigin?: string): Promise<TypographySettingsV1> {
   const origin =
@@ -321,7 +321,7 @@ async function persistSiteOverrideEntry(
   await persistSiteOverridesState({ v: 1, byOrigin })
 }
 
-/** RFC 016 Popup：写入与全局差分后的滑块部分覆盖。 */
+/** RFC 0016 Popup：写入与全局差分后的滑块部分覆盖。 */
 export async function upsertSiteThemeFiltersOverride(
   origin: string,
   current: ThemeFiltersStateV1,
@@ -353,7 +353,7 @@ export async function upsertSitePagePaletteOverride(origin: string, palette: Pag
   await persistSiteOverrideEntry(origin, next, state)
 }
 
-/** RFC 018：写入与全局差分后的字体/描边部分覆盖。 */
+/** RFC 0018：写入与全局差分后的字体/描边部分覆盖。 */
 export async function upsertSiteTypographyOverride(
   origin: string,
   current: TypographySettingsV1,
@@ -371,7 +371,7 @@ export async function upsertSiteTypographyOverride(
   await persistSiteOverrideEntry(origin, next, state)
 }
 
-/** RFC 016 / 019：移除此 origin 的主题/字体覆盖与自定义 CSS。 */
+/** RFC 0016 / 019：移除此 origin 的主题/字体覆盖与自定义 CSS。 */
 export async function clearSiteOverrideForOrigin(origin: string): Promise<void> {
   const state = await readSiteOverridesState()
   const byOrigin = { ...state.byOrigin }
@@ -383,7 +383,7 @@ export async function clearSiteOverrideForOrigin(origin: string): Promise<void> 
   await persistSiteCustomCssState({ v: 1, byOrigin: cssByOrigin })
 }
 
-/** RFC 024：读取智能暗色检测阈值。 */
+/** RFC 0024：读取智能暗色检测阈值。 */
 export async function readAutoDarkThreshold(): Promise<number> {
   const result = await chrome.storage.local.get(STORAGE_KEY_AUTO_DARK_THRESHOLD)
   const val = result[STORAGE_KEY_AUTO_DARK_THRESHOLD]
@@ -391,7 +391,7 @@ export async function readAutoDarkThreshold(): Promise<number> {
   return DEFAULT_AUTO_DARK_THRESHOLD
 }
 
-/** RFC 024：持久化智能暗色检测阈值。 */
+/** RFC 0024：持久化智能暗色检测阈值。 */
 export async function persistAutoDarkThreshold(val: number): Promise<void> {
   await chrome.storage.local.set({ [STORAGE_KEY_AUTO_DARK_THRESHOLD]: val })
 }

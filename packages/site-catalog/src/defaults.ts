@@ -1,5 +1,5 @@
 /**
- * RFC 034：全局默认 policy（与 RFC 033 surface-heuristics 对齐）。
+ * RFC 0034：全局默认 policy（与 RFC 0033 surface-heuristics 对齐）。
  */
 
 import {

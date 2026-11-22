@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * RFC 031 §2.7：从 Rust 真源校验 / 再生成 golden fixture。
+ * RFC 0031 §2.7：从 Rust 真源校验 / 再生成 golden fixture。
  *
  * live `darkreader` npm 不导出 `modifyColor`；向量以 `dark-color-utils` 为准。
  *

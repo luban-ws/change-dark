@@ -1,4 +1,4 @@
-//! RFC 031 §2：逐色变换 `modifyColor`（对齐 Dark Reader `modify-colors.ts`）。
+//! RFC 0031 §2：逐色变换 `modifyColor`（对齐 Dark Reader `modify-colors.ts`）。
 //! sRGB ↔ HSL 在字节空间直算，不走 gamma 线性化。
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -45,7 +45,7 @@ impl ColorUse {
     }
 }
 
-/// RFC 031 §2.1：`dark` 默认 profile（pole ≈ #181a1b / #e8e6e3）。
+/// RFC 0031 §2.1：`dark` 默认 profile（pole ≈ #181a1b / #e8e6e3）。
 pub fn default_dark_profile() -> ColorProfile {
     ColorProfile {
         max_bg_lightness: 0.4,
@@ -320,7 +320,7 @@ pub fn modify_color(rgb: Rgb, use_tag: ColorUse, profile: &ColorProfile) -> Rgb 
 }
 
 /// 批量改色：扁平 RGB `3*n` + 平行 `uses`（0=bg,1=fg,2=border）→ 扁平 RGB。
-/// 同色 + 同用途只算一次（Rust hash 缓存，RFC 031 §5.1 去重）。
+/// 同色 + 同用途只算一次（Rust hash 缓存，RFC 0031 §5.1 去重）。
 pub fn batch_modify_color(rgb: &[u8], uses: &[u8], profile: &ColorProfile) -> Option<Vec<u8>> {
     if rgb.len() % 3 != 0 || rgb.is_empty() {
         return None;
@@ -445,7 +445,7 @@ mod tests {
         assert_eq!((batch[6], batch[7], batch[8]), (s1.r, s1.g, s1.b));
     }
 
-    /// RFC 031 §2.7 golden 向量（Rust 真源，对齐 DR `modify-colors.ts` 移植）。
+    /// RFC 0031 §2.7 golden 向量（Rust 真源，对齐 DR `modify-colors.ts` 移植）。
     #[test]
     fn golden_vectors_rfc_027() {
         let p = default_dark_profile();

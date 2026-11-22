@@ -2,7 +2,7 @@
 
 **English:** A **Chromium (Manifest V3)** extension that applies a **forced dark appearance** to websites. Heavy color math runs in **Rust → WebAssembly**; the host UI, content scripts, and bundling are **TypeScript** with **Vite** and [**CRXJS**](https://github.com/crxjs/chrome-extension-tools).
 
-**中文：** 在网页上注入暗色样式与主题策略；配色聚合、亮度聚类等在 **WASM** 中完成，扩展侧为 MV3 + 存储策略，规格以 **`.spec/rfc/`** 为准（一事一 RFC）。**产品仅保留 Dynamic 模式**（RFC 032）。
+**中文：** 在网页上注入暗色样式与主题策略；配色聚合、亮度聚类等在 **WASM** 中完成，扩展侧为 MV3 + 存储策略，规格以 **`.spec/rfc/`** 为准（一事一 RFC）。**产品仅保留 Dynamic 模式**（RFC 0032）。
 
 ---
 
@@ -14,13 +14,13 @@
 
 | 能力 | 说明 |
 |------|------|
-| **Dynamic** | 视口采样 + stylesheet/inline 改色 + WASM `modifyColor`；见 [RFC 023](.spec/rfc/completed/023-dynamic-color-engine-pipeline.md)、[RFC 031](.spec/rfc/completed/031-dynamic-recolor-engine.md) |
-| **全局策略** | Auto / On / Off，见 [RFC 008](.spec/rfc/completed/008-global-on-off-policy.md) |
-| **按站覆盖** | Only for、站点列表与 pattern，见 [RFC 016](.spec/rfc/completed/016-only-for-per-site-overrides.md)、[RFC 017](.spec/rfc/completed/017-site-list-patterns-regex.md) |
-| **页面配色 / 字体** | Solarized 等页面调色板、字体与描边，见 [RFC 022](.spec/rfc/completed/022-solarized-dark-popup-ui.md)、[RFC 018](.spec/rfc/completed/018-font-and-text-stroke.md) |
-| **站点 catalog** | 跨站 surface repair / recolor profile，见 [RFC 034](.spec/rfc/034-site-profile-catalog.md) |
+| **Dynamic** | 视口采样 + stylesheet/inline 改色 + WASM `modifyColor`；见 [RFC 0023](.spec/rfc/completed/0023-dynamic-color-engine-pipeline.md)、[RFC 0031](.spec/rfc/completed/0031-dynamic-recolor-engine.md) |
+| **全局策略** | Auto / On / Off，见 [RFC 0008](.spec/rfc/completed/0008-global-on-off-policy.md) |
+| **按站覆盖** | Only for、站点列表与 pattern，见 [RFC 0016](.spec/rfc/completed/0016-only-for-per-site-overrides.md)、[RFC 0017](.spec/rfc/completed/0017-site-list-patterns-regex.md) |
+| **页面配色 / 字体** | Solarized 等页面调色板、字体与描边，见 [RFC 0022](.spec/rfc/completed/0022-solarized-dark-popup-ui.md)、[RFC 0018](.spec/rfc/completed/0018-font-and-text-stroke.md) |
+| **站点 catalog** | 跨站 surface repair / recolor profile，见 [RFC 0034](.spec/rfc/0034-site-profile-catalog.md) |
 
-> Static、Filter、Filter+ 已于 [RFC 032](.spec/rfc/completed/032-theme-mode-product-consolidation.md) 从产品中移除（历史 RFC 仍保留在 `.spec/rfc/completed/`）。
+> Static、Filter、Filter+ 已于 [RFC 0032](.spec/rfc/completed/0032-theme-mode-product-consolidation.md) 从产品中移除（历史 RFC 仍保留在 `.spec/rfc/completed/`）。
 
 行为上可参考 [Dark Reader Help](https://darkreader.org/help/en/)，实现为独立代码路径，非 fork。
 
@@ -35,7 +35,7 @@
 | `packages/dynamic-recolor/` | Stylesheet/inline 改色、`light-dark()`、WASM glue；`@change-dark/dynamic-recolor` |
 | `packages/injected-styles/` | `buildDarkCss`、theme shell、`<style>` 注入；`@change-dark/injected-styles` |
 | `packages/extension-settings/` | 常量、选择器、palette、storage；`@change-dark/extension-settings` |
-| `packages/site-catalog/` | 站点 profile catalog（RFC 034）；`@change-dark/site-catalog` |
+| `packages/site-catalog/` | 站点 profile catalog（RFC 0034）；`@change-dark/site-catalog` |
 | `.spec/rfc/` | 规格正文；**RFC 索引**见 [ROADMAP.md](ROADMAP.md) |
 | `.github/workflows/ci.yml` | 全仓 `pnpm` install、`build`、`test`、`lint`（含 `wasm32-unknown-unknown`） |
 | `.github/workflows/deploy-github-pages.yml` | 仅构建 `@change-dark/site` 并部署 **GitHub Pages** |
@@ -80,10 +80,10 @@ pnpm --filter @change-dark/site dev   # 仅预览落地页
 | 文档 | 内容 |
 |------|------|
 | [ROADMAP.md](ROADMAP.md) | **RFC 索引**、约定、下一编号、阶段与里程碑 |
-| [RFC 001](.spec/rfc/completed/001-rust-wasm-monorepo-and-chrome-host.md) | 架构基线（Approved） |
-| [RFC 023](.spec/rfc/completed/023-dynamic-color-engine-pipeline.md) | Dynamic 配色管线（采样 / 聚合语义） |
+| [RFC 0001](.spec/rfc/completed/0001-rust-wasm-monorepo-and-chrome-host.md) | 架构基线（Approved） |
+| [RFC 0023](.spec/rfc/completed/0023-dynamic-color-engine-pipeline.md) | Dynamic 配色管线（采样 / 聚合语义） |
 | [TASK_TRACKING.md](TASK_TRACKING.md) | 任务 ID 与 RFC 对应 |
-| [RFC 021](.spec/rfc/completed/021-project-status-and-backlog.md) | 状态快照与 backlog（元文档） |
+| [任务追踪](.spec/TASK_TRACKING.md) | 状态快照与 backlog（元文档） |
 | [docs/chrome-web-store-listing.md](docs/chrome-web-store-listing.md) | Chrome 网上应用店：政策对齐、隐私 URL、权限英文稿、素材规格、ZIP 说明 |
 | [docs/chrome-web-store-publish.md](docs/chrome-web-store-publish.md) | **发布步骤**：开发者账号、`pack`、后台上传/更新、（可选）Publish API |
 

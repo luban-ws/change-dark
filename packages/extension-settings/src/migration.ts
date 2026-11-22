@@ -18,7 +18,7 @@ import {
 /** 当前存储 schema；与 `STORAGE_KEY_SCHEMA_VERSION` 写入值一致。 */
 export const CURRENT_STORAGE_SCHEMA_VERSION = 2 as const
 
-/** RFC 032：读路径已忽略的旧主题模式字面量。 */
+/** RFC 0032：读路径已忽略的旧主题模式字面量。 */
 export const LEGACY_THEME_MODE_VALUES = ['static', 'filter-css', 'filter-plus'] as const
 
 const POLICY_VALUES: readonly GlobalPolicy[] = [POLICY_AUTO, POLICY_ON, POLICY_OFF]
@@ -44,7 +44,7 @@ export function resolvePolicyFromSnapshot(snapshot: Record<string, unknown>): Gl
 
 /**
  * 是否应对页面应用强制暗色（内容脚本 / 注入决策）。
- * **RFC 008**：`off` → 不注入并拆除；`on`/`auto` → 注入（`auto` 在系统主题 RFC 落地前暂同 `on`）。
+ * **RFC 0008**：`off` → 不注入并拆除；`on`/`auto` → 注入（`auto` 在系统主题 RFC 落地前暂同 `on`）。
  */
 export function resolveApplyDarkFromPolicy(policy: GlobalPolicy): boolean {
   if (policy === POLICY_OFF) return false
@@ -52,7 +52,7 @@ export function resolveApplyDarkFromPolicy(policy: GlobalPolicy): boolean {
 }
 
 /**
- * RFC 008 别名：与 `resolveApplyDarkFromPolicy` 相同，强调「全局开关」语义。
+ * RFC 0008 别名：与 `resolveApplyDarkFromPolicy` 相同，强调「全局开关」语义。
  */
 export function shouldInjectForcedDarkStyles(policy: GlobalPolicy): boolean {
   return resolveApplyDarkFromPolicy(policy)
@@ -65,7 +65,7 @@ function isLegacyThemeModeValue(raw: unknown): boolean {
   )
 }
 
-/** 从 storage 快照移除 per-site `themeMode` 字段（RFC 032）。 */
+/** 从 storage 快照移除 per-site `themeMode` 字段（RFC 0032）。 */
 export function stripLegacyThemeModeFromSiteOverrides(
   raw: unknown,
 ): { state: SiteOverridesStateV1; changed: boolean } {
@@ -119,7 +119,7 @@ export interface StorageMigrationPlan {
   needsWrite: boolean
   /** 是否在写入后移除遗留键 */
   removeLegacyEnabled: boolean
-  /** RFC 032：写入 `change-dark:theme-mode=dynamic` */
+  /** RFC 0032：写入 `change-dark:theme-mode=dynamic` */
   writeThemeMode: boolean
   /** 规范化后的 site-overrides（仅当 `siteOverridesChanged` 为 true 时写入） */
   siteOverrides: SiteOverridesStateV1 | null

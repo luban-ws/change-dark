@@ -41,7 +41,7 @@ packages/
 | `kMeansRgbCentroids(rgb, k, maxIter)` | `k_means_rgb_centroids` | RGB 欧氏 k-means，返回 `[r,g,b]*k` |
 | `kMeansDarkerCentroid(rgb, maxIter)` | `k_means_darker_centroid` | **主算法**（见第 4 节），返回 3 字节 |
 
-**输入格式（扁平 RGB 缓冲）**：每连续 3 字节为一个 `(R, G, B)` 像素，与 RFC 005/006 采样缓冲布局一致。最大 `3 * 524_288` 字节（约 1.5 MiB）。
+**输入格式（扁平 RGB 缓冲）**：每连续 3 字节为一个 `(R, G, B)` 像素，与 RFC 0005/006 采样缓冲布局一致。最大 `3 * 524_288` 字节（约 1.5 MiB）。
 
 ---
 
@@ -147,7 +147,7 @@ result = channel * (1 - amount)   // amount ∈ [0,1], 0=不变, 1=纯黑
 ```
 content/index.ts (applyForcedDark)
         │
-        ├─ collectPageBackgroundRgbBuffer()   ← sampling.ts (JS, RFC 006)
+        ├─ collectPageBackgroundRgbBuffer()   ← sampling.ts (JS, RFC 0006)
         │  └─ elementsFromPoint + 文档树 DFS → 扁平 RGB Uint8Array
         │
         ├─ kMeansDarkerCentroid(buffer, 40)  ← dark-engine (WASM)
@@ -203,7 +203,7 @@ Rust 单元测试覆盖主要路径（`packages/dark-color-utils/src/lib.rs`）�
 
 | RFC | 内容 |
 |-----|------|
-| [RFC 005](./rfc/completed/005-wasm-batch-color-api.md) | WASM API 形状与扁平缓冲约定 |
-| [RFC 006](./rfc/completed/006-content-script-sampling-budget-fallback.md) | 采样预算、`collectPageBackgroundRgbBuffer` |
-| [RFC 012](./rfc/completed/012-theme-mode-dynamic.md) | Dynamic 模式产品行为 |
-| [RFC 023](./rfc/completed/023-dynamic-color-engine-pipeline.md) | 管线语义、备选方案讨论与决策记录 |
+| [RFC 0005](./rfc/completed/0005-wasm-batch-color-api.md) | WASM API 形状与扁平缓冲约定 |
+| [RFC 0006](./rfc/completed/0006-content-script-sampling-budget-fallback.md) | 采样预算、`collectPageBackgroundRgbBuffer` |
+| [RFC 0012](./rfc/completed/0012-theme-mode-dynamic.md) | Dynamic 模式产品行为 |
+| [RFC 0023](./rfc/completed/0023-dynamic-color-engine-pipeline.md) | 管线语义、备选方案讨论与决策记录 |

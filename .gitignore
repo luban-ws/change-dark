@@ -17,4 +17,5 @@ playwright-video/
 test-results
 .test-user-data
 .codegraph/
+.graphify/
 graphify-out/

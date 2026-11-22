@@ -1,5 +1,5 @@
 /**
- * RFC 031 §3.3 / S1：`modify-css` 层 — 把 CSS 声明中的颜色 token 改写为暗色等价。
+ * RFC 0031 §3.3 / S1：`modify-css` 层 — 把 CSS 声明中的颜色 token 改写为暗色等价。
  *
  * S1 范围：单条内联声明（如 `color: #000`）→ `modifyColor` → 新色值。
  * S2+ 再扩到整段 stylesheet 规则收集与覆盖注入。
@@ -15,7 +15,7 @@ import {
 import { recolorLightDarkToPaletteVar } from './light-dark'
 import { paletteCssVarForRecolor } from './palette-apply'
 
-/** RFC 031 §2.6：Phase 1 直接支持的 longhand 属性 → 色用途。 */
+/** RFC 0031 §2.6：Phase 1 直接支持的 longhand 属性 → 色用途。 */
 export const RECOLOR_LONGHAND_PROPERTIES: Readonly<Record<string, ColorUse>> = {
   'background-color': 'bg',
   color: 'fg',

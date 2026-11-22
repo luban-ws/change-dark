@@ -12,7 +12,7 @@ import {
 import { DEFAULT_THEME_FILTERS } from '../theme-filters'
 import { DEFAULT_TYPOGRAPHY_STATE } from '../typography'
 
-describe('RFC 016 — merge 全局 + 覆盖', () => {
+describe('RFC 0016 — merge 全局 + 覆盖', () => {
   it('无覆盖时等同全局（模式恒为 dynamic）', () => {
     const state = parseSiteOverridesState(undefined)
     const r = resolveEffectiveTheme(
@@ -67,7 +67,7 @@ describe('RFC 016 — merge 全局 + 覆盖', () => {
     )
   })
 
-  it('RFC 018：resolveEffectiveTypography 合并 partial', () => {
+  it('RFC 0018：resolveEffectiveTypography 合并 partial', () => {
     const state = parseSiteOverridesState({
       v: 1,
       byOrigin: {

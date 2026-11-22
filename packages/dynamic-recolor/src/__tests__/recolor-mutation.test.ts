@@ -62,7 +62,7 @@ describe('analyzeRecolorMutations', () => {
   })
 })
 
-describe('RFC 031 P1-4 — applyRecolorMutationFlush', () => {
+describe('RFC 0031 P1-4 — applyRecolorMutationFlush', () => {
   const themeFilters = {
     brightness: 100,
     contrast: 100,
