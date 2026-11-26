@@ -8,7 +8,12 @@ import {
   scheduleIdleTask,
   whenDocumentComplete,
 } from './sampling'
-import { paintRecolorInlinePath, paintRecolorPath, paintRecolorStylesheetPath } from './recolor-path'
+import {
+  paintRecolorInlinePath,
+  paintRecolorPath,
+  paintRecolorStylesheetPath,
+  paintRecolorStylesheetPathWithMeta,
+} from './recolor-path'
 import { resolveDynamicBaseRgbWithBranch } from './dynamic-fallback'
 import {
   startRecolorDynamicObserver,
@@ -129,14 +134,21 @@ function applyFastDynamicPaintShell(
   theme: ResolvedThemePalette,
   baseCss: string,
   budget: SamplingBudget,
-): void {
+): boolean {
   document.documentElement.setAttribute(ROOT_ATTR, '')
   ensureStyleElement(mergeRecolorStyleText(baseCss, ''))
   applyPageSurfaceFloor(document)
-  paintRecolorStylesheetPath(themeFilters, theme, document, baseCss)
+  const { variableGraphBudgetExceeded } = paintRecolorStylesheetPathWithMeta(
+    themeFilters,
+    theme,
+    document,
+    baseCss,
+    { variableGraphMaxMs: budget.maxMs },
+  )
   sweepFixedChromeSurfaces(document, budget)
   sweepDocumentLightSurfaces(document, budget)
   scheduleDocumentLightSurfaceResweep(document, budget, 0)
+  return variableGraphBudgetExceeded
 }
 
 /** idle 分片：WASM 改色 + 视口 sweep（重活不阻塞首帧）。 */
@@ -145,8 +157,12 @@ function applyHeavyDynamicPaintWork(
   theme: ResolvedThemePalette,
   budget: SamplingBudget,
   baseCss: string,
+  needFullVariableGraph = false,
 ): void {
   try {
+    if (needFullVariableGraph) {
+      paintRecolorStylesheetPath(themeFilters, theme, document, baseCss)
+    }
     paintRecolorInlinePath(theme, document)
     lastReadableStylesheetCount = collectReadableStylesheetCssTexts(document).readableSheetCount
     startRecolorDynamicObserver(themeFilters, budget, theme, baseCss)
@@ -268,10 +284,21 @@ async function applyForcedDark(): Promise<void> {
 
       const { baseCss, theme } = buildSampledPalette(themeFilters, pagePalette, budget)
       refreshActiveSitePolicy(document, siteProfilePatch)
-      applyFastDynamicPaintShell(themeFilters, theme, baseCss, budget)
+      const needFullVariableGraph = applyFastDynamicPaintShell(
+        themeFilters,
+        theme,
+        baseCss,
+        budget,
+      )
 
       scheduleIdleTask(() => {
-        applyHeavyDynamicPaintWork(themeFilters, theme, budget, baseCss)
+        applyHeavyDynamicPaintWork(
+          themeFilters,
+          theme,
+          budget,
+          baseCss,
+          needFullVariableGraph,
+        )
       })
     } finally {
       ensureTypographyStyleElement(buildTypographyCss(typoSettings))

@@ -27,8 +27,23 @@ describe('parseCssColorToken', () => {
     expect(parseCssColorToken('rgb(10, 20, 30)')).toEqual({ r: 10, g: 20, b: 30 })
   })
 
-  it('Rust/WASM 解析 hsl 与命名色', () => {
+  it('Rust/WASM 解析 hsl、space-separated rgb/hsl 与 oklch', () => {
     expect(parseCssColorToken('hsl(0, 100%, 50%)')).toEqual({ r: 255, g: 0, b: 0 })
+    expect(parseCssColorToken('hsl(0 100% 50%)')).toEqual({ r: 255, g: 0, b: 0 })
+    expect(parseCssColorToken('rgb(240 240 240 / 0.8)')).toEqual({
+      r: 240,
+      g: 240,
+      b: 240,
+    })
+    expect(parseCssColorToken('rgba(255, 255, 255, 0)')).toBeNull()
+    const light = parseCssColorToken('oklch(0.96 0 0)')
+    expect(light).not.toBeNull()
+    expect(light!.r).toBeGreaterThan(235)
+    expect(parseCssColorToken('oklch(96% 0 0)')).toEqual(light)
+    const accent = parseCssColorToken('oklch(0.6 0.2 250)')
+    expect(accent).not.toBeNull()
+    expect(accent!.b).toBeGreaterThan(accent!.r)
+    expect(parseCssColorToken('oklch(1 0 0 / 0)')).toBeNull()
     expect(parseCssColorToken('red')).toEqual({ r: 255, g: 0, b: 0 })
   })
 

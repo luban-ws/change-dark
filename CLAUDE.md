@@ -19,7 +19,7 @@ Single source: `:root` vars `--cd-page-bg` / `--cd-page-fg` / `--cd-page-border`
 
 | Layer | Purpose |
 |-------|---------|
-| Recolor overrides | Neutral literals + **`--*` custom props** → `var(--cd-page-bg/fg/border)` |
+| Recolor overrides | Neutral literals + CSS variable graph (`--cd-recolor-{bg\|fg\|border}--*` wrappers preserving author `--*`) + `light-dark()` → `var(--cd-page-bg/fg/border)`; brand accents & `oklch()` via Rust/WASM |
 | Theme shell (`buildThemePaletteShellCss`) | Last in merge; **no `:where()`**; beats WASM class rules |
 | Surface repair | Inline `background-color: var(--cd-page-bg)` only; skips buttons/links |
 
@@ -56,8 +56,8 @@ When a user reports “wrong black / wrong white” on a modern site:
 
 1. Confirm `<html data-change-dark-root>` and injected `#change-dark-style` exist.
 2. Inspect computed `background-color` on the offending node.
-3. Check author `--*` vars (`getComputedStyle(documentElement).getPropertyValue('--…')`).
-4. If values contain `light-dark(`, verify recolor output includes **`html[ROOT_ATTR] { --…: var(--cd-page-bg)`** (not `html[…] :root`).
+3. Check author `--*` vars (`getComputedStyle(documentElement).getPropertyValue('--…')`) and injected `--cd-recolor-{bg|fg|border}--*` wrappers in `#change-dark-style`.
+4. If values contain `light-dark(`, verify recolor output includes **`html[ROOT_ATTR] { --…: var(--cd-page-bg)`** (not `html[…] :root`); for variable-backed rules, verify consumers use `var(--cd-recolor-*)`. Note P1-6 only skips unknown/cross-origin/inline `style` custom props and constructive expressions like `rgb(var(--r)...)`.
 5. Reload extension after `pnpm --filter @change-dark/chrome build`.
 
 ## Commands

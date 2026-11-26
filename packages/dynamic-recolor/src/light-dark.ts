@@ -68,12 +68,14 @@ export function parseOklchNeutralLightness(value: string): number | null {
 }
 
 function branchNeutralLuma(value: string): number | null {
+  const oklchL = parseOklchNeutralLightness(value)
+  if (oklchL != null) return oklchL
   const rgb = parseCssColorToken(value)
   if (rgb) {
     if (!isNeutralPaletteCandidate(rgb)) return null
     return relativeRgbLuma(rgb)
   }
-  return parseOklchNeutralLightness(value)
+  return null
 }
 
 function isNeutralLightDarkBranch(value: string): boolean {

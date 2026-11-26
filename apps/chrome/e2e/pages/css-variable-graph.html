@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CSS Variable Graph E2E Fixture</title>
+    <style>
+      :root {
+        --surface: #f0f0f0;
+        --brand: #1a73e8;
+        --tone: #e8e8e8;
+        --base-bg: oklch(0.96 0 0);
+        --alias-bg: var(--base-bg);
+        --cyc-a: var(--cyc-b);
+        --cyc-b: var(--cyc-a);
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #ffffff;
+        color: #111111;
+        font-family: system-ui, sans-serif;
+      }
+
+      .swatch {
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+        margin: 4px;
+      }
+
+      .panel {
+        background-color: var(--surface);
+      }
+
+      .brand-btn {
+        background-color: var(--brand);
+        color: #ffffff;
+      }
+
+      .multi-bg {
+        background-color: var(--tone);
+      }
+
+      .multi-fg {
+        color: var(--tone);
+        background-color: #222222;
+      }
+
+      .fallback-panel {
+        background-color: var(--unset-var, var(--surface));
+      }
+
+      .alias-panel {
+        background-color: var(--alias-bg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="swatch panel">panel</div>
+    <div class="swatch brand-btn">brand</div>
+    <div class="swatch multi-bg">multi-bg</div>
+    <div class="swatch multi-fg">multi-fg</div>
+    <div class="swatch fallback-panel">fallback</div>
+    <div class="swatch alias-panel">alias</div>
+  </body>
+</html>

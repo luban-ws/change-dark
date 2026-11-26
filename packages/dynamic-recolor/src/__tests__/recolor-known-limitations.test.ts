@@ -37,4 +37,13 @@ describe('RFC 0031 P1-6 — CSS 变量已知限制', () => {
     expect(out).not.toContain('var(--text)')
     expect(out).toContain('background-color:')
   })
+
+  it('未定义的 var(--unknown-token) 仍保持跳过而不破坏原声明', () => {
+    const css = `
+      .missing-token { color: var(--unknown-token); background-color: #fff; }
+    `
+    const out = buildRecolorOverrideStylesheet(css)
+    expect(out).not.toContain('--unknown-token')
+    expect(out).toContain('background-color:')
+  })
 })

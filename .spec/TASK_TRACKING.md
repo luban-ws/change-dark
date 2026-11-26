@@ -105,21 +105,21 @@
 | C2 | pack → `change-dark-extension.zip` | ✅ |
 | C3 | Dashboard 提交 | ☐ 人工 |
 
-## RFC 0036 — CSS 变量改色图（Draft）
+## RFC 0036 — CSS 变量改色图（已完成）
 
 | ID | 专属 RFC | 内容 | 状态 |
 |----|----------|------|------|
-| T-049 | [0036](./rfc/0036-css-variable-recolor-graph.md) | 变量图：定义/用法改写，对齐 DR VariablesStore；修浅灰底 | 📝 Draft |
+| T-049 | [0036](rfc/completed/0036-css-variable-recolor-graph.md) | 变量图：定义/用法改写，对齐 DR VariablesStore；修浅灰底 | ✅ Done |
 
 ### T-049 子任务（见 RFC Delivery）
 
 | 子项 | 内容 | 状态 |
 |------|------|------|
-| S0 | `buildCssVariableGraph` + 单测 | ☐ |
-| S1 | 中性 `--*` 定义 → `--cd-page-*` / WASM + `:root` 前缀 | ☐ |
-| S2 | 简单 `var(--name)` 用法生效 + fixture computed | ☐ |
-| S3 | 接入 `buildRecolorInjectionFromSource` + 回归 | ☐ |
-| S4 | 更新 CLAUDE.md / 031 Phase 1.5 交叉引用 | ☐ |
+| S0 | `buildCssVariableGraph` + 单测 | ✅ |
+| S1 | 中性 `--*` 定义 → `--cd-page-*` / WASM + `:root` 前缀 | ✅ |
+| S2 | 简单 `var(--name)` 用法生效 + fixture computed | ✅ |
+| S3 | 接入 `buildRecolorInjectionFromSource` + 回归 | ✅ |
+| S4 | 更新 CLAUDE.md / 031 Phase 1.5 交叉引用 | ✅ |
 
 ## Backlog（下一个建议 **037**）
 
@@ -139,7 +139,6 @@
 
 
 - [ ] Implement RFC 0035: Chrome Web Store 发布（v0.1.2+） (RFC 0035)
-- [ ] Implement RFC 0036: CSS 变量改色图（对齐 Dark Reader VariablesStore） (RFC 0036)
 
 ## Done
 
@@ -175,5 +174,7 @@
 - [x] Implement RFC 0032: Dynamic-only 产品（移除 Static / Filter / Filter+） (RFC 0032)
 - [x] Implement RFC 0033: 跨站点表面修复层（Surface Repair Layer） (RFC 0033)
 - [x] Implement RFC 0034: Site Profile Catalog（数据驱动站点策略，超越 Dark Reader） (RFC 0034)
+- [x] Implement RFC 0036: CSS 变量改色图（对齐 Dark Reader VariablesStore） (RFC 0036)
+
 
 

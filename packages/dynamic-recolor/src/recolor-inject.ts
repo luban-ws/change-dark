@@ -12,12 +12,14 @@ import {
   buildRecolorOverrideStylesheet,
   type RecolorStylesheetOptions,
 } from './css-stylesheet'
+import { buildCssVariableGraph } from './css-variable-graph'
 import { DEFAULT_DARK_PROFILE, type ColorProfile } from './modify-colors'
 import { collectReadableStylesheetCssTexts } from './stylesheet-collect'
 
 export interface RecolorInjectionBuildResult {
   overrideCss: string
   cssText: string
+  variableGraphBudgetExceeded?: boolean
 }
 
 /** 从已收集的 CSS 文本生成覆盖层（避免重复遍历 `styleSheets`）。 */
@@ -27,11 +29,23 @@ export function buildRecolorInjectionFromSource(
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
   options: RecolorStylesheetOptions = {},
 ): RecolorInjectionBuildResult {
-  const overrideCss = sourceCss.trim()
-    ? buildRecolorOverrideStylesheet(sourceCss, profile, options)
-    : ''
+  let variableGraphBudgetExceeded = false
+  let overrideCss = ''
+  if (sourceCss.trim()) {
+    const graph =
+      options.variableGraph ??
+      buildCssVariableGraph(sourceCss, {
+        maxMs: options.variableGraphMaxMs,
+        now: options.now,
+      })
+    variableGraphBudgetExceeded = graph.stats.budgetExceeded
+    overrideCss = buildRecolorOverrideStylesheet(sourceCss, profile, {
+      ...options,
+      variableGraph: graph,
+    })
+  }
   const cssText = buildRecolorDynamicCss(overrideCss, themeFilters)
-  return { overrideCss, cssText }
+  return { overrideCss, cssText, variableGraphBudgetExceeded }
 }
 
 /** 从可读 stylesheet 生成覆盖 CSS 与完整注入文本（不写 DOM）。 */

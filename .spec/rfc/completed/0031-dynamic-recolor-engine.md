@@ -154,7 +154,7 @@ DR issue #2583 未解，因为这是**架构分叉**，不是细节：引擎看�
 - **静态重写**（读 `cssRules` 原始文本）：拿到 `var(--x)`，无法在 CSS 文本里改一个未知变量 → 这就是 #2583 卡点。
 - **计算值路径**（按元素读 `getComputedStyle().color`）：拿到解析后真实 RGB，可改，但失去「改一条规则覆盖一片」的批量优势，退化成逐元素。
 
-**本仓库定调**：Phase 1 = 静态重写为主（批量、快），CSS 变量**显式列已知限制**（与 DR 同档，P1-6）；**计算值路径作为 §6 待评估的 Phase 1.5**，不混入 Phase 1 主干。该决策写死于此，因它定引擎骨架，不可推迟到 Phase 2。
+**本仓库定调**：Phase 1 = 静态重写为主（批量、快），CSS 变量**显式列已知限制**（与 DR 同档，P1-6）；**计算值/变量图路径作为 §6 待评估的 Phase 1.5**，不混入 Phase 1 主干。该决策写死于此，因它定引擎骨架，不可推迟到 Phase 2。（**注**：Phase 1.5 静态 CSS 变量图已由 [RFC 0036](0036-css-variable-recolor-graph.md) 交付。）
 
 ### 3.3 `modify-css` 层规格（规则遍历的边界）
 
@@ -178,7 +178,7 @@ DR issue #2583 未解，因为这是**架构分叉**，不是细节：引擎看�
 | Shadow DOM（`shadowRoot.adoptedStyleSheets` / 内部 `<style>`） | ⛔ Phase 1 不穿透 | 未来 RFC（DR 用 `adopted-style-manager`，本仓库另开） |
 | 跨域 iframe 子文档 | ⛔ 不可注入（同 RFC 0013 限制） | 永久限制 |
 | `CSSStyleSheet.insertRule` 运行时新增 | ⚠️ 由 §3 MutationObserver + sheet 监听覆盖（P1-4） | Phase 1 P1-4 |
-| 计算值变量解析（`var()`） | ⛔ 已知限制 | §3.2 Phase 1.5 |
+| 计算值变量解析（`var()`） | ✅ 静态变量图已由 RFC 0036 落地；未知/构造色仍跳过 | §3.2 Phase 1.5 / RFC 0036 |
 
 ---
 
@@ -228,7 +228,7 @@ S0→S3 是骨架；P1-3（内联）、P1-4（MutationObserver）、P1-5（背�
 | P1-3 内联样式 | 扫 `element.style` 颜色 | fixture 内联样式被改 | ✅ |
 | P1-4 动态补色 | MutationObserver 新增节点/样式实时改色 | 动态插入 fixture | ✅ |
 | P1-5 背景图 | 背景图亮度分析（**Rust/WASM**）+ 必要时 `filter: brightness()` | 暗/亮图 fixture | ✅ |
-| P1-6 CSS 变量 | 静态重写下 `var(--x)` 不可改 → `recolor-known-limitations.ts` 列**已知限制** | 文档 + 测试 | ✅ |
+| P1-6 CSS 变量 | Phase 1 静态跳过；Phase 1.5 变量图已在 [RFC 0036](0036-css-variable-recolor-graph.md) 交付（未知/构造色仍列已知限制） | 文档 + 测试 | ✅ |
 
 ---
 

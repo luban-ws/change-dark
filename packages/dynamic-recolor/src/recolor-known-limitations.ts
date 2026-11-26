@@ -24,13 +24,13 @@ export interface RecolorKnownLimitation {
   reference?: string
 }
 
-/** RFC 0031 P1-6 完整已知限制表（文档真源）。 */
+/** RFC 0031 P1-6 / RFC 0036 已知限制表（文档真源）。 */
 export const RECOLOR_KNOWN_LIMITATIONS: readonly RecolorKnownLimitation[] = [
   {
     id: RECOLOR_SKIP_REASON.CSS_VAR,
-    title: 'CSS 自定义属性 `var(--*)`',
+    title: 'CSS 自定义属性 `var(--*)`（未定义 / 构造表达式）',
     description:
-      '静态重写仅见 `color: var(--x)` 字面量，无法在不知道 `--x` 定义的情况下改写。元素仍显示变量解析后的原站色。',
+      'RFC 0036 变量图已处理可读 stylesheet 内的 `--*` 定义与简单 `var()`/`fallback` 消费；仅未知/跨域/内联 `style` 自定义属性及 `rgb(var(--r)...)` / `color-mix()` 等构造表达式保持跳过。',
     reference: 'https://github.com/darkreader/darkreader/issues/2583',
   },
   {

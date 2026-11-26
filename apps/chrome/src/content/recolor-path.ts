@@ -13,6 +13,37 @@ import type { ThemeFiltersStateV1 } from '@change-dark/extension-settings'
 import { getActiveSitePolicy } from './site-policy'
 
 /**
+ * 仅 stylesheet 覆盖（同步首屏路径；`theme.profile` 含 Solarized preset），返回注入与变量图预算状态。
+ */
+export function paintRecolorStylesheetPathWithMeta(
+  themeFilters: ThemeFiltersStateV1,
+  theme: ResolvedThemePalette,
+  doc: Document = document,
+  baseCss = '',
+  options: { variableGraphMaxMs?: number } = {},
+): { painted: boolean; variableGraphBudgetExceeded: boolean } {
+  const { cssChunks } = collectReadableStylesheetCssTexts(doc)
+  const sourceCss = cssChunks.join('\n\n').trim()
+  if (!sourceCss) return { painted: false, variableGraphBudgetExceeded: false }
+
+  const build = buildRecolorInjectionFromSource(
+    sourceCss,
+    themeFilters,
+    theme.profile,
+    {
+      cssVarSubstitute: getActiveSitePolicy().recolor.cssVarSubstitute,
+      variableGraphMaxMs: options.variableGraphMaxMs,
+    },
+  )
+  const variableGraphBudgetExceeded = Boolean(build.variableGraphBudgetExceeded)
+  if (!build.overrideCss.trim()) {
+    return { painted: false, variableGraphBudgetExceeded }
+  }
+  applyRecolorInjectionFromBuild(doc, build, baseCss)
+  return { painted: true, variableGraphBudgetExceeded }
+}
+
+/**
  * 仅 stylesheet 覆盖（同步首屏路径；`theme.profile` 含 Solarized preset）。
  */
 export function paintRecolorStylesheetPath(
@@ -21,19 +52,8 @@ export function paintRecolorStylesheetPath(
   doc: Document = document,
   baseCss = '',
 ): boolean {
-  const { cssChunks } = collectReadableStylesheetCssTexts(doc)
-  const sourceCss = cssChunks.join('\n\n').trim()
-  if (!sourceCss) return false
-
-  const build = buildRecolorInjectionFromSource(
-    sourceCss,
-    themeFilters,
-    theme.profile,
-    { cssVarSubstitute: getActiveSitePolicy().recolor.cssVarSubstitute },
-  )
-  if (!build.overrideCss.trim()) return false
-  applyRecolorInjectionFromBuild(doc, build, baseCss)
-  return true
+  return paintRecolorStylesheetPathWithMeta(themeFilters, theme, doc, baseCss)
+    .painted
 }
 
 /** 内联 `[style]` 改色（idle 分片；须已有可读 stylesheet 才执行，与 DR 门槛一致）。 */
