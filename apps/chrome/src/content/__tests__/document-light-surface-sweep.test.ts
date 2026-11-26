@@ -127,7 +127,7 @@ describe('sweepDocumentLightSurfaces', () => {
 
     document.elementsFromPoint = () => [wrapper, main, document.body, document.documentElement]
 
-    const count = sweepDocumentLightSurfaces(document, budget)
+    const count = sweepDocumentLightSurfaces(document, budget, () => 0)
     expect(count).toBeGreaterThan(0)
     expect(main.style.getPropertyValue('background-color')).toBe(THEME_PAGE_BACKGROUND_CSS)
     expect(wrapper.hasAttribute(SURFACE_FLOOR_ATTR)).toBe(false)

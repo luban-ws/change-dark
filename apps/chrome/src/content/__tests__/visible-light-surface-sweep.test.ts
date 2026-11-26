@@ -83,7 +83,7 @@ describe('sweepVisibleLightSurfaces', () => {
     mockRect(grid, 600, 400)
     document.body.appendChild(grid)
 
-    const count = sweepVisibleLightSurfaces(document, budget)
+    const count = sweepVisibleLightSurfaces(document, budget, () => 0)
     expect(count).toBeGreaterThan(0)
     expect(footer.hasAttribute(SURFACE_FLOOR_ATTR)).toBe(true)
     expect(section.hasAttribute(SURFACE_FLOOR_ATTR)).toBe(true)

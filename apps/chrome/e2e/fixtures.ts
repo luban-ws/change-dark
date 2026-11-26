@@ -20,6 +20,7 @@ export const test = base.extend<{
     const headless = process.env.HEADLESS === 'true'
     const context = await chromium.launchPersistentContext(userDataDir, {
       headless,
+      ...(headless ? { channel: 'chromium' as const } : {}),
       args: [
         headless ? '--headless=new' : '',
         `--disable-extensions-except=${extensionPath}`,

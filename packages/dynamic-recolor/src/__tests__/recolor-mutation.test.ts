@@ -83,7 +83,7 @@ describe('RFC 0031 P1-4 — applyRecolorMutationFlush', () => {
     document.head.appendChild(style)
 
     const plan = analyzeRecolorMutations([mockChildListMutation([style])])
-    const result = applyRecolorMutationFlush(document, plan, themeFilters, budget)
+    const result = applyRecolorMutationFlush(document, plan, themeFilters, budget, undefined, '', () => 0)
     expect(result.stylesheetRebuilt).toBe(true)
 
     const injected = document.getElementById(STYLE_ELEMENT_ID)
@@ -112,7 +112,7 @@ describe('RFC 0031 P1-4 — applyRecolorMutationFlush', () => {
     document.body.appendChild(p)
 
     const plan = analyzeRecolorMutations([mockChildListMutation([p])])
-    const result = applyRecolorMutationFlush(document, plan, themeFilters, budget)
+    const result = applyRecolorMutationFlush(document, plan, themeFilters, budget, undefined, '', () => 0)
     expect(result.inlineElementsRecolored).toBe(1)
     expect(p.style.getPropertyValue('color').trim()).toBe(
       `var(${CSS_VAR_PAGE_FG})`,

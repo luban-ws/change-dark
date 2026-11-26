@@ -7,7 +7,7 @@
 | 状态 | **Approved**（Phase 1 骨架落地） |
 | 任务 ID | **T-047** |
 | 创建日期 | 2026-06-08 |
-| 基线 | [0031](./completed/0031-dynamic-recolor-engine.md)、[0033](./0033-cross-site-surface-repair-layer.md)、[0019](./completed/0019-per-site-css-selector-fixes.md)、[0016](./completed/0016-only-for-per-site-overrides.md) |
+| 基线 | [0031](./completed/0031-dynamic-recolor-engine.md)、[0033](completed/0033-cross-site-surface-repair-layer.md)、[0019](./completed/0019-per-site-css-selector-fixes.md)、[0016](./completed/0016-only-for-per-site-overrides.md) |
 
 ---
 

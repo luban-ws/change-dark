@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Surface Repair GMP Fixture</title>
+    <style>
+      :root {
+        --late-white: #ffffff;
+      }
+      body {
+        margin: 0;
+        background-color: #ffffff;
+        color: #202124;
+      }
+      .gmp-page {
+        border-left: 24px solid #ffffff;
+        border-right: 24px solid #ffffff;
+        min-height: 2200px;
+      }
+      .h-c-page {
+        background-color: transparent;
+        padding: 16px;
+      }
+      .hero-banner {
+        height: 320px;
+        background-image: linear-gradient(135deg, #e8f0fe, #ffffff);
+      }
+      .spacer {
+        height: 1200px;
+        background-color: transparent;
+      }
+      section.below-fold-panel {
+        background-color: var(--late-white);
+        width: 900px;
+        height: 300px;
+      }
+      footer.site-footer {
+        background-color: var(--late-white);
+        height: 220px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gmp-page">
+      <div class="h-c-page">
+        <div class="hero-banner">Hero Banner</div>
+        <div class="spacer">Spacer</div>
+        <section class="below-fold-panel">Below Fold Section</section>
+        <footer class="site-footer">Site Footer</footer>
+      </div>
+    </div>
+  </body>
+</html>

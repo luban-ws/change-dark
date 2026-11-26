@@ -243,8 +243,7 @@ async function applyForcedDark(): Promise<void> {
   ])
 
   if (!applyDark) {
-    document.documentElement.removeAttribute(ROOT_ATTR)
-    document.getElementById(STYLE_ELEMENT_ID)?.remove()
+    clearForcedDarkSurface()
     ensureTypographyStyleElement('')
     ensureCustomCssStyleElement('')
     return

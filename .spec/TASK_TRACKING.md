@@ -75,11 +75,11 @@
 | T-044 | [0031](./rfc/completed/0031-dynamic-recolor-engine.md) | Dynamic 改色引擎 Phase 1 | ✅ Done |
 | T-045 | [0032](./rfc/completed/0032-theme-mode-product-consolidation.md) | Dynamic-only 产品整合 | ✅ Done |
 
-## RFC 0033 — 跨站点表面修复层（进行中）
+## RFC 0033 — 跨站点表面修复层（已完成）
 
 | ID | 专属 RFC | 内容 | 状态 |
 |----|----------|------|------|
-| T-046 | [0033](./rfc/0033-cross-site-surface-repair-layer.md) | Surface Repair：三层 sweep、启发式、border/box-shadow recolor | 🔄 In progress |
+| T-046 | [0033](rfc/completed/0033-cross-site-surface-repair-layer.md) | Surface Repair：三层 sweep、启发式、border/box-shadow recolor | ✅ Done |
 
 ## RFC 0034 — Site Profile Catalog（进行中）
 
@@ -138,7 +138,6 @@
 - [ ] Implement RFC 0037: 开放 Shadow DOM 与 adoptedStyleSheets 动态改色 (RFC 0037)
 
 
-- [ ] Implement RFC 0033: 跨站点表面修复层（Surface Repair Layer） (RFC 0033)
 - [ ] Implement RFC 0034: Site Profile Catalog（数据驱动站点策略，超越 Dark Reader） (RFC 0034)
 - [ ] Implement RFC 0035: Chrome Web Store 发布（v0.1.2+） (RFC 0035)
 - [ ] Implement RFC 0036: CSS 变量改色图（对齐 Dark Reader VariablesStore） (RFC 0036)
@@ -175,3 +174,5 @@
 - [x] Implement RFC 0030: Static 模式（**Dropped**） (RFC 0030)
 - [x] Implement RFC 0031: Dynamic 逐规则改色引擎（对齐 Dark Reader → Rust 反超） (RFC 0031)
 - [x] Implement RFC 0032: Dynamic-only 产品（移除 Static / Filter / Filter+） (RFC 0032)
+- [x] Implement RFC 0033: 跨站点表面修复层（Surface Repair Layer） (RFC 0033)
+

@@ -1,13 +1,13 @@
 # RFC 0033 — 跨站点表面修复层（Surface Repair Layer）
 
-**Status:** Under Review
+**Status:** Implemented
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | **Under Review**（实现中） |
+| 状态 | **Implemented** |
 | 任务 ID | **T-046** |
 | 创建日期 | 2026-06-08 |
-| 基线 RFC | [0031](./completed/0031-dynamic-recolor-engine.md)、[0006](./completed/0006-content-script-sampling-budget-fallback.md)、[0032](./completed/0032-theme-mode-product-consolidation.md) |
+| 基线 RFC | [0031](0031-dynamic-recolor-engine.md)、[0006](0006-content-script-sampling-budget-fallback.md)、[0032](0032-theme-mode-product-consolidation.md) |
 
 ---
 
@@ -177,8 +177,8 @@ Tier 1 仅少量地标 query，默认不计入 heavy scan。
 | T-046-1 | `surface-heuristics.ts` 地标 / class / 面积启发式 | ✅ |
 | T-046-2 | 三层 sweep + scroll resweep + MO 联动 | ✅ |
 | T-046-3 | `border-css` / `box-shadow-css` recolor | ✅ |
-| T-046-4 | 单测：heuristics、sweep、GMP CSS golden | 🔄 进行中 |
-| T-046-5 | E2E：marketingplatform.google.com 回归 | ⏳ |
+| T-046-4 | 单测：heuristics、sweep、GMP CSS golden | ✅ |
+| T-046-5 | E2E：marketingplatform.google.com 回归 | ✅ |
 | T-046-6 | Phase 2：`var()` 计算值 / 站点 profile 负向规则 | ⏳ Deferred |
 
 ---
