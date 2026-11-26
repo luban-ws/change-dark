@@ -20,6 +20,11 @@ import {
   stopRecolorDynamicObserver,
   updateRecolorObserverPaintState,
 } from './recolor-observer'
+import {
+  startShadowRootManager,
+  stopShadowRootManager,
+  syncDocumentAdoptedStyleSheets,
+} from './shadow-root-manager'
 import { scheduleBackgroundImageRecolor } from './recolor-background-images'
 import {
   attachLightSurfaceResweepListeners,
@@ -145,6 +150,15 @@ function applyFastDynamicPaintShell(
     baseCss,
     { variableGraphMaxMs: budget.maxMs },
   )
+  startShadowRootManager({
+    doc: document,
+    themeFilters,
+    budget,
+    theme,
+    onDocumentInvalidated: () => {
+      paintRecolorStylesheetPath(themeFilters, theme, document, baseCss)
+    },
+  })
   sweepFixedChromeSurfaces(document, budget)
   sweepDocumentLightSurfaces(document, budget)
   scheduleDocumentLightSurfaceResweep(document, budget, 0)
@@ -162,6 +176,7 @@ function applyHeavyDynamicPaintWork(
   try {
     if (needFullVariableGraph) {
       paintRecolorStylesheetPath(themeFilters, theme, document, baseCss)
+      syncDocumentAdoptedStyleSheets()
     }
     paintRecolorInlinePath(theme, document)
     lastReadableStylesheetCount = collectReadableStylesheetCssTexts(document).readableSheetCount
@@ -190,6 +205,7 @@ function applyHeavyDynamicPaintWork(
 
 function clearForcedDarkSurface(): void {
   stopRecolorDynamicObserver()
+  stopShadowRootManager()
   restoreBackgroundImageFiltersInDocument(document)
   restoreInlineStylesInDocument(document)
   clearPageSurfaceFloor(document)
@@ -227,6 +243,7 @@ function scheduleDynamicRecolorRetries(
         try {
           if (paintRecolorPath(themeFilters, theme, document, baseCss)) {
             updateRecolorObserverPaintState(baseCss)
+            syncDocumentAdoptedStyleSheets()
           }
           scheduleBackgroundImageRecolor(budget)
           scheduleDocumentLightSurfaceResweep(document, budget, 120)
@@ -271,6 +288,7 @@ async function applyForcedDark(): Promise<void> {
   const runPaint = (): void => {
     try {
       stopRecolorDynamicObserver()
+      stopShadowRootManager()
       restoreBackgroundImageFiltersInDocument(document)
       restoreInlineStylesInDocument(document)
       lastReadableStylesheetCount = 0

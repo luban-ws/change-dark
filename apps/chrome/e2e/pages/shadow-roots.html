@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shadow DOM &amp; adoptedStyleSheets E2E Fixture</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        background: #ffffff;
+        color: #111111;
+        font-family: system-ui, sans-serif;
+      }
+      .doc-swatch {
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="doc-shared" class="doc-swatch shared-box">doc-shared</div>
+    <div id="doc-temp" class="doc-swatch temp-box">doc-temp</div>
+
+    <div id="host-initial"></div>
+    <div id="host-runtime"></div>
+    <div id="host-shared-1"></div>
+    <div id="host-shared-2"></div>
+
+    <script>
+      ;(function () {
+        // 1. 初始已存在的开放 ShadowRoot
+        var hostInitial = document.getElementById('host-initial')
+        var srInitial = hostInitial.attachShadow({ mode: 'open' })
+        srInitial.innerHTML =
+          '<style>.shadow-card { display: inline-block; width: 40px; height: 20px; background-color: #f5f5f5; color: #222222; }</style>' +
+          '<div class="shadow-card">initial</div>'
+
+        // 2. 共享 constructed CSSStyleSheet（Document + 2 ShadowRoots）
+        var sharedSheet = new CSSStyleSheet()
+        sharedSheet.replaceSync(
+          '.shared-box { display: inline-block; width: 40px; height: 20px; background-color: #eeeeee; color: #111111; }',
+        )
+        document.adoptedStyleSheets = [sharedSheet]
+
+        var srShared1 = document.getElementById('host-shared-1').attachShadow({ mode: 'open' })
+        srShared1.innerHTML =
+          '<div class="shared-box">shared1</div><div class="temp-box">temp1</div>'
+        srShared1.adoptedStyleSheets = [sharedSheet]
+
+        var srShared2 = document.getElementById('host-shared-2').attachShadow({ mode: 'open' })
+        srShared2.innerHTML =
+          '<div class="shared-box">shared2</div><div class="temp-box">temp2</div>'
+        srShared2.adoptedStyleSheets = [sharedSheet]
+
+        // Expose explicit MAIN-world test controls (including native-code check)
+        window.__testShadowApi = {
+          attachRuntimeShadow: function (dispatchDuplicate) {
+            var host = document.getElementById('host-runtime')
+            if (!host.shadowRoot) {
+              var sr = host.attachShadow({ mode: 'open' })
+              sr.innerHTML =
+                '<style>.runtime-card { display: inline-block; width: 40px; height: 20px; background-color: #fafafa; color: #111111; }</style>' +
+                '<div class="runtime-card">runtime</div>'
+            }
+            if (dispatchDuplicate) {
+              host.dispatchEvent(
+                new CustomEvent('change-dark:open-shadow-attached', {
+                  bubbles: true,
+                  composed: true,
+                }),
+              )
+            }
+          },
+          appendStyleToInitialShadow: function () {
+            var st = document.createElement('style')
+            st.textContent =
+              '.shadow-added { display: inline-block; width: 40px; height: 20px; background-color: #f2f2f2; }'
+            srInitial.appendChild(st)
+            var el = document.createElement('div')
+            el.className = 'shadow-added'
+            el.textContent = 'added'
+            srInitial.appendChild(el)
+          },
+          insertSharedRule: function (ruleText) {
+            return sharedSheet.insertRule(ruleText, sharedSheet.cssRules.length)
+          },
+          deleteLastSharedRule: function () {
+            if (sharedSheet.cssRules.length > 0) {
+              sharedSheet.deleteRule(sharedSheet.cssRules.length - 1)
+            }
+          },
+          replaceSharedSync: function (cssText) {
+            sharedSheet.replaceSync(cssText)
+          },
+          replaceSharedAsync: function (cssText) {
+            return sharedSheet.replace(cssText)
+          },
+          getInsertRuleSource: function () {
+            return CSSStyleSheet.prototype.insertRule.toString()
+          },
+        }
+      })()
+    </script>
+  </body>
+</html>

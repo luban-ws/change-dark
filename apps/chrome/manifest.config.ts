@@ -60,6 +60,12 @@ export default defineManifest({
   content_scripts: [
     {
       matches: ['<all_urls>'],
+      js: ['src/content/shadow-hook-main.ts'],
+      run_at: 'document_start',
+      world: 'MAIN',
+    },
+    {
+      matches: ['<all_urls>'],
       js: ['src/content/index.ts'],
       run_at: 'document_start',
     },

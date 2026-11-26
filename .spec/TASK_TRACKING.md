@@ -121,7 +121,13 @@
 | S3 | 接入 `buildRecolorInjectionFromSource` + 回归 | ✅ |
 | S4 | 更新 CLAUDE.md / 031 Phase 1.5 交叉引用 | ✅ |
 
-## Backlog（下一个建议 **037**）
+## RFC 0037 — 开放 Shadow DOM 与 adoptedStyleSheets（已完成）
+
+| ID | 专属 RFC | 内容 | 状态 |
+|----|----------|------|------|
+| T-050 | [0037](rfc/completed/0037-open-shadow-style-roots.md) | 开放 ShadowRoot + `adoptedStyleSheets` 动态改色与 CLEANUP | ✅ Done |
+
+## Backlog（下一个建议 **038**）
 
 | 方向 | 说明 |
 |------|------|
@@ -134,9 +140,6 @@
 |------|------|
 
 ## Active
-
-- [ ] Implement RFC 0037: 开放 Shadow DOM 与 adoptedStyleSheets 动态改色 (RFC 0037)
-
 
 - [ ] Implement RFC 0035: Chrome Web Store 发布（v0.1.2+） (RFC 0035)
 
@@ -175,6 +178,8 @@
 - [x] Implement RFC 0033: 跨站点表面修复层（Surface Repair Layer） (RFC 0033)
 - [x] Implement RFC 0034: Site Profile Catalog（数据驱动站点策略，超越 Dark Reader） (RFC 0034)
 - [x] Implement RFC 0036: CSS 变量改色图（对齐 Dark Reader VariablesStore） (RFC 0036)
+- [x] Implement RFC 0037: 开放 Shadow DOM 与 adoptedStyleSheets 动态改色 (RFC 0037)
+
 
 
 

@@ -15,6 +15,10 @@ import { scheduleBackgroundImageRecolorForElements } from './recolor-background-
 import { sweepDocumentLightSurfaces } from './document-light-surface-sweep'
 import { applyPageSurfaceFloor } from './page-surface-floor'
 import { getActiveSitePolicy } from './site-policy'
+import {
+  scanAddedSubtreeForShadowRoots,
+  syncDocumentAdoptedStyleSheets,
+} from './shadow-root-manager'
 import { sweepVisibleLightSurfaces } from './visible-light-surface-sweep'
 
 type IdleSchedule = (task: () => void) => void
@@ -47,6 +51,18 @@ function flushPendingRecords(): void {
 
   const records = pendingRecords
   pendingRecords = []
+  const addedNodes: Node[] = []
+  for (const r of records) {
+    if (r.type === 'childList') {
+      for (const n of Array.from(r.addedNodes)) {
+        addedNodes.push(n)
+      }
+    }
+  }
+  if (addedNodes.length > 0) {
+    scanAddedSubtreeForShadowRoots(addedNodes)
+  }
+
   const plan = analyzeRecolorMutations(records)
   if (!plan.rebuildStylesheets && plan.inlineElements.length === 0 && plan.backgroundImageElements.length === 0) return
 
@@ -64,7 +80,9 @@ function flushPendingRecords(): void {
         Date.now,
         { cssVarSubstitute: getActiveSitePolicy().recolor.cssVarSubstitute },
       )
-      void result
+      if (result.stylesheetRebuilt) {
+        syncDocumentAdoptedStyleSheets()
+      }
       scheduleBackgroundImageRecolorForElements(
         plan.backgroundImageElements,
         activeConfig.budget,

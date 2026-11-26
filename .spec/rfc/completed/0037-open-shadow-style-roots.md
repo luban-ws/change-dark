@@ -2,10 +2,10 @@
 
 | 字段 | 值 |
 |------|-----|
-| 基线 | [0031](./completed/0031-dynamic-recolor-engine.md)、[0036](completed/0036-css-variable-recolor-graph.md) |
+| 基线 | [0031](0031-dynamic-recolor-engine.md)、[0036](0036-css-variable-recolor-graph.md) |
 | 上游对照 | Dark Reader dynamic-theme style managers |
 
-**Status:** Draft
+**Status:** Implemented
 
 ## Summary
 

@@ -56,11 +56,14 @@ export type CssVarSubstituteMap = Readonly<
   Record<string, { use: ColorUse; fallback?: string }>
 >
 
+export type RecolorSelectorMode = 'document' | 'shadow'
+
 export interface RecolorStylesheetOptions {
   cssVarSubstitute?: CssVarSubstituteMap
   variableGraph?: CssVariableGraph
   variableGraphMaxMs?: number
   now?: () => number
+  selectorMode?: RecolorSelectorMode
 }
 
 /** 单条声明改色计划。 */
@@ -284,10 +287,41 @@ export function prefixRecolorOverrideSelector(selector: string): string {
   return [...new Set(parts)].join(', ')
 }
 
-/** 格式化单条覆盖规则（恢复 @media / @keyframes 嵌套）。 */
-export function formatRecolorOverrideRule(rule: RecolorOverrideRule): string {
-  const inner = `${prefixRecolorOverrideSelector(rule.selector)} { ${rule.declarations} }`
+function formatShadowSelectorPart(part: string): string {
+  const p = part.trim()
+  if (!p) return ':host'
+  const rootMatch = /^:root(?=$|[.\[:#\s>+~])/.exec(p)
+  if (rootMatch) {
+    const rest = p.slice(rootMatch[0].length)
+    return rest ? `:host${rest}` : ':host'
+  }
+  return p
+}
+
+/** RFC 0037：ShadowRoot 内覆盖选择器格式（禁加 `html[...]`；`:root` → `:host`）。 */
+export function formatShadowRecolorOverrideSelector(selector: string): string {
+  const trimmed = selector.trim()
+  if (/^(?:from|to|\d+(?:\.\d+)?%)$/i.test(trimmed)) return trimmed
+  const parts = trimmed.split(',').map((part) => formatShadowSelectorPart(part))
+  return [...new Set(parts)].join(', ')
+}
+
+/** RFC 0037：按模式格式化单条覆盖规则（恢复 @media / @keyframes 嵌套）。 */
+export function formatRecolorOverrideRuleWithMode(
+  rule: RecolorOverrideRule,
+  selectorMode: RecolorSelectorMode = 'document',
+): string {
+  const formattedSelector =
+    selectorMode === 'shadow'
+      ? formatShadowRecolorOverrideSelector(rule.selector)
+      : prefixRecolorOverrideSelector(rule.selector)
+  const inner = `${formattedSelector} { ${rule.declarations} }`
   return rule.wrappers.reduceRight((body, wrap) => `${wrap} { ${body} }`, inner)
+}
+
+/** 格式化单条覆盖规则（恢复 @media / @keyframes 嵌套；兼容 `.map(formatRecolorOverrideRule)` 单参签名）。 */
+export function formatRecolorOverrideRule(rule: RecolorOverrideRule): string {
+  return formatRecolorOverrideRuleWithMode(rule, 'document')
 }
 
 /**
@@ -299,8 +333,11 @@ export function buildRecolorOverrideStylesheet(
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
   options: RecolorStylesheetOptions = {},
 ): string {
+  const mode = options.selectorMode ?? 'document'
   const rules = collectRecolorOverrideRules(cssText, profile, options)
-  return rules.map(formatRecolorOverrideRule).join('\n\n')
+  return rules
+    .map((rule) => formatRecolorOverrideRuleWithMode(rule, mode))
+    .join('\n\n')
 }
 
 /** 解析并收集所有需注入的改色规则。 */
