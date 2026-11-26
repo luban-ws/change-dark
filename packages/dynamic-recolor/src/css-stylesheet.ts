@@ -4,7 +4,12 @@
  * §5.3：整表改色走 `batchModifyColors` 单次 WASM，禁逐色过桥。
  */
 
-import { ROOT_ATTR, CSS_VAR_PAGE_BORDER } from '@change-dark/extension-settings'
+import {
+  CSS_VAR_PAGE_BG,
+  CSS_VAR_PAGE_BORDER,
+  CSS_VAR_PAGE_FG,
+  ROOT_ATTR,
+} from '@change-dark/extension-settings'
 import { formatRgbHex, parseCssColorToken } from './color-parse'
 import { recolorBackgroundImageDeclaration } from './background-image-css'
 import { recolorBorderShorthandDeclaration } from './border-css'
@@ -39,6 +44,15 @@ interface RecolorRuleDraft {
   body: string
 }
 
+/** RFC 0034：`recolor.cssVarSubstitute` 站点级 CSS 变量替换表。 */
+export type CssVarSubstituteMap = Readonly<
+  Record<string, { use: ColorUse; fallback?: string }>
+>
+
+export interface RecolorStylesheetOptions {
+  cssVarSubstitute?: CssVarSubstituteMap
+}
+
 /** 单条声明改色计划。 */
 interface DeclarationRecolorPlan {
   prop: string
@@ -48,6 +62,12 @@ interface DeclarationRecolorPlan {
 }
 
 const BLOCK_COMMENT = /\/\*[\s\S]*?\*\//g
+const SIMPLE_CSS_VAR_RE = /^var\(\s*(--[a-zA-Z0-9_-]+)(?:\s*,\s*([^)]+))?\s*\)$/i
+const PAGE_VAR_BY_USE: Readonly<Record<ColorUse, string>> = {
+  bg: `var(${CSS_VAR_PAGE_BG})`,
+  fg: `var(${CSS_VAR_PAGE_FG})`,
+  border: `var(${CSS_VAR_PAGE_BORDER})`,
+}
 
 /** 去掉注释，便于纯文本解析。 */
 export function stripCssComments(css: string): string {
@@ -77,7 +97,34 @@ function stripImportant(value: string): string {
   return value.trim().replace(/\s*!important\s*$/i, '').trim()
 }
 
-function planDeclarationRecolor(property: string, rawValue: string): DeclarationRecolorPlan | null {
+function planCssVarSubstitute(
+  prop: string,
+  val: string,
+  subs?: CssVarSubstituteMap,
+): DeclarationRecolorPlan | null {
+  if (!subs) return null
+  const lowerProp = prop.toLowerCase()
+  if (colorUseForCssProperty(prop) == null && lowerProp !== 'background') return null
+  const match = SIMPLE_CSS_VAR_RE.exec(val)
+  if (!match) return null
+  const varName = match[1]!
+  if (!Object.prototype.hasOwnProperty.call(subs, varName)) return null
+  const sub = subs[varName]!
+  const fb = sub.fallback?.trim()
+  if (fb) {
+    if (/^var\(/i.test(fb)) return { prop, literal: fb }
+    const rgb = parseCssColorToken(fb)
+    if (rgb) return { prop, batch: { rgb, use: sub.use } }
+    return null
+  }
+  return { prop, literal: PAGE_VAR_BY_USE[sub.use] }
+}
+
+function planDeclarationRecolor(
+  property: string,
+  rawValue: string,
+  options: RecolorStylesheetOptions = {},
+): DeclarationRecolorPlan | null {
   const prop = property.trim()
   const val = stripImportant(rawValue)
   const lightDarkLiteral = recolorLightDarkToPaletteVar(val)
@@ -87,6 +134,8 @@ function planDeclarationRecolor(property: string, rawValue: string): Declaration
     }
     return { prop, literal: lightDarkLiteral }
   }
+  const varSubPlan = planCssVarSubstitute(prop, val, options.cssVarSubstitute)
+  if (varSubPlan) return varSubPlan
   const use = colorUseForCssProperty(prop)
   if (use) {
     const rgb = parseCssColorToken(val)
@@ -145,6 +194,7 @@ function recolorDeclarationPlans(
 export function recolorDeclarationBlock(
   block: string,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
+  options: RecolorStylesheetOptions = {},
 ): string {
   const plans = splitCssDeclarations(block)
     .map((decl) => {
@@ -153,6 +203,7 @@ export function recolorDeclarationBlock(
       return planDeclarationRecolor(
         decl.slice(0, colon),
         decl.slice(colon + 1),
+        options,
       )
     })
     .filter((p): p is DeclarationRecolorPlan => p != null)
@@ -206,8 +257,9 @@ export function formatRecolorOverrideRule(rule: RecolorOverrideRule): string {
 export function buildRecolorOverrideStylesheet(
   cssText: string,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
+  options: RecolorStylesheetOptions = {},
 ): string {
-  const rules = collectRecolorOverrideRules(cssText, profile)
+  const rules = collectRecolorOverrideRules(cssText, profile, options)
   return rules.map(formatRecolorOverrideRule).join('\n\n')
 }
 
@@ -215,14 +267,16 @@ export function buildRecolorOverrideStylesheet(
 export function collectRecolorOverrideRules(
   cssText: string,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
+  options: RecolorStylesheetOptions = {},
 ): RecolorOverrideRule[] {
   const drafts = collectRecolorRuleDrafts(cssText)
-  return buildRulesFromDrafts(drafts, profile)
+  return buildRulesFromDrafts(drafts, profile, options)
 }
 
 function buildRulesFromDrafts(
   drafts: readonly RecolorRuleDraft[],
   profile: ColorProfile,
+  options: RecolorStylesheetOptions = {},
 ): RecolorOverrideRule[] {
   const perDraftPlans: DeclarationRecolorPlan[][] = []
   const batchJobs: Array<{ rgb: Rgb; use: ColorUse }> = []
@@ -235,6 +289,7 @@ function buildRulesFromDrafts(
       const plan = planDeclarationRecolor(
         decl.slice(0, colon),
         decl.slice(colon + 1),
+        options,
       )
       if (!plan) continue
       if (plan.batch) {

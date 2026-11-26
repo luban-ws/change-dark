@@ -5,7 +5,7 @@
 | 状态 | **Draft** |
 | 任务 ID | **T-049** |
 | 创建日期 | 2026-09-20 |
-| 基线 | [0031](./completed/0031-dynamic-recolor-engine.md)、[0033](completed/0033-cross-site-surface-repair-layer.md)、[0034](./0034-site-profile-catalog.md) |
+| 基线 | [0031](./completed/0031-dynamic-recolor-engine.md)、[0033](completed/0033-cross-site-surface-repair-layer.md)、[0034](completed/0034-site-profile-catalog.md) |
 | 对照源码 | Dark Reader `src/inject/dynamic-theme/variables.ts`（`VariablesStore`） |
 | 相关 issue | DR [#2583](https://github.com/darkreader/darkreader/issues/2583)；本仓库 P1-6 已知限制 |
 

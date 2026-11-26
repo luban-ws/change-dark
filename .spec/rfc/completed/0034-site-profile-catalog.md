@@ -1,13 +1,13 @@
 # RFC 0034 — Site Profile Catalog（数据驱动站点策略，超越 Dark Reader）
 
-**Status:** Approved
+**Status:** Implemented
 
 | 字段 | 值 |
 |------|-----|
-| 状态 | **Approved**（Phase 1 骨架落地） |
+| 状态 | **Implemented**（Phase 1 + Phase 1.5 落地） |
 | 任务 ID | **T-047** |
 | 创建日期 | 2026-06-08 |
-| 基线 | [0031](./completed/0031-dynamic-recolor-engine.md)、[0033](completed/0033-cross-site-surface-repair-layer.md)、[0019](./completed/0019-per-site-css-selector-fixes.md)、[0016](./completed/0016-only-for-per-site-overrides.md) |
+| 基线 | [0031](0031-dynamic-recolor-engine.md)、[0033](0033-cross-site-surface-repair-layer.md)、[0019](0019-per-site-css-selector-fixes.md)、[0016](0016-only-for-per-site-overrides.md) |
 
 ---
 
@@ -140,10 +140,10 @@ packages/site-catalog/
 | `google-marketing-platform.json` 样板 | ✅ |
 | L2 消费 `ResolvedSurfaceRepairPolicy` | ✅ |
 | `gutterProbe` 读 policy | ✅ |
-| storage user patch | ⏳ Phase 1.5 |
-| remote signed catalog | ⏳ Phase 2 |
-| `cssVarSubstitute` in recolor | ⏳ Phase 1.5 |
-| Popup 编辑 / 导入导出 | ⏳ Phase 2 |
+| storage user patch | ✅ |
+| remote signed catalog | ⏳ Deferred (RFC 0038) |
+| `cssVarSubstitute` in recolor | ✅ |
+| Popup 编辑 / 导入导出 | ⏳ Deferred (RFC 0039) |
 
 ---
 

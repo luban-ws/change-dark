@@ -10,6 +10,7 @@ import {
   type ResolvedThemePalette,
 } from '@change-dark/dynamic-recolor'
 import type { ThemeFiltersStateV1 } from '@change-dark/extension-settings'
+import { getActiveSitePolicy } from './site-policy'
 
 /**
  * 仅 stylesheet 覆盖（同步首屏路径；`theme.profile` 含 Solarized preset）。
@@ -24,7 +25,12 @@ export function paintRecolorStylesheetPath(
   const sourceCss = cssChunks.join('\n\n').trim()
   if (!sourceCss) return false
 
-  const build = buildRecolorInjectionFromSource(sourceCss, themeFilters, theme.profile)
+  const build = buildRecolorInjectionFromSource(
+    sourceCss,
+    themeFilters,
+    theme.profile,
+    { cssVarSubstitute: getActiveSitePolicy().recolor.cssVarSubstitute },
+  )
   if (!build.overrideCss.trim()) return false
   applyRecolorInjectionFromBuild(doc, build, baseCss)
   return true
@@ -54,7 +60,12 @@ export function paintRecolorPath(
   if (!sourceCss) return false
 
   const { elementsRecolored } = recolorInlineStylesInDocument(doc, theme.profile)
-  const build = buildRecolorInjectionFromSource(sourceCss, themeFilters, theme.profile)
+  const build = buildRecolorInjectionFromSource(
+    sourceCss,
+    themeFilters,
+    theme.profile,
+    { cssVarSubstitute: getActiveSitePolicy().recolor.cssVarSubstitute },
+  )
   if (!build.overrideCss.trim() && elementsRecolored === 0) return false
   applyRecolorInjectionFromBuild(doc, build, baseCss)
   return true

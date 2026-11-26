@@ -106,4 +106,48 @@ describe('RFC 0031 S2 — 单张 <style> 全规则 golden in→out', () => {
     expect(out).not.toContain('rgb(255, 255, 255)')
     expect(out).toContain(`var(${CSS_VAR_PAGE_BG})`)
   })
+
+  it('cssVarSubstitute: bg/fg/border 映射、color fallback 改色、var() 直通与未登记变量跳过', () => {
+    const css = `
+      .panel {
+        background: var(--site-surface);
+        color: var(--site-text);
+        border-color: var(--site-border);
+      }
+      .card {
+        background-color: var(--site-card-bg);
+      }
+      .custom-token {
+        background-color: var(--site-passthrough);
+      }
+      .unlisted {
+        background-color: var(--other-var);
+        color: var(--other-text);
+      }
+    `
+    const out = buildRecolorOverrideStylesheet(css, undefined, {
+      cssVarSubstitute: {
+        '--site-surface': { use: 'bg' },
+        '--site-text': { use: 'fg' },
+        '--site-border': { use: 'border' },
+        '--site-card-bg': { use: 'bg', fallback: 'rgb(255, 255, 255)' },
+        '--site-passthrough': { use: 'bg', fallback: 'var(--cd-custom-surface)' },
+      },
+    })
+
+    expect(out).toContain(`html[${ROOT_ATTR}] .panel`)
+    expect(out).toContain(`background: var(${CSS_VAR_PAGE_BG})`)
+    expect(out).toContain(`color: var(${CSS_VAR_PAGE_FG})`)
+    expect(out).toContain(`border-color: var(${CSS_VAR_PAGE_BORDER})`)
+
+    expect(out).toContain(`html[${ROOT_ATTR}] .card`)
+    expect(out).not.toContain('rgb(255, 255, 255)')
+
+    expect(out).toContain(`html[${ROOT_ATTR}] .custom-token`)
+    expect(out).toContain('background-color: var(--cd-custom-surface)')
+
+    expect(out).not.toContain('.unlisted')
+    expect(out).not.toContain('--other-var')
+    expect(out).not.toContain('--other-text')
+  })
 })

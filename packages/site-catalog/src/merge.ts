@@ -3,10 +3,6 @@
  */
 
 import {
-  SURFACE_COMPONENT_CLASS_HINT_RE,
-} from '@change-dark/extension-settings'
-
-import {
   DEFAULT_RECOLOR_POLICY,
   DEFAULT_SURFACE_REPAIR_POLICY,
 } from './defaults'
@@ -23,10 +19,13 @@ function uniqueStrings(items: readonly string[]): string[] {
   return [...new Set(items.filter(Boolean))]
 }
 
-function compileComponentClassHintRe(extraHints: readonly string[]): RegExp {
-  if (extraHints.length === 0) return SURFACE_COMPONENT_CLASS_HINT_RE
+function appendComponentClassHints(
+  baseRe: RegExp,
+  extraHints?: readonly string[],
+): RegExp {
+  if (!extraHints?.length) return baseRe
   const parts = [
-    SURFACE_COMPONENT_CLASS_HINT_RE.source,
+    baseRe.source,
     ...extraHints.map((h) => `(?:${h})`),
   ]
   return new RegExp(parts.join('|'), 'i')
@@ -46,14 +45,15 @@ function mergeSurfaceRepairLayer(
     ? uniqueStrings([...base.neverPaintSelectors, ...patch.neverPaint])
     : [...base.neverPaintSelectors]
 
-  const extraHints = patch.componentClassHints ?? []
-
   return {
     landmarkSelectors,
     landmarkSelectorList: landmarkSelectors.join(', '),
     neverPaintSelectors,
     neverPaintSelectorList: neverPaintSelectors.join(', '),
-    componentClassHintRe: compileComponentClassHintRe(extraHints),
+    componentClassHintRe: appendComponentClassHints(
+      base.componentClassHintRe,
+      patch.componentClassHints,
+    ),
     minPanelAreaPx: patch.minPanelAreaPx ?? base.minPanelAreaPx,
     minPanelWidthPx: patch.minPanelWidthPx ?? base.minPanelWidthPx,
     minPanelHeightPx: patch.minPanelHeightPx ?? base.minPanelHeightPx,
@@ -93,6 +93,11 @@ export function mergeSitePolicies(
   if (!userPatch?.disabled) {
     for (const profile of matched) {
       matchedProfileIds.push(profile.id)
+    }
+    const ascending = matched
+      .slice()
+      .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
+    for (const profile of ascending) {
       surface = mergeSurfaceRepairLayer(surface, profile.surfaceRepair)
       recolor = mergeRecolorLayer(recolor, profile.recolor)
       if (profile.customCss?.trim()) {

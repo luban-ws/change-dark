@@ -43,6 +43,7 @@ import {
   readSamplingBudget,
   readShouldApplyForcedDarkForPage,
   readSiteCustomCssForPage,
+  readSiteProfilePatchForPage,
   readGlobalPolicy,
   readAutoDarkThreshold,
   sanitizeSiteCustomCss,
@@ -231,6 +232,7 @@ async function applyForcedDark(): Promise<void> {
     typoSettings,
     siteCustomCss,
     autoDarkThreshold,
+    siteProfilePatch,
   ] = await Promise.all([
     readShouldApplyForcedDarkForPage(),
     readGlobalPolicy(),
@@ -240,6 +242,7 @@ async function applyForcedDark(): Promise<void> {
     readEffectiveTypographyForPage(),
     readSiteCustomCssForPage(),
     readAutoDarkThreshold(),
+    readSiteProfilePatchForPage(),
   ])
 
   if (!applyDark) {
@@ -264,7 +267,7 @@ async function applyForcedDark(): Promise<void> {
       }
 
       const { baseCss, theme } = buildSampledPalette(themeFilters, pagePalette, budget)
-      refreshActiveSitePolicy(document)
+      refreshActiveSitePolicy(document, siteProfilePatch)
       applyFastDynamicPaintShell(themeFilters, theme, baseCss, budget)
 
       scheduleIdleTask(() => {

@@ -14,6 +14,7 @@ import { scheduleIdleTask } from './sampling'
 import { scheduleBackgroundImageRecolorForElements } from './recolor-background-images'
 import { sweepDocumentLightSurfaces } from './document-light-surface-sweep'
 import { applyPageSurfaceFloor } from './page-surface-floor'
+import { getActiveSitePolicy } from './site-policy'
 import { sweepVisibleLightSurfaces } from './visible-light-surface-sweep'
 
 type IdleSchedule = (task: () => void) => void
@@ -60,6 +61,8 @@ function flushPendingRecords(): void {
         activeConfig.budget,
         activeConfig.theme.profile,
         activeConfig.baseCss,
+        Date.now,
+        { cssVarSubstitute: getActiveSitePolicy().recolor.cssVarSubstitute },
       )
       void result
       scheduleBackgroundImageRecolorForElements(

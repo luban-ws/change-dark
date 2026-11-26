@@ -71,7 +71,7 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 | [0029](./rfc/completed/0029-theme-mode-dynamic-refinement.md) | T-042 | Dynamic **唯一产品** | ✅ |
 | [0032](./rfc/completed/0032-theme-mode-product-consolidation.md) | T-045 | Dynamic-only：删模式/迁移/铺底 | ✅ |
 | [0033](rfc/completed/0033-cross-site-surface-repair-layer.md) | T-046 | 跨站点表面修复层（三层 sweep + border recolor） | ✅ Implemented |
-| [0034](./rfc/0034-site-profile-catalog.md) | T-047 | Site Profile Catalog（数据驱动，超越 DR） | 🔄 Phase 1 |
+| [0034](rfc/completed/0034-site-profile-catalog.md) | T-047 | Site Profile Catalog（数据驱动，超越 DR） | ✅ Implemented |
 | [0035](./rfc/0035-chrome-web-store-release-v0-1-2.md) | T-048 | Chrome Web Store 发布（v0.1.2+） | 📝 Draft |
 | [0036](./rfc/0036-css-variable-recolor-graph.md) | T-049 | CSS 变量改色图（DR VariablesStore 对齐 / 031 Phase 1.5） | 📝 Draft |
 | [0037](./rfc/0037-open-shadow-style-roots.md) | T-050 | 开放 Shadow DOM 与 adoptedStyleSheets 动态改色 | 📝 Draft |
@@ -84,7 +84,6 @@ WASM 引擎设计：[docs/dark-engine-design.md](./docs/dark-engine-design.md)
 
 | RFC | 任务 | 标题 | 状态 |
 |-----|------|------|------|
-| [0034](./rfc/0034-site-profile-catalog.md) | T-047 | Site Profile Catalog + `@change-dark/site-catalog` | 🔄 |
 | [0035](./rfc/0035-chrome-web-store-release-v0-1-2.md) | T-048 | CWS 发布：CI/E2E 门禁 + listing + v0.1.2 提审 | 📝 Draft |
 | [0036](./rfc/0036-css-variable-recolor-graph.md) | T-049 | CSS 变量改色图（浅灰底 / `var(--*)` 根因） | 📝 Draft |
 | [0037](./rfc/0037-open-shadow-style-roots.md) | T-050 | 开放 Shadow DOM 与 adoptedStyleSheets | 📝 Draft |

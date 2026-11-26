@@ -8,7 +8,10 @@ import {
   buildThemePaletteShellCss,
   ensureStyleElement,
 } from '@change-dark/injected-styles'
-import { buildRecolorOverrideStylesheet } from './css-stylesheet'
+import {
+  buildRecolorOverrideStylesheet,
+  type RecolorStylesheetOptions,
+} from './css-stylesheet'
 import { DEFAULT_DARK_PROFILE, type ColorProfile } from './modify-colors'
 import { collectReadableStylesheetCssTexts } from './stylesheet-collect'
 
@@ -22,9 +25,10 @@ export function buildRecolorInjectionFromSource(
   sourceCss: string,
   themeFilters: ThemeFiltersStateV1,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
+  options: RecolorStylesheetOptions = {},
 ): RecolorInjectionBuildResult {
   const overrideCss = sourceCss.trim()
-    ? buildRecolorOverrideStylesheet(sourceCss, profile)
+    ? buildRecolorOverrideStylesheet(sourceCss, profile, options)
     : ''
   const cssText = buildRecolorDynamicCss(overrideCss, themeFilters)
   return { overrideCss, cssText }
@@ -35,9 +39,15 @@ export function buildRecolorInjection(
   doc: Document,
   themeFilters: ThemeFiltersStateV1,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
+  options: RecolorStylesheetOptions = {},
 ): RecolorInjectionBuildResult {
   const { cssChunks } = collectReadableStylesheetCssTexts(doc)
-  return buildRecolorInjectionFromSource(cssChunks.join('\n\n'), themeFilters, profile)
+  return buildRecolorInjectionFromSource(
+    cssChunks.join('\n\n'),
+    themeFilters,
+    profile,
+    options,
+  )
 }
 
 /** 采样铺底 + 改色壳层 + 主题壳（主题壳必须最后，压过 WASM 改色字面量）。 */
@@ -65,7 +75,8 @@ export function applyRecolorInjection(
   themeFilters: ThemeFiltersStateV1,
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
   baseCss = '',
+  options: RecolorStylesheetOptions = {},
 ): string {
-  const build = buildRecolorInjection(doc, themeFilters, profile)
+  const build = buildRecolorInjection(doc, themeFilters, profile, options)
   return applyRecolorInjectionFromBuild(doc, build, baseCss)
 }

@@ -38,6 +38,9 @@ export const STORAGE_KEY_TYPOGRAPHY = 'change-dark:typography' as const
 /** RFC 0019：每站自定义 CSS（`SiteCustomCssStateV1`）。 */
 export const STORAGE_KEY_SITE_CUSTOM_CSS = 'change-dark:site-custom-css' as const
 
+/** RFC 0034：每站 Site Profile 覆盖补丁（`SiteProfilePatchesStateV1`）。 */
+export const STORAGE_KEY_SITE_PROFILE_PATCHES = 'change-dark:site-profile-patches' as const
+
 /** 全局主题滤镜（`ThemeFiltersStateV1`），RFC 0011。 */
 export const STORAGE_KEY_THEME_FILTERS = 'change-dark:theme-filters'
 
@@ -142,5 +145,6 @@ export const STORAGE_KEYS_AFFECTING_INJECTION: readonly string[] = [
   STORAGE_KEY_PAGE_PALETTE,
   STORAGE_KEY_TYPOGRAPHY,
   STORAGE_KEY_SITE_CUSTOM_CSS,
+  STORAGE_KEY_SITE_PROFILE_PATCHES,
   STORAGE_KEY_AUTO_DARK_THRESHOLD,
 ]

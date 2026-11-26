@@ -13,6 +13,7 @@ import {
   STORAGE_KEY_PAGE_PALETTE,
   STORAGE_KEY_TYPOGRAPHY,
   STORAGE_KEY_SITE_CUSTOM_CSS,
+  STORAGE_KEY_SITE_PROFILE_PATCHES,
   STORAGE_KEY_AUTO_DARK_THRESHOLD,
   DEFAULT_AUTO_DARK_THRESHOLD,
 } from './constants'
@@ -62,6 +63,14 @@ import {
   parseSiteCustomCssState,
   sanitizeSiteCustomCss,
 } from './site-custom-css'
+import {
+  type SiteProfilePatchesStateV1,
+  type StoredSiteProfilePatchV1,
+  SITE_PROFILE_PATCHES_SCHEMA_VERSION,
+  isValidSiteProfileOriginKey,
+  parseSiteProfilePatch,
+  parseSiteProfilePatchesState,
+} from './site-profile-patches'
 
 const READ_KEYS = [STORAGE_KEY_SCHEMA_VERSION, STORAGE_KEY_POLICY, STORAGE_KEY_ENABLED] as const
 
@@ -78,6 +87,8 @@ const SITE_OVERRIDE_KEYS = [STORAGE_KEY_SITE_OVERRIDES] as const
 const TYPOGRAPHY_KEYS = [STORAGE_KEY_TYPOGRAPHY] as const
 
 const SITE_CUSTOM_CSS_KEYS = [STORAGE_KEY_SITE_CUSTOM_CSS] as const
+
+const SITE_PROFILE_PATCHES_KEYS = [STORAGE_KEY_SITE_PROFILE_PATCHES] as const
 
 /**
  * 读取当前全局策略（合并遗留 boolean，不写盘）。
@@ -254,13 +265,58 @@ export async function persistSiteCustomCssForOrigin(origin: string, css: string)
   await persistSiteCustomCssState({ v: 1, byOrigin })
 }
 
-/** RFC 0016 / 019：是否存在该 origin 的主题/字体覆盖或自定义 CSS。 */
+/** RFC 0034：读取每站 Site Profile 补丁表。 */
+export async function readSiteProfilePatchesState(): Promise<SiteProfilePatchesStateV1> {
+  const snap = await chrome.storage.local.get([...SITE_PROFILE_PATCHES_KEYS])
+  return parseSiteProfilePatchesState(snap[STORAGE_KEY_SITE_PROFILE_PATCHES])
+}
+
+/** RFC 0034：写入每站 Site Profile 补丁整表。 */
+export async function persistSiteProfilePatchesState(
+  state: SiteProfilePatchesStateV1,
+): Promise<void> {
+  await chrome.storage.local.set({ [STORAGE_KEY_SITE_PROFILE_PATCHES]: state })
+}
+
+/** RFC 0034：读取当前页 origin 的 user siteProfilePatch；无效或无配置返回 undefined。 */
+export async function readSiteProfilePatchForPage(
+  pageOrigin?: string,
+): Promise<StoredSiteProfilePatchV1 | undefined> {
+  const origin =
+    pageOrigin ?? (typeof globalThis.location !== 'undefined' ? globalThis.location.origin : '')
+  if (!isValidSiteProfileOriginKey(origin)) return undefined
+  const state = await readSiteProfilePatchesState()
+  return state.byOrigin[origin]
+}
+
+/** RFC 0034：写入或删除某 origin 的 user siteProfilePatch。 */
+export async function persistSiteProfilePatchForOrigin(
+  origin: string,
+  patch: StoredSiteProfilePatchV1 | null,
+): Promise<void> {
+  if (!isValidSiteProfileOriginKey(origin)) return
+  const cur = await readSiteProfilePatchesState()
+  const byOrigin = { ...cur.byOrigin }
+  const normalized = patch ? parseSiteProfilePatch(patch) : null
+  if (!normalized) {
+    delete byOrigin[origin]
+  } else {
+    byOrigin[origin] = normalized
+  }
+  await persistSiteProfilePatchesState({
+    v: SITE_PROFILE_PATCHES_SCHEMA_VERSION,
+    byOrigin,
+  })
+}
+
+/** RFC 0016 / 019 / 034：是否存在该 origin 的主题/字体覆盖、自定义 CSS 或 Site Profile 补丁。 */
 export async function hasSiteScopedDataForOrigin(origin: string): Promise<boolean> {
-  const [ov, cssText] = await Promise.all([
+  const [ov, cssText, profilePatch] = await Promise.all([
     readSiteOverridesState(),
     readSiteCustomCssForPage(origin),
+    readSiteProfilePatchForPage(origin),
   ])
-  return Boolean(ov.byOrigin[origin]) || cssText.trim().length > 0
+  return Boolean(ov.byOrigin[origin]) || cssText.trim().length > 0 || Boolean(profilePatch)
 }
 
 /**
@@ -371,7 +427,7 @@ export async function upsertSiteTypographyOverride(
   await persistSiteOverrideEntry(origin, next, state)
 }
 
-/** RFC 0016 / 019：移除此 origin 的主题/字体覆盖与自定义 CSS。 */
+/** RFC 0016 / 019 / 034：移除此 origin 的主题/字体覆盖、自定义 CSS 与 Site Profile 补丁。 */
 export async function clearSiteOverrideForOrigin(origin: string): Promise<void> {
   const state = await readSiteOverridesState()
   const byOrigin = { ...state.byOrigin }
@@ -381,6 +437,15 @@ export async function clearSiteOverrideForOrigin(origin: string): Promise<void> 
   const cssByOrigin = { ...cssCur.byOrigin }
   delete cssByOrigin[origin]
   await persistSiteCustomCssState({ v: 1, byOrigin: cssByOrigin })
+  const patchCur = await readSiteProfilePatchesState()
+  if (patchCur.byOrigin[origin]) {
+    const patchByOrigin = { ...patchCur.byOrigin }
+    delete patchByOrigin[origin]
+    await persistSiteProfilePatchesState({
+      v: SITE_PROFILE_PATCHES_SCHEMA_VERSION,
+      byOrigin: patchByOrigin,
+    })
+  }
 }
 
 /** RFC 0024：读取智能暗色检测阈值。 */

@@ -11,6 +11,7 @@ import {
   type SamplingBudget,
   type ThemeFiltersStateV1,
 } from '@change-dark/extension-settings'
+import type { RecolorStylesheetOptions } from './css-stylesheet'
 import { recolorElementInlineStyle } from './inline-style-recolor'
 import { hasBitmapBackgroundImage } from './background-image-css'
 import { applyRecolorInjection } from './recolor-inject'
@@ -166,12 +167,13 @@ export function applyRecolorMutationFlush(
   profile: ColorProfile = DEFAULT_DARK_PROFILE,
   baseCss = '',
   now: () => number = Date.now,
+  options: RecolorStylesheetOptions = {},
 ): RecolorMutationFlushResult {
   let stylesheetRebuilt = false
   let inlineElementsRecolored = 0
 
   if (plan.rebuildStylesheets) {
-    applyRecolorInjection(doc, themeFilters, profile, baseCss)
+    applyRecolorInjection(doc, themeFilters, profile, baseCss, options)
     stylesheetRebuilt = true
   }
 

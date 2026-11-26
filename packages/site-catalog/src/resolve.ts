@@ -19,12 +19,32 @@ export interface ResolveSitePolicyOptions {
   userPatch?: SiteProfilePatchV1
 }
 
-/** 由 origin + pathname 解析合并后的 policy。 */
+/** 由 origin + pathname 或完整 URL 解析合并后的 policy。 */
 export function resolveSitePolicy(
-  origin: string,
-  pathname: string,
-  options: ResolveSitePolicyOptions = {},
+  originOrUrl: string,
+  pathnameOrOptions?: string | ResolveSitePolicyOptions,
+  maybeOptions: ResolveSitePolicyOptions = {},
 ): MergedSitePolicyV1 {
+  let origin: string
+  let pathname: string
+  let options: ResolveSitePolicyOptions
+
+  if (typeof pathnameOrOptions === 'string') {
+    origin = originOrUrl
+    pathname = pathnameOrOptions
+    options = maybeOptions
+  } else {
+    options = pathnameOrOptions ?? {}
+    try {
+      const parsed = new URL(originOrUrl)
+      origin = parsed.origin
+      pathname = parsed.pathname
+    } catch {
+      origin = originOrUrl
+      pathname = '/'
+    }
+  }
+
   const catalog = options.catalog ?? BUNDLED_SITE_CATALOG
   const matched = matchSiteProfiles(origin, pathname, catalog)
   if (matched.length === 0 && !options.userPatch) {
