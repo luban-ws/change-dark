@@ -169,3 +169,55 @@ pub fn batch_modify_color_wasm(
     dark_color_utils::modify_colors::batch_modify_color(rgb, uses, &profile)
         .ok_or_else(|| JsValue::from_str("batchModifyColor failed"))
 }
+
+fn format_dsl_json_result(data_json: Result<String, serde_json::Error>) -> String {
+    match data_json {
+        Ok(raw) => format!("{{\"ok\":true,\"data\":{raw}}}"),
+        Err(err) => serialize_theme_dsl_err(&theme_dsl::DslError {
+            message: format!("serialize error: {err}"),
+            line: 1,
+            column: 1,
+            offset: 0,
+        }),
+    }
+}
+
+fn serialize_theme_dsl_err(err: &theme_dsl::DslError) -> String {
+    serde_json::json!({
+        "ok": false,
+        "error": err,
+    })
+    .to_string()
+}
+
+/// RFC 0038：编译 `.theme` 站点档案列表，返回 `{ ok, data | error }` JSON。
+#[wasm_bindgen(js_name = compileThemeDslWasm)]
+pub fn compile_theme_dsl_wasm(source: &str) -> String {
+    match theme_dsl::parse_theme_profiles(source) {
+        Ok(profiles) => format_dsl_json_result(serde_json::to_string(&profiles)),
+        Err(err) => serialize_theme_dsl_err(&err),
+    }
+}
+
+/// RFC 0038：编译单条用户 `.theme` patch，返回 `{ ok, data | error }` JSON。
+#[wasm_bindgen(js_name = compileThemePatchDslWasm)]
+pub fn compile_theme_patch_dsl_wasm(source: &str) -> String {
+    match theme_dsl::parse_theme_patch(source) {
+        Ok(patch) => format_dsl_json_result(serde_json::to_string(&patch)),
+        Err(err) => serialize_theme_dsl_err(&err),
+    }
+}
+
+/// RFC 0038：将 `SiteProfilePatchV1` JSON 格式化为标准 `.theme` patch 源码。
+#[wasm_bindgen(js_name = formatThemePatchDslWasm)]
+pub fn format_theme_patch_dsl_wasm(patch_json: &str) -> String {
+    match serde_json::from_str::<theme_dsl::SiteProfilePatchV1>(patch_json) {
+        Ok(patch) => format_dsl_json_result(serde_json::to_string(&theme_dsl::format_theme_patch(&patch))),
+        Err(err) => serialize_theme_dsl_err(&theme_dsl::DslError {
+            message: format!("invalid patch JSON: {err}"),
+            line: 1,
+            column: 1,
+            offset: 0,
+        }),
+    }
+}

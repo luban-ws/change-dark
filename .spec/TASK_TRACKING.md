@@ -127,7 +127,13 @@
 |----|----------|------|------|
 | T-050 | [0037](rfc/completed/0037-open-shadow-style-roots.md) | 开放 ShadowRoot + `adoptedStyleSheets` 动态改色与 CLEANUP | ✅ Done |
 
-## Backlog（下一个建议 **038**）
+## RFC 0038 — Theme DSL（.theme）与 Rust winnow 及异步批改色（已完成）
+
+| ID | 专属 RFC | 内容 | 状态 |
+|----|----------|------|------|
+| T-051 | [0038](rfc/completed/0038-theme-dsl-winnow.md) | `.theme` Rust `winnow` 解析/格式化/校验 CLI + WASM 直接执行 + `batchModifyColorsAsync` | ✅ Done |
+
+## Backlog（下一个建议 **039**）
 
 | 方向 | 说明 |
 |------|------|
@@ -179,6 +185,8 @@
 - [x] Implement RFC 0034: Site Profile Catalog（数据驱动站点策略，超越 Dark Reader） (RFC 0034)
 - [x] Implement RFC 0036: CSS 变量改色图（对齐 Dark Reader VariablesStore） (RFC 0036)
 - [x] Implement RFC 0037: 开放 Shadow DOM 与 adoptedStyleSheets 动态改色 (RFC 0037)
+- [x] Implement RFC 0038: Theme DSL（.theme）与 Rust winnow 编译器及异步批改色 (RFC 0038)
+
 
 
 

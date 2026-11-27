@@ -14,16 +14,20 @@
     }
   },
   "scripts": {
+    "check:themes": "cargo run --manifest-path ../theme-dsl/Cargo.toml --bin theme-dsl-check -- ./src/catalog",
     "build": "vite build",
     "test": "vitest run"
   },
   "dependencies": {
+    "@change-dark/dark-engine": "workspace:*",
     "@change-dark/extension-settings": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.6.2",
     "vite": "^5.4.2",
     "vite-plugin-dts": "^4.2.1",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.6.0",
     "vitest": "^2.1.2"
   }
 }

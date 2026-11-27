@@ -10,7 +10,7 @@ export default defineConfig({
     },
     emptyOutDir: true,
     rollupOptions: {
-      external: ['@change-dark/extension-settings'],
+      external: ['@change-dark/dark-engine', '@change-dark/extension-settings'],
     },
   },
   plugins: [dts({ rollupTypes: true })],

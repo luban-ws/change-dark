@@ -70,6 +70,69 @@ export interface ParsedCssRgb {
   b: number;
 }
 export declare function parseCssColorTokenWasmRgb(input: string): ParsedCssRgb | null;
+export type ThemeDslColorUseKind = 'bg' | 'fg' | 'border';
+export interface ThemeDslError {
+  message: string;
+  line: number;
+  column: number;
+  offset: number;
+}
+export type ThemeDslResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: ThemeDslError };
+export interface ThemeDslMatchV1 {
+  hostEquals?: string[];
+  hostSuffix?: string[];
+  pathPrefix?: string[];
+}
+export interface ThemeDslGutterProbeV1 {
+  mainSelector: string;
+  insetPx: number;
+}
+export interface ThemeDslSurfaceRepairV1 {
+  landmarkSelectors?: string[];
+  componentClassHints?: string[];
+  neverPaint?: string[];
+  minPanelAreaPx?: number;
+  minPanelWidthPx?: number;
+  minPanelHeightPx?: number;
+  gutterProbe?: ThemeDslGutterProbeV1;
+}
+export interface ThemeDslCssVarSubstituteV1 {
+  use: ThemeDslColorUseKind;
+  fallback?: string;
+}
+export interface ThemeDslRecolorV1 {
+  forceShorthandProperties?: string[];
+  cssVarSubstitute?: Record<string, ThemeDslCssVarSubstituteV1>;
+}
+export interface ThemeDslSiteProfileV1 {
+  v: 1;
+  id: string;
+  match: ThemeDslMatchV1;
+  priority?: number;
+  surfaceRepair?: ThemeDslSurfaceRepairV1;
+  recolor?: ThemeDslRecolorV1;
+  customCss?: string;
+}
+export interface ThemeDslSiteProfilePatchV1 {
+  disabled?: boolean;
+  surfaceRepair?: Partial<ThemeDslSurfaceRepairV1>;
+  recolor?: Partial<ThemeDslRecolorV1>;
+  customCss?: string;
+}
+export declare function compileThemeDsl(
+  source: string,
+): ThemeDslResult<ThemeDslSiteProfileV1[]>;
+export declare function compileThemePatchDsl(
+  source: string,
+): ThemeDslResult<ThemeDslSiteProfilePatchV1>;
+export declare function compileThemePatchDslAsync(
+  source: string,
+): Promise<ThemeDslResult<ThemeDslSiteProfilePatchV1>>;
+export declare function formatThemePatchDsl(
+  patch: ThemeDslSiteProfilePatchV1,
+): ThemeDslResult<string>;
 `
 
 writeFileSync(typesDest, `${readFileSync(typesDest, 'utf8')}${modifyColorTypes}`, 'utf8')

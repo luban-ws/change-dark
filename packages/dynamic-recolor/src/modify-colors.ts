@@ -161,3 +161,68 @@ export function batchModifyColors(
     return { r: out[o]!, g: out[o + 1]!, b: out[o + 2]! }
   })
 }
+
+export interface AsyncBatchColorOptions {
+  /** 单块最大送入 WASM 的色值条数；超出时分块并在块间协作让出主线程。 */
+  chunkSize?: number
+  /** 可选中止信号；触发后停止后续分块改色并抛出中止错误。 */
+  signal?: AbortSignal
+}
+
+export const DEFAULT_ASYNC_BATCH_CHUNK_SIZE = 512
+
+function throwIfAborted(signal?: AbortSignal): void {
+  if (!signal?.aborted) return
+  if (signal.reason !== undefined) {
+    throw signal.reason
+  }
+  if (typeof DOMException !== 'undefined') {
+    throw new DOMException('Aborted', 'AbortError')
+  }
+  throw new Error('Aborted')
+}
+
+function yieldToMainThread(): Promise<void> {
+  const sched = (
+    globalThis as { scheduler?: { yield?: () => Promise<void> } }
+  ).scheduler
+  if (sched && typeof sched.yield === 'function') {
+    return sched.yield()
+  }
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, 0)
+  })
+}
+
+/**
+ * RFC 0038：异步分块批改色。
+ * 小批量（`<= chunkSize`）走单次同步 WASM 快路径；大批量分块执行并在块间让出主线程。
+ */
+export async function batchModifyColorsAsync(
+  items: ReadonlyArray<{ rgb: Rgb; use: ColorUse }>,
+  profile: ColorProfile = DEFAULT_DARK_PROFILE,
+  options?: AsyncBatchColorOptions,
+): Promise<Rgb[]> {
+  throwIfAborted(options?.signal)
+  if (items.length === 0) return []
+  const chunkSize = Math.max(
+    1,
+    Math.floor(options?.chunkSize ?? DEFAULT_ASYNC_BATCH_CHUNK_SIZE),
+  )
+  if (items.length <= chunkSize) {
+    return batchModifyColors(items, profile)
+  }
+  const results: Rgb[] = []
+  for (let offset = 0; offset < items.length; offset += chunkSize) {
+    throwIfAborted(options?.signal)
+    const slice = items.slice(offset, offset + chunkSize)
+    const mapped = batchModifyColors(slice, profile)
+    for (let i = 0; i < mapped.length; i += 1) {
+      results.push(mapped[i]!)
+    }
+    if (offset + chunkSize < items.length) {
+      await yieldToMainThread()
+    }
+  }
+  return results
+}
