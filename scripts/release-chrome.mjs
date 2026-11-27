@@ -179,7 +179,7 @@ function isPkgDirty() {
 
 function gitNotesSinceLastTag() {
   try {
-    const last = execSync('git', ['describe', '--tags', '--abbrev=0'], {
+    const last = execFileSync('git', ['describe', '--tags', '--abbrev=0'], {
       cwd: repoRoot,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'ignore'],

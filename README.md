@@ -10,6 +10,14 @@
 
 ---
 
+## 最新版本（v0.3.0）
+
+- **Open Shadow DOM 与动态渲染增强**：支持 open `ShadowRoot` 与 `adoptedStyleSheets` 动态改色、CSS 变量重着色依赖图与 Rust `oklch()` 解析、Rust `winnow` WASM 直编 `.theme` DSL、站点 catalog 用户补丁存储，以及表面修复与关闭时的干净样式还原。
+- **Strict-CSP 兼容与即时开关**：在严格 CSP 页面（如 `npmjs.com`）自动降级为纯 JS 颜色引擎 fallback，消除 WASM 初始化阻塞并保证开/关切换即时生效。
+- **Popup 秒开骨架与 CI 性能门禁**：入口脚本 `async` 非阻塞、首屏加载骨架屏与 spinner、单次 `chrome.storage` 快照预取、轻量 i18n、Radix CSS 构建期按需裁剪（约缩小 75%），以及 CI Popup 启动性能回归门禁。
+
+---
+
 ## 功能概览
 
 | 能力 | 说明 |

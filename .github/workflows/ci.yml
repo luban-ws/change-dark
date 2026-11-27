@@ -82,7 +82,7 @@ jobs:
 
   e2e-perf:
     needs: build-test-lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -106,8 +106,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-playwright-
+          key: ${{ runner.os }}-ubuntu24-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-ubuntu24-playwright-
 
       - name: Install Playwright Chromium
         run: pnpm --filter @change-dark/chrome exec playwright install --with-deps chromium

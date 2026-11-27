@@ -3,7 +3,7 @@
  * 需系统 PATH 中有 `zip`（macOS / Linux）；Windows 可装 Git Bash 或手动打包 `dist/`。
  */
 import { execSync } from 'node:child_process'
-import { existsSync } from 'node:fs'
+import { existsSync, mkdirSync, rmSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -19,8 +19,8 @@ if (!existsSync(distDir)) {
   process.exit(1)
 }
 
-import { mkdirSync } from 'node:fs'
 mkdirSync(outDir, { recursive: true })
+rmSync(outZip, { force: true })
 
 execSync(`zip -r -q "${outZip}" .`, { cwd: distDir, stdio: 'inherit' })
 console.warn('packed', outZip)
