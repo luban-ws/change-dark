@@ -118,4 +118,4 @@ Dynamic 变量图 Phase 1.5（RFC 0036）、开放 Shadow DOM 与 `adoptedStyleS
 | 0039 | [修复内容脚本 WASM 初始化竞态与暗色开关即时生效](rfc/completed/0039-wasm-tla-and-instant-dark-toggle.md) | Implemented |
 | 0040 | [Popup 异步壳首帧加载进度与启动性能优化](rfc/completed/0040-async-shell-first-popup-perf.md) | Implemented |
 | 0041 | [Popup 异步入口脚本优化、骨架屏进度反馈与性能回归测试](rfc/completed/0041-popup-async-script-and-perf-test.md) | Implemented |
-| 0042 | [CI 性能门禁、中位数基准与 PR 报告防回退](rfc/0042-ci-popup-perf-gate-and-reporting.md) | Approved |
+| 0042 | [CI 性能门禁、中位数基准与 PR 报告防回退](rfc/completed/0042-ci-popup-perf-gate-and-reporting.md) | Implemented |

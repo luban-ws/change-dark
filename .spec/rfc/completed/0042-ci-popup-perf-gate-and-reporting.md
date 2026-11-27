@@ -1,6 +1,6 @@
 # RFC 0042: CI 性能门禁、中位数基准与 PR 报告防回退
 
-**Status:** Approved
+**Status:** Implemented
 
 ## Summary
 

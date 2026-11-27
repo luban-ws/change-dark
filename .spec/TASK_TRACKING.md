@@ -145,10 +145,6 @@
 | 文档 | 路径 |
 |------|------|
 
-## Active
-
-- [ ] Implement RFC 0042: CI 性能门禁、中位数基准与 PR 报告防回退 (RFC 0042)
-
 ## Done
 
 
@@ -190,6 +186,8 @@
 - [x] Implement RFC 0040: Popup 异步壳首帧加载进度与启动性能优化 (RFC 0040)
 - [x] Implement RFC 0035: Chrome Web Store 发布（v0.1.2+） (RFC 0035)
 - [x] Implement RFC 0041: Popup 异步入口脚本优化、骨架屏进度反馈与性能回归测试 (RFC 0041)
+- [x] Implement RFC 0042: CI 性能门禁、中位数基准与 PR 报告防回退 (RFC 0042)
+
 
 
 
