@@ -8,15 +8,21 @@
       html,body{margin:0;padding:0;width:380px;height:600px;overflow:hidden;background:#111113;color:#edeef0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
       #root{width:100%;height:100%}
       .cd-boot{display:flex;flex-direction:column;height:100%;background:#111113}
-      .cd-boot-hdr{padding:12px;border-bottom:1px solid rgba(255,255,255,.08);background:#18191b;display:flex;align-items:center;gap:8px}
+      .cd-boot-hdr{padding:12px;border-bottom:1px solid rgba(255,255,255,.08);background:#18191b;display:flex;align-items:center;justify-content:space-between;gap:8px}
+      .cd-boot-brand{display:flex;align-items:center;gap:8px}
       .cd-boot-icon{width:20px;height:20px;color:#00a2c7;flex-shrink:0}
       .cd-boot-title{font-size:16px;font-weight:700;line-height:1.25;margin:0}
       .cd-boot-sub{font-size:11px;color:#9a9ca3;line-height:1.35;margin:2px 0 0}
-      .cd-boot-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px}
-      .cd-boot-spin{width:28px;height:28px;border:2.5px solid rgba(255,255,255,.14);border-top-color:#2aa198;border-radius:50%;animation:cd-spin .7s linear infinite}
-      .cd-boot-bar{width:140px;height:3px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+      .cd-boot-spin{width:24px;height:24px;border:2.5px solid rgba(255,255,255,.14);border-top-color:#2aa198;border-radius:50%;animation:cd-spin .7s linear infinite;flex-shrink:0}
+      .cd-boot-spin--sm{width:14px;height:14px;border-width:2px}
+      .cd-boot-body{flex:1;display:flex;flex-direction:column;gap:12px;padding:14px}
+      .cd-boot-status-box{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;background:#18191b;border:1px solid rgba(255,255,255,.08)}
+      .cd-boot-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+      .cd-boot-bar{width:100%;height:3px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
       .cd-boot-bar>i{display:block;width:45%;height:100%;background:#2aa198;border-radius:999px;animation:cd-slide 1.1s ease-in-out infinite}
-      .cd-boot-msg{font-size:12px;color:#9a9ca3;margin:0}
+      .cd-boot-msg{font-size:12px;color:#c7c9d1;margin:0}
+      .cd-boot-skel{height:76px;border-radius:10px;background:#18191b;border:1px solid rgba(255,255,255,.06);opacity:.65}
+      .cd-boot-skel--lg{height:124px;opacity:.45}
       @keyframes cd-spin{to{transform:rotate(360deg)}}
       @keyframes cd-slide{0%{transform:translateX(-110%)}100%{transform:translateX(240%)}}
     </style>
@@ -25,16 +31,25 @@
     <div id="root">
       <div id="cd-boot-shell" class="cd-boot" aria-busy="true">
         <div class="cd-boot-hdr">
-          <svg class="cd-boot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-          <div>
-            <p id="cd-boot-title" class="cd-boot-title">Selena</p>
-            <p id="cd-boot-sub" class="cd-boot-sub">Loading settings…</p>
+          <div class="cd-boot-brand">
+            <svg class="cd-boot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            <div>
+              <p id="cd-boot-title" class="cd-boot-title">Selena</p>
+              <p id="cd-boot-sub" class="cd-boot-sub">Loading settings…</p>
+            </div>
           </div>
+          <div class="cd-boot-spin cd-boot-spin--sm" aria-hidden="true"></div>
         </div>
         <div class="cd-boot-body">
-          <div class="cd-boot-spin" role="progressbar" aria-label="Loading"></div>
-          <div class="cd-boot-bar"><i></i></div>
-          <p id="cd-boot-status" class="cd-boot-msg">Loading interface…</p>
+          <div class="cd-boot-status-box">
+            <div class="cd-boot-spin" role="progressbar" aria-label="Loading"></div>
+            <div class="cd-boot-meta">
+              <p id="cd-boot-status" class="cd-boot-msg">Loading interface…</p>
+              <div class="cd-boot-bar"><i></i></div>
+            </div>
+          </div>
+          <div class="cd-boot-skel"></div>
+          <div class="cd-boot-skel cd-boot-skel--lg"></div>
         </div>
       </div>
     </div>

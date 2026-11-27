@@ -47,12 +47,12 @@ function bootPopupUi(): void {
 
 // 让浏览器先完成极轻量 shell 的 onload 与首帧绘制（spinner 立即可见），再异步加载 React/Radix chunk。
 if (document.readyState === 'complete') {
-  requestAnimationFrame(() => setTimeout(bootPopupUi, 0))
+  requestAnimationFrame(bootPopupUi)
 } else {
   window.addEventListener(
     'load',
     () => {
-      requestAnimationFrame(() => setTimeout(bootPopupUi, 0))
+      requestAnimationFrame(bootPopupUi)
     },
     { once: true },
   )

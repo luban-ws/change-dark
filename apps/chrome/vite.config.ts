@@ -21,9 +21,29 @@ function pruneRadixCssPlugin(): Plugin {
   }
 }
 
+function asyncPopupEntryScriptPlugin(): Plugin {
+  return {
+    name: 'async-popup-entry-script',
+    enforce: 'post',
+    transformIndexHtml(html, ctx) {
+      if (!ctx.filename.endsWith(path.join('src', 'popup', 'index.html'))) {
+        return html
+      }
+      return html.replace(/<script\s+type="module"(?!\s+async\b)/g, '<script type="module" async')
+    },
+  }
+}
+
 /** Vite 配置：CRXJS 负责 manifest 与多入口打包，开发期启用 HMR。 */
 export default defineConfig({
-  plugins: [pruneRadixCssPlugin(), react(), wasm(), topLevelAwait(), crx({ manifest })],
+  plugins: [
+    pruneRadixCssPlugin(),
+    asyncPopupEntryScriptPlugin(),
+    react(),
+    wasm(),
+    topLevelAwait(),
+    crx({ manifest }),
+  ],
   resolve: {
     alias: {
       '@change-dark/extension-settings': path.resolve(

@@ -117,3 +117,4 @@ GitHub Pages 落地页（RFC 0020）、Popup Solarized Dark 配色（RFC 0022）
 Dynamic 变量图 Phase 1.5（RFC 0036）、开放 Shadow DOM 与 `adoptedStyleSheets`（RFC 0037）、`.theme` Rust `winnow` DSL 与异步批改色（RFC 0038）。
 | 0039 | [修复内容脚本 WASM 初始化竞态与暗色开关即时生效](rfc/completed/0039-wasm-tla-and-instant-dark-toggle.md) | Implemented |
 | 0040 | [Popup 异步壳首帧加载进度与启动性能优化](rfc/completed/0040-async-shell-first-popup-perf.md) | Implemented |
+| 0041 | [Popup 异步入口脚本优化、骨架屏进度反馈与性能回归测试](rfc/completed/0041-popup-async-script-and-perf-test.md) | Implemented |
