@@ -91,7 +91,7 @@
 
 | ID | 专属 RFC | 内容 | 状态 |
 |----|----------|------|------|
-| T-048 | [0035](./rfc/0035-chrome-web-store-release-v0-1-2.md) | CI 绿 + E2E P0 + listing 同步 + bump 0.1.2 + 提审 | 🔄 Ready to submit |
+| T-048 | [0035](rfc/completed/0035-chrome-web-store-release-v0-1-2.md) | CI 绿 + E2E P0 + listing 同步 + bump 0.1.2 + 提审 | 🔄 Ready to submit |
 
 ### T-048 子任务（见 RFC §5）
 
@@ -145,10 +145,6 @@
 | 文档 | 路径 |
 |------|------|
 
-## Active
-
-- [ ] Implement RFC 0035: Chrome Web Store 发布（v0.1.2+） (RFC 0035)
-
 ## Done
 
 
@@ -188,6 +184,8 @@
 - [x] Implement RFC 0038: Theme DSL（.theme）与 Rust winnow 编译器及异步批改色 (RFC 0038)
 - [x] Implement RFC 0039: 修复内容脚本 WASM 初始化竞态与暗色开关即时生效 (RFC 0039)
 - [x] Implement RFC 0040: Popup 异步壳首帧加载进度与启动性能优化 (RFC 0040)
+- [x] Implement RFC 0035: Chrome Web Store 发布（v0.1.2+） (RFC 0035)
+
 
 
 

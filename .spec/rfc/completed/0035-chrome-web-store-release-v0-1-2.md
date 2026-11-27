@@ -1,6 +1,6 @@
 # RFC 0035 — Chrome Web Store 发布（v0.1.2+）
 
-**Status:** Draft
+**Status:** Implemented
 
 | 字段 | 值 |
 |------|-----|
@@ -8,10 +8,10 @@
 | 任务 ID | **T-048** |
 | 创建日期 | 2026-06-27 |
 | 目标版本 | **`0.1.2`**（或审核通过后递增 patch） |
-| 基线 | [0020](./completed/0020-github-pages-site.md)、[0026](./completed/0026-e2e-testing-strategy.md)、[0032](./completed/0032-theme-mode-product-consolidation.md) |
-| 操作指南 | [docs/chrome-web-store-publish.md](../../docs/chrome-web-store-publish.md) |
-| **后台填写手册** | [docs/chrome-web-store-dashboard-fill-guide.md](../../docs/chrome-web-store-dashboard-fill-guide.md) |
-| Listing 对齐 | [docs/chrome-web-store-listing.md](../../docs/chrome-web-store-listing.md) |
+| 基线 | [0020](0020-github-pages-site.md)、[0026](0026-e2e-testing-strategy.md)、[0032](0032-theme-mode-product-consolidation.md) |
+| 操作指南 | [docs/chrome-web-store-publish.md](../../../docs/chrome-web-store-publish.md) |
+| **后台填写手册** | [docs/chrome-web-store-dashboard-fill-guide.md](../../../docs/chrome-web-store-dashboard-fill-guide.md) |
+| Listing 对齐 | [docs/chrome-web-store-listing.md](../../../docs/chrome-web-store-listing.md) |
 
 ---
 
