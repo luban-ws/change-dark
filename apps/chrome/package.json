@@ -11,6 +11,8 @@
         "preview": "vite preview",
         "test": "vitest run",
         "test:e2e": "playwright test",
+        "test:perf": "playwright test e2e/popup-perf.spec.ts e2e/smoke.spec.ts --reporter=list",
+        "perf:summary": "node scripts/format-perf-summary.mjs",
         "test:e2e:install": "playwright install chromium",
         "test:e2e:report": "playwright show-report",
         "screenshots:store": "node scripts/capture-store-screenshots.mjs",

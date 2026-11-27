@@ -1,0 +1,21 @@
+{
+  "static": {
+    "maxEntryHtmlBytes": 4096,
+    "maxEntryScriptBytes": 10240,
+    "maxCssBytes": 225280,
+    "maxPopupAsyncJsBytes": 430080,
+    "maxContentScriptBytes": 471040,
+    "maxDarkEngineWasmDataUrls": 1
+  },
+  "runtime": {
+    "warmRuns": 5,
+    "maxColdStorageGets": 2,
+    "expectedStorageGets": 1,
+    "expectedTabQueries": 1,
+    "maxWarmStorageSets": 0,
+    "maxWarmMedianDclMs": 500,
+    "maxWarmMedianLoadMs": 1500,
+    "maxWarmMedianFcpMs": 1500,
+    "maxWarmMedianFullUiMs": 3000
+  }
+}

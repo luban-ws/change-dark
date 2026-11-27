@@ -1,4 +1,4 @@
-# 全 monorepo：build（含 WASM + 各 app）/ test / lint。与仅部署站点的 deploy-github-pages 分工。
+# 全 monorepo：build（含 WASM + 各 app）/ test / lint + Chrome Popup 性能与冒烟 E2E 门禁。
 name: CI
 
 on:
@@ -6,6 +6,9 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -67,3 +70,63 @@ jobs:
       - run: pnpm run lint
         env:
           TURBO_TELEMETRY_DISABLED: "1"
+
+      - name: Upload built extension artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-extension-dist
+          path: |
+            apps/chrome/dist
+            packages/dark-engine/dist/index.mjs
+          retention-days: 1
+
+  e2e-perf:
+    needs: build-test-lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Download built extension artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: chrome-extension-dist
+          path: .
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @change-dark/chrome exec playwright install --with-deps chromium
+
+      - name: Run Popup Perf & Smoke E2E Gate
+        run: pnpm --filter @change-dark/chrome run test:perf
+        env:
+          HEADLESS: "true"
+          CI: "true"
+
+      - name: Write Performance Summary
+        if: always()
+        run: pnpm --filter @change-dark/chrome run perf:summary
+
+      - name: Upload Perf Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-popup-perf-report
+          path: apps/chrome/test-results/perf-report.json
+          if-no-files-found: ignore
+          retention-days: 30
