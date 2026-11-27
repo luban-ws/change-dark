@@ -115,3 +115,5 @@ Monorepo 架构、Rust/WASM 工具链、MV3 Chrome 扩展宿主、CI 流水线�
 ### Phase 2 — 质量与发布（进行中）
 GitHub Pages 落地页（RFC 0020）、Popup Solarized Dark 配色（RFC 0022）、Popup 现代化重构（RFC 0024）。
 Dynamic 变量图 Phase 1.5（RFC 0036）、开放 Shadow DOM 与 `adoptedStyleSheets`（RFC 0037）、`.theme` Rust `winnow` DSL 与异步批改色（RFC 0038）。
+| 0039 | [修复内容脚本 WASM 初始化竞态与暗色开关即时生效](rfc/completed/0039-wasm-tla-and-instant-dark-toggle.md) | Implemented |
+| 0040 | [Popup 异步壳首帧加载进度与启动性能优化](rfc/completed/0040-async-shell-first-popup-perf.md) | Implemented |

@@ -133,6 +133,7 @@ export declare function compileThemePatchDslAsync(
 export declare function formatThemePatchDsl(
   patch: ThemeDslSiteProfilePatchV1,
 ): ThemeDslResult<string>;
+export declare function isWasmAvailable(): boolean;
 `
 
 writeFileSync(typesDest, `${readFileSync(typesDest, 'utf8')}${modifyColorTypes}`, 'utf8')

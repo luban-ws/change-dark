@@ -324,6 +324,11 @@ async function applyForcedDark(): Promise<void> {
     }
   }
 
+  if (document.readyState === 'complete') {
+    runPaint()
+    return
+  }
+
   scheduleIdleTask(() => {
     void (async () => {
       await whenDocumentComplete()

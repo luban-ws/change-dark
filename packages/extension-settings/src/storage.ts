@@ -460,3 +460,70 @@ export async function readAutoDarkThreshold(): Promise<number> {
 export async function persistAutoDarkThreshold(val: number): Promise<void> {
   await chrome.storage.local.set({ [STORAGE_KEY_AUTO_DARK_THRESHOLD]: val })
 }
+
+/** Popup 首屏单次 IPC 批量读取的全部存储键。 */
+export const POPUP_STORAGE_KEYS = [
+  STORAGE_KEY_SCHEMA_VERSION,
+  STORAGE_KEY_POLICY,
+  STORAGE_KEY_ENABLED,
+  STORAGE_KEY_THEME_FILTERS,
+  STORAGE_KEY_PAGE_PALETTE,
+  STORAGE_KEY_TYPOGRAPHY,
+  STORAGE_KEY_SITE_LIST,
+  STORAGE_KEY_SITE_OVERRIDES,
+  STORAGE_KEY_SITE_CUSTOM_CSS,
+  STORAGE_KEY_SITE_PROFILE_PATCHES,
+  STORAGE_KEY_AUTO_DARK_THRESHOLD,
+] as const
+
+export interface PopupStorageSnapshotV1 {
+  policy: GlobalPolicy
+  filters: ThemeFiltersStateV1
+  palette: PagePalette
+  typography: TypographyStateV1
+  siteList: SiteListStateV2
+  siteOverrides: SiteOverridesStateV1
+  siteCustomCss: SiteCustomCssStateV1
+  siteProfilePatches: SiteProfilePatchesStateV1
+  autoDarkThreshold: number
+}
+
+/** 从单次 `chrome.storage.local.get` 快照解析 popup 所需的全量状态。 */
+export function parsePopupStorageSnapshot(
+  raw: Record<string, unknown>,
+): PopupStorageSnapshotV1 {
+  const thresholdRaw = raw[STORAGE_KEY_AUTO_DARK_THRESHOLD]
+  return {
+    policy: resolvePolicyFromSnapshot(raw),
+    filters: parseThemeFiltersState(raw[STORAGE_KEY_THEME_FILTERS]),
+    palette: parsePagePalette(raw[STORAGE_KEY_PAGE_PALETTE]),
+    typography: parseTypographyState(raw[STORAGE_KEY_TYPOGRAPHY]),
+    siteList: parseSiteListState(raw[STORAGE_KEY_SITE_LIST]),
+    siteOverrides: parseSiteOverridesState(raw[STORAGE_KEY_SITE_OVERRIDES]),
+    siteCustomCss: parseSiteCustomCssState(raw[STORAGE_KEY_SITE_CUSTOM_CSS]),
+    siteProfilePatches: parseSiteProfilePatchesState(raw[STORAGE_KEY_SITE_PROFILE_PATCHES]),
+    autoDarkThreshold:
+      typeof thresholdRaw === 'number' ? thresholdRaw : DEFAULT_AUTO_DARK_THRESHOLD,
+  }
+}
+
+/** 单次 IPC 读取 popup 全量存储快照。 */
+export async function readPopupStorageSnapshot(): Promise<PopupStorageSnapshotV1> {
+  const raw = await chrome.storage.local.get([...POPUP_STORAGE_KEYS])
+  return parsePopupStorageSnapshot(raw as Record<string, unknown>)
+}
+
+/** 基于已有快照判断指定 origin 是否存在站点级覆盖/样式/档案补丁（零额外 IPC）。 */
+export function hasSiteScopedDataInSnapshot(
+  origin: string,
+  snapshot: Pick<
+    PopupStorageSnapshotV1,
+    'siteOverrides' | 'siteCustomCss' | 'siteProfilePatches'
+  >,
+): boolean {
+  return (
+    Boolean(snapshot.siteOverrides.byOrigin[origin]) ||
+    (snapshot.siteCustomCss.byOrigin[origin]?.css ?? '').trim().length > 0 ||
+    Boolean(snapshot.siteProfilePatches.byOrigin[origin])
+  )
+}

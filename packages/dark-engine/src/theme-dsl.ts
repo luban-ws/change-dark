@@ -2,11 +2,8 @@
  * RFC 0038：`.theme` DSL Rust WASM 编译器、校验器与格式化器薄封装。
  * 类型结构与 `@change-dark/site-catalog` 1:1 对齐，保持 `dark-engine` 零上游工作区依赖。
  */
-import {
-  compileThemeDslWasm,
-  compileThemePatchDslWasm,
-  formatThemePatchDslWasm,
-} from '../pkg/dark_engine.js'
+import * as fallback from './js-fallback'
+import { bg, isWasmAvailable } from './wasm-runtime'
 
 export type ThemeDslColorUseKind = 'bg' | 'fg' | 'border'
 
@@ -77,7 +74,9 @@ function parseEnvelope<T>(raw: string): ThemeDslResult<T> {
 export function compileThemeDsl(
   source: string,
 ): ThemeDslResult<ThemeDslSiteProfileV1[]> {
-  return parseEnvelope<ThemeDslSiteProfileV1[]>(compileThemeDslWasm(source))
+  return parseEnvelope<ThemeDslSiteProfileV1[]>(
+    isWasmAvailable() ? bg.compileThemeDslWasm(source) : fallback.compileThemeDslWasm(source),
+  )
 }
 
 /** 编译单条用户 `.theme` 站点补丁（`patch { ... }`）。 */
@@ -85,7 +84,9 @@ export function compileThemePatchDsl(
   source: string,
 ): ThemeDslResult<ThemeDslSiteProfilePatchV1> {
   return parseEnvelope<ThemeDslSiteProfilePatchV1>(
-    compileThemePatchDslWasm(source),
+    isWasmAvailable()
+      ? bg.compileThemePatchDslWasm(source)
+      : fallback.compileThemePatchDslWasm(source),
   )
 }
 
@@ -100,5 +101,10 @@ export function compileThemePatchDslAsync(
 export function formatThemePatchDsl(
   patch: ThemeDslSiteProfilePatchV1,
 ): ThemeDslResult<string> {
-  return parseEnvelope<string>(formatThemePatchDslWasm(JSON.stringify(patch)))
+  const json = JSON.stringify(patch)
+  return parseEnvelope<string>(
+    isWasmAvailable()
+      ? bg.formatThemePatchDslWasm(json)
+      : fallback.formatThemePatchDslWasm(json),
+  )
 }

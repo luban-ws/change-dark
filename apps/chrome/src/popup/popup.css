@@ -41,3 +41,20 @@ body, html {
   --cyan-10: #33b8ad !important;  /* Hover Cyan */
   --cyan-11: #2aa198 !important;
 }
+
+.cd-inline-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-top-color: var(--accent-a10, #2aa198);
+  border-radius: 50%;
+  animation: cd-inline-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes cd-inline-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

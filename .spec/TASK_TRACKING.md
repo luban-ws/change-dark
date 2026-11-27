@@ -186,6 +186,10 @@
 - [x] Implement RFC 0036: CSS 变量改色图（对齐 Dark Reader VariablesStore） (RFC 0036)
 - [x] Implement RFC 0037: 开放 Shadow DOM 与 adoptedStyleSheets 动态改色 (RFC 0037)
 - [x] Implement RFC 0038: Theme DSL（.theme）与 Rust winnow 编译器及异步批改色 (RFC 0038)
+- [x] Implement RFC 0039: 修复内容脚本 WASM 初始化竞态与暗色开关即时生效 (RFC 0039)
+- [x] Implement RFC 0040: Popup 异步壳首帧加载进度与启动性能优化 (RFC 0040)
+
+
 
 
 

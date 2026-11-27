@@ -1,14 +1,29 @@
 import { crx } from '@crxjs/vite-plugin'
 import path from 'node:path'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import topLevelAwait from 'vite-plugin-top-level-await'
 import wasm from 'vite-plugin-wasm'
 import react from '@vitejs/plugin-react'
 import manifest from './manifest.config'
+import { pruneRadixThemesCss } from './scripts/prune-radix-css'
+
+function pruneRadixCssPlugin(): Plugin {
+  return {
+    name: 'prune-radix-themes-css',
+    enforce: 'pre',
+    transform(code, id) {
+      const cleanId = id.split('?')[0] ?? id
+      if (cleanId.includes('@radix-ui/themes') && cleanId.endsWith('styles.css')) {
+        return { code: pruneRadixThemesCss(code), map: null }
+      }
+      return null
+    },
+  }
+}
 
 /** Vite 配置：CRXJS 负责 manifest 与多入口打包，开发期启用 HMR。 */
 export default defineConfig({
-  plugins: [react(), wasm(), topLevelAwait(), crx({ manifest })],
+  plugins: [pruneRadixCssPlugin(), react(), wasm(), topLevelAwait(), crx({ manifest })],
   resolve: {
     alias: {
       '@change-dark/extension-settings': path.resolve(

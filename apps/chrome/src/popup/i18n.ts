@@ -1,7 +1,5 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-
 export const STORAGE_KEY_LANG = 'ui_language'
+const LOCAL_CACHE_KEY_LANG = 'cd_popup_lang_v1'
 
 export type PopupLanguage = 'en' | 'zh_CN'
 
@@ -125,7 +123,7 @@ export function normalizePopupLanguage(raw: unknown): PopupLanguage | undefined 
 
 /** 首次打开 popup 时的默认语言（storage 未写入时）。 */
 export function defaultPopupLanguageFromBrowser(): PopupLanguage {
-  const ui = chrome.i18n.getUILanguage?.() ?? ''
+  const ui = typeof chrome !== 'undefined' ? (chrome.i18n?.getUILanguage?.() ?? '') : ''
   return normalizePopupLanguage(ui) ?? 'en'
 }
 
@@ -134,31 +132,64 @@ export function resolvePopupLanguage(saved: unknown): PopupLanguage {
   return normalizePopupLanguage(saved) ?? defaultPopupLanguageFromBrowser()
 }
 
-export const i18nReady = i18n.use(initReactI18next).init({
-    lng: defaultPopupLanguageFromBrowser(),
-    fallbackLng: 'en',
-    supportedLngs: ['en', 'zh_CN'],
-    nonExplicitSupportedLngs: false,
-    resources: POPUP_LOCALES,
-    interpolation: { escapeValue: false },
-    react: {
-      useSuspense: false,
-      bindI18n: 'languageChanged loaded',
-      bindI18nStore: 'added removed',
-    },
-  })
-
-/** 从 storage 读取语言后再挂载 UI，避免首屏英文闪一下或卡在 en。 */
-export async function initPopupLanguageFromStorage(): Promise<PopupLanguage> {
-  await i18nReady
-  const result = await chrome.storage.local.get(STORAGE_KEY_LANG)
-  let lng = resolvePopupLanguage(result[STORAGE_KEY_LANG])
-  if (result[STORAGE_KEY_LANG] === undefined) {
-    lng = defaultPopupLanguageFromBrowser()
-    await chrome.storage.local.set({ [STORAGE_KEY_LANG]: lng })
+function readCachedPopupLanguage(): PopupLanguage | undefined {
+  try {
+    return normalizePopupLanguage(globalThis.localStorage?.getItem(LOCAL_CACHE_KEY_LANG))
+  } catch {
+    return undefined
   }
-  await i18n.changeLanguage(lng)
+}
+
+function writeCachedPopupLanguage(lng: PopupLanguage): void {
+  try {
+    globalThis.localStorage?.setItem(LOCAL_CACHE_KEY_LANG, lng)
+  } catch {
+    /* ignore */
+  }
+}
+
+type LanguageListener = (lng: PopupLanguage) => void
+const listeners = new Set<LanguageListener>()
+
+const i18n = {
+  /** 保持为可配置数据属性，兼容单测中 `Object.defineProperty(i18n, 'language', ...)`。 */
+  language: readCachedPopupLanguage() ?? defaultPopupLanguageFromBrowser(),
+  on(event: 'languageChanged', listener: LanguageListener): void {
+    if (event === 'languageChanged') listeners.add(listener)
+  },
+  off(event: 'languageChanged', listener: LanguageListener): void {
+    if (event === 'languageChanged') listeners.delete(listener)
+  },
+  changeLanguage(next: string): Promise<PopupLanguage> {
+    const resolved = normalizePopupLanguage(next) ?? defaultPopupLanguageFromBrowser()
+    i18n.language = resolved
+    writeCachedPopupLanguage(resolved)
+    for (const listener of listeners) {
+      listener(resolved)
+    }
+    return Promise.resolve(resolved)
+  },
+}
+
+export const i18nReady = Promise.resolve()
+
+/** 将 `chrome.storage.local` 读出的语言值同步应用到内存与 `localStorage`，缺失时后台补写而不阻塞渲染。 */
+export function applyPopupLanguageFromStorageValue(saved: unknown): PopupLanguage {
+  const lng = resolvePopupLanguage(saved)
+  writeCachedPopupLanguage(lng)
+  if (saved === undefined && typeof chrome !== 'undefined' && chrome.storage?.local?.set) {
+    void chrome.storage.local.set({ [STORAGE_KEY_LANG]: lng }).catch(() => {})
+  }
+  if (normalizePopupLanguage(i18n.language) !== lng) {
+    void i18n.changeLanguage(lng)
+  }
   return lng
 }
 
-export default i18n;
+/** 从 storage 读取并应用语言（供单测或独立调用）。 */
+export async function initPopupLanguageFromStorage(): Promise<PopupLanguage> {
+  const result = await chrome.storage.local.get(STORAGE_KEY_LANG)
+  return applyPopupLanguageFromStorageValue(result[STORAGE_KEY_LANG])
+}
+
+export default i18n

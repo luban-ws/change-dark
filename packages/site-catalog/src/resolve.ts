@@ -49,9 +49,19 @@ export function loadSiteCatalogFromThemes(
   return profiles
 }
 
+let cachedBundledCatalog: readonly SiteProfileV1[] | null = null
+
+/** 懒加载并缓存 bundled `.theme` catalog，避免模块顶层在 WASM 初始化前触发编译。 */
+export function getBundledSiteCatalog(): readonly SiteProfileV1[] {
+  if (!cachedBundledCatalog) {
+    cachedBundledCatalog = loadSiteCatalogFromThemes(BUNDLED_THEME_SOURCES)
+  }
+  return cachedBundledCatalog
+}
+
 /** 随扩展发布的 bundled catalog：运行期直接由 `.theme` 源码经 Rust WASM 编译生效。 */
 export const BUNDLED_SITE_CATALOG: readonly SiteProfileV1[] =
-  loadSiteCatalogFromThemes(BUNDLED_THEME_SOURCES)
+  /* @__PURE__ */ loadSiteCatalogFromThemes(BUNDLED_THEME_SOURCES)
 
 export interface ResolveSitePolicyOptions {
   catalog?: readonly SiteProfileV1[]
@@ -93,7 +103,7 @@ export function resolveSitePolicy(
     }
   }
 
-  const catalog = options.catalog ?? BUNDLED_SITE_CATALOG
+  const catalog = options.catalog ?? getBundledSiteCatalog()
   const userPatch =
     options.userPatch ?? compileOptionalUserPatchDsl(options.userPatchDsl)
   const matched = matchSiteProfiles(origin, pathname, catalog)

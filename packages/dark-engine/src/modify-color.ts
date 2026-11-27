@@ -1,7 +1,8 @@
 /**
  * RFC 0031：WASM `modifyColor` / `batchModifyColor` 的 TS 薄封装。
  */
-import { batchModifyColor, modifyColor as wasmModifyColor } from '../pkg/dark_engine.js'
+import * as fallback from './js-fallback'
+import { bg, isWasmAvailable } from './wasm-runtime'
 
 export const COLOR_USE_BG = 0 as const
 export const COLOR_USE_FG = 1 as const
@@ -34,7 +35,9 @@ export function modifyColorRgb(
   useTag: ColorUseTag,
   profileTag: RecolorProfileTag = PROFILE_TAG_DARK,
 ): [number, number, number] {
-  const out = wasmModifyColor(r, g, b, useTag, profileTag)
+  const out = isWasmAvailable()
+    ? bg.modifyColor(r, g, b, useTag, profileTag)
+    : fallback.modifyColor(r, g, b, useTag, profileTag)
   return [out[0]!, out[1]!, out[2]!]
 }
 
@@ -44,5 +47,7 @@ export function batchModifyColorRgb(
   uses: Uint8Array,
   profileTag: RecolorProfileTag = PROFILE_TAG_DARK,
 ): Uint8Array {
-  return batchModifyColor(rgb, uses, profileTag)
+  return isWasmAvailable()
+    ? bg.batchModifyColor(rgb, uses, profileTag)
+    : fallback.batchModifyColor(rgb, uses, profileTag)
 }

@@ -18,12 +18,11 @@ export default function App() {
   
   const { 
     origin, hostnameTitle, editScope, hasSiteOverride, isSiteForcedDark, 
-    policy, filters, palette, typography, siteCss, siteList, autoDarkThreshold, actions 
+    policy, filters, palette, typography, siteCss, siteList, autoDarkThreshold, isSyncing, actions 
   } = usePopupState()
 
   return (
       <Flex
-          key={`popup-root-${lng}`}
           className={`theme-mode-${palette}`}
           direction="column"
           style={{
@@ -43,7 +42,10 @@ export default function App() {
                   <Flex gap="2" align="center">
                       <Moon size={20} color="var(--accent-a10)" />
                       <Box>
-                          <Heading size="3">{t('extName')}</Heading>
+                          <Flex align="center" gap="2">
+                              <Heading size="3">{t('extName')}</Heading>
+                              {isSyncing && <span className="cd-inline-spinner" aria-hidden="true" />}
+                          </Flex>
                           <Text size="1" color="gray">
                               {t('extSubtitle')}
                           </Text>
